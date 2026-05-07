@@ -57,7 +57,10 @@ HAND_CONNECTIONS = [
 ]
 
 FINGERS = {
-    "thumb":  (THUMB_MCP, THUMB_IP, THUMB_IP, THUMB_TIP),
+    # (mcp, pip, dip, tip) — angle is computed at the second joint between the
+    # first and third. The thumb has no DIP joint (it has CMC, MCP, IP, TIP) so
+    # we use TIP in place of DIP — angle at IP between MCP and TIP.
+    "thumb":  (THUMB_MCP, THUMB_IP, THUMB_TIP, THUMB_TIP),
     "index":  (INDEX_MCP, INDEX_PIP, INDEX_DIP, INDEX_TIP),
     "middle": (MIDDLE_MCP, MIDDLE_PIP, MIDDLE_DIP, MIDDLE_TIP),
     "ring":   (RING_MCP, RING_PIP, RING_DIP, RING_TIP),
@@ -125,10 +128,10 @@ def _enhance_auto_gamma(frame):
     mean_l = float(gray.mean())
     if mean_l < 1:
         return bal
+    # gamma derived so that x=mean_l maps to ~110: (mean_l/255)^gamma = 110/255
     gamma = math.log(110 / 255.0) / math.log(mean_l / 255.0)
     gamma = max(0.4, min(2.5, gamma))
-    inv_g = 1.0 / gamma
-    lut = np.array([((i / 255.0) ** inv_g) * 255 for i in range(256)]).astype(np.uint8)
+    lut = np.array([((i / 255.0) ** gamma) * 255 for i in range(256)]).astype(np.uint8)
     return cv2.LUT(bal, lut)
 
 

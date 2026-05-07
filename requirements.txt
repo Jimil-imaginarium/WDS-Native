@@ -17,3 +17,6 @@ numpy>=1.24,<2.0
 
 # YOLO glove + person detector (loaded if models/hands.pt is present)
 ultralytics==8.3.30
+
+# ── Test (Phase 4) ──────────────────────────────────
+pytest==8.3.4
