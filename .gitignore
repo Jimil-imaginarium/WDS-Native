@@ -1,0 +1,32 @@
+# ── Python ──────────────────────────────────────────
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# ── Node ────────────────────────────────────────────
+web/node_modules/
+web/dist/
+web/.vite/
+*.log
+npm-debug.log*
+
+# ── Runtime / data ──────────────────────────────────
+wds.db                   # SQLite — contains hashed admin password + events
+snapshots/               # captured idle anomaly frames
+diag_frames/             # diagnostic frame dumps
+diag_pipeline/           # diagnostic frame dumps
+test_glove_result.jpg    # local sanity-check output
+models/hand_landmarker.task   # auto-downloaded by MediaPipe on first run
+
+# ── Editor / OS ─────────────────────────────────────
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# ── Secrets ─────────────────────────────────────────
+.env
+.env.*
+*.pem
