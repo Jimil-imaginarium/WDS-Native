@@ -487,15 +487,145 @@ class MediaPipeHands:
 
 
 # ─────────────────────────────────────────────────────────────────────────
+# MediaPipe Gesture Recognizer — landmarks + gesture classification per hand
+#
+# Used in HYBRID mode alongside YOLO: YOLO detects gloves+persons, this
+# detects bare-hand landmarks and gestures (Closed_Fist / Open_Palm /
+# Pointing_Up / Thumb_Up / Thumb_Down / Victory / ILoveYou / None).
+# Replaces the hand-rolled grip classifier with Google's built-in classifier.
+# ─────────────────────────────────────────────────────────────────────────
+DEFAULT_GESTURE_URL = (
+    "https://storage.googleapis.com/mediapipe-models/"
+    "gesture_recognizer/gesture_recognizer/float16/1/gesture_recognizer.task"
+)
+DEFAULT_GESTURE_PATH = "models/gesture_recognizer.task"
+
+# Gestures that DO NOT indicate the worker is gripping something.
+# Only a confidently-classified Open_Palm means "hand is open, not holding".
+# Everything else — Closed_Fist, Pointing_Up, Thumb_Up, Thumb_Down, Victory, ILoveYou,
+# AND "None" (MediaPipe couldn't classify — most common in factory poses) — is treated
+# as "potentially holding". Better to err toward ACTIVE for factory monitoring.
+NOT_HOLDING_GESTURES = {"Open_Palm"}
+
+
+@dataclass
+class GestureObs:
+    handedness: str                                  # "Left" / "Right" / "Unknown"
+    gesture: str                                     # e.g. "Closed_Fist", "Open_Palm", "None"
+    gesture_score: float                             # confidence of the gesture classifier
+    center: tuple[int, int]
+    bbox: tuple[int, int, int, int]
+    landmarks_px: list[tuple[int, int]]
+    is_moving: bool = False
+    score: float = 1.0                               # handedness detection confidence
+
+
+def _ensure_gesture_model(path: str = DEFAULT_GESTURE_PATH, url: str = DEFAULT_GESTURE_URL) -> str:
+    p = Path(path)
+    if p.exists() and p.stat().st_size > 0:
+        return path
+    p.parent.mkdir(parents=True, exist_ok=True)
+    log.info("Downloading gesture_recognizer.task → %s", path)
+    with requests.get(url, stream=True, timeout=120) as r:
+        r.raise_for_status()
+        with open(p, "wb") as f:
+            for chunk in r.iter_content(chunk_size=65536):
+                if chunk:
+                    f.write(chunk)
+    log.info("Gesture model saved (%d bytes)", p.stat().st_size)
+    return path
+
+
+class MediaPipeGestures:
+    """Gesture Recognizer wrapper — landmarks + gesture classification."""
+
+    def __init__(self, model_path: str | None = None,
+                 num_hands: int = 4,
+                 detection_conf: float = 0.3,
+                 presence_conf: float = 0.3,
+                 tracking_conf: float = 0.3):
+        import mediapipe as mp
+        from mediapipe.tasks import python as mp_python
+        from mediapipe.tasks.python import vision as mp_vision
+
+        self._mp = mp
+        path = _ensure_gesture_model(model_path or DEFAULT_GESTURE_PATH)
+
+        opts = mp_vision.GestureRecognizerOptions(
+            base_options                  = mp_python.BaseOptions(model_asset_path=path),
+            running_mode                  = mp_vision.RunningMode.VIDEO,
+            num_hands                     = num_hands,
+            min_hand_detection_confidence = detection_conf,
+            min_hand_presence_confidence  = presence_conf,
+            min_tracking_confidence       = tracking_conf,
+        )
+        self.recognizer = mp_vision.GestureRecognizer.create_from_options(opts)
+        self._t0_ns = time.monotonic_ns()
+        self._last_ts_ms = -1
+
+    def _next_ts(self) -> int:
+        ts = (time.monotonic_ns() - self._t0_ns) // 1_000_000
+        if ts <= self._last_ts_ms:
+            ts = self._last_ts_ms + 1
+        self._last_ts_ms = ts
+        return ts
+
+    def detect(self, frame_bgr) -> list[GestureObs]:
+        h, w = frame_bgr.shape[:2]
+        rgb = cv2.cvtColor(frame_bgr, cv2.COLOR_BGR2RGB)
+        mp_image = self._mp.Image(image_format=self._mp.ImageFormat.SRGB, data=rgb)
+        result = self.recognizer.recognize_for_video(mp_image, self._next_ts())
+
+        out: list[GestureObs] = []
+        if not result.hand_landmarks:
+            return out
+
+        for i, lm_list in enumerate(result.hand_landmarks):
+            # Gesture (top-1 only)
+            gesture_name, gesture_score = "None", 0.0
+            if i < len(result.gestures) and result.gestures[i]:
+                top = result.gestures[i][0]
+                gesture_name = top.category_name
+                gesture_score = float(top.score)
+
+            # Handedness
+            handedness, hand_score = "Unknown", 1.0
+            if i < len(result.handedness) and result.handedness[i]:
+                handedness = result.handedness[i][0].category_name
+                hand_score = float(result.handedness[i][0].score)
+
+            xs = [int(lm.x * w) for lm in lm_list]
+            ys = [int(lm.y * h) for lm in lm_list]
+            pts = list(zip(xs, ys))
+            cx, cy = int(sum(xs) / len(xs)), int(sum(ys) / len(ys))
+            x1, y1, x2, y2 = min(xs), min(ys), max(xs), max(ys)
+
+            out.append(GestureObs(
+                handedness=handedness, gesture=gesture_name, gesture_score=gesture_score,
+                center=(cx, cy), bbox=(x1, y1, x2, y2), landmarks_px=pts, score=hand_score,
+            ))
+        return out
+
+    def close(self):
+        try:
+            self.recognizer.close()
+        except Exception:
+            pass
+
+
+# ─────────────────────────────────────────────────────────────────────────
 # YOLO glove + person detector (loaded only if models/hands.pt exists)
 # ─────────────────────────────────────────────────────────────────────────
 @dataclass
 class GloveObs:
-    cls_name: str                                    # 'glove' or 'person'
+    cls_name: str                                    # 'hand', 'glove', or 'person'
     bbox: tuple[int, int, int, int]                  # x1, y1, x2, y2
     center: tuple[int, int]
     score: float = 1.0
     is_moving: bool = False
+    # True if this detection was merged into another (overlapping hand/glove pair).
+    # Annotation skips duplicates so each physical hand is drawn once.
+    is_duplicate: bool = False
 
 
 class GloveDetector:
@@ -549,19 +679,20 @@ class StationWorker:
         self.classifier = ActivityClassifier(smooth_frames=6)
         self.motion = StationMotion()
         self.reader = StreamReader(cfg.page_url)
-        self.detector: MediaPipeHands | None = None  # lazy — only when first frame arrives
+        self.detector: MediaPipeHands | None = None  # lazy — used only when YOLO is NOT loaded
 
-        # Optional YOLO glove + person detector. Loaded eagerly if models/hands.pt exists.
-        # When loaded, replaces MediaPipe entirely (faster + works on gloved hands).
+        # Optional YOLO multi-class detector. Loaded eagerly if models/hands.pt exists.
+        # When loaded, the worker uses YOLO only (no MediaPipe). The 3-class model
+        # (hand + glove + person) covers gloved AND bare-handed workers in one pass.
         self.glove_detector: GloveDetector | None = None
         yolo_path = Path("models/hands.pt")
         if yolo_path.exists() and yolo_path.stat().st_size > 0:
             try:
                 self.glove_detector = GloveDetector(str(yolo_path))
-                log.info("YOLO glove detector loaded: classes=%s",
+                log.info("YOLO detector loaded: classes=%s",
                          self.glove_detector.class_names)
             except Exception as exc:
-                log.error("Failed to load YOLO glove model: %s — falling back to MediaPipe", exc)
+                log.error("Failed to load YOLO model: %s — falling back to MediaPipe", exc)
                 self.glove_detector = None
 
         self._stop = threading.Event()
@@ -593,13 +724,26 @@ class StationWorker:
             try:
                 enhanced = apply_enhancement(frame, self.cfg.enhancement)
                 h, w = frame.shape[:2]
+                mp_hands: list = []
 
                 if self.glove_detector is not None:
+                    # YOLO multi-class path (hand + glove + person) drives activity.
                     detections = self.glove_detector.detect(enhanced)
                     hands_in_roi, moving, any_holding = self._yolo_activity_inputs(
                         detections, w, h
                     )
+                    # MediaPipe HandLandmarker runs in parallel ONLY for the skeleton
+                    # visualization. Its output does NOT feed the activity classifier.
+                    if self.detector is None:
+                        self.detector = MediaPipeHands(
+                            max_hands=4,
+                            detection_conf=0.3,
+                            presence_conf=0.3,
+                            tracking_conf=0.3,
+                        )
+                    mp_hands = self.detector.detect(enhanced)
                 else:
+                    # MediaPipe-only fallback (when YOLO model is missing)
                     if self.detector is None:
                         self.detector = MediaPipeHands()
                     detections = self.detector.detect(enhanced)
@@ -616,7 +760,7 @@ class StationWorker:
                 self.last_state = state
 
                 if self.glove_detector is not None:
-                    annotated = self._annotate_yolo(frame, detections, state)
+                    annotated = self._annotate_yolo(frame, detections, mp_hands, state)
                 else:
                     annotated = self._annotate(frame, detections, state)
                 ok, jpg = cv2.imencode(".jpg", annotated, [cv2.IMWRITE_JPEG_QUALITY, 70])
@@ -629,8 +773,17 @@ class StationWorker:
                 if now - self._last_publish >= 1.0:
                     self._last_publish = now
                     real_fps = self._compute_fps()
-                    log.info("[%s] real_fps=%.2f  state=%s  detections=%d",
-                             self.cfg.name, real_fps, state.value, len(detections))
+                    if self.glove_detector is not None:
+                        # Count deduplicated hand/glove entities (one per physical hand)
+                        entities = sum(1 for d in detections
+                                       if d.cls_name in ('hand', 'glove') and not d.is_duplicate)
+                        p_n = sum(1 for d in detections if d.cls_name == 'person')
+                        log.info("[%s] real_fps=%.2f state=%s hand_entities=%d person=%d skeleton=%d",
+                                 self.cfg.name, real_fps, state.value,
+                                 entities, p_n, len(mp_hands))
+                    else:
+                        log.info("[%s] real_fps=%.2f state=%s hands=%d",
+                                 self.cfg.name, real_fps, state.value, len(detections))
                     self._emit(state, detections, fps=real_fps)
             except Exception as exc:
                 log.exception("worker %s frame error: %s", self.cfg.name, exc)
@@ -664,41 +817,83 @@ class StationWorker:
         return in_roi, moving, any_holding
 
     def _yolo_activity_inputs(self, detections, w, h) -> tuple[int, int, bool]:
-        """Map YOLO glove+person detections into the same shape as _activity_inputs.
+        """Map YOLO 3-class (hand + glove + person) detections into the unified
+        (n_in_roi, moving, any_holding) tuple consumed by ActivityClassifier.
 
-        - hands_in_roi   = number of glove detections whose center is inside ROI
-        - moving         = 1 if the centroid of all in-ROI gloves moved > threshold else 0
-        - any_holding    = True if at least one glove in ROI (gloves = always holding)
+        Hand + glove dedup: a gloved hand often produces BOTH a `hand` box and a
+        `glove` box that overlap heavily. We treat overlapping (IOU > 0.5)
+        hand/glove pairs as a single entity, so each physical hand counts once.
+
+        Worker presence:
+          - any HAND or GLOVE (deduplicated) in ROI → worker's hand visible (strong)
+          - else any PERSON in ROI → worker at workstation (weaker)
+          - else → no worker
         """
         rx1 = int(self.cfg.roi[0] * w); ry1 = int(self.cfg.roi[1] * h)
         rx2 = int((self.cfg.roi[0] + self.cfg.roi[2]) * w)
         ry2 = int((self.cfg.roi[1] + self.cfg.roi[3]) * h)
 
-        glove_centers: list[tuple[int, int]] = []
-        for d in detections:
-            if d.cls_name != 'glove':
-                continue
-            cx, cy = d.center
-            if rx1 <= cx <= rx2 and ry1 <= cy <= ry2:
-                glove_centers.append((cx, cy))
+        def _in(c):
+            return rx1 <= c[0] <= rx2 and ry1 <= c[1] <= ry2
 
-        gloves_in_roi = len(glove_centers)
-        if gloves_in_roi == 0:
-            self.motion.prune(set())   # drop any stale "centroid" track
+        hand_or_glove = [d for d in detections
+                         if d.cls_name in ('hand', 'glove') and _in(d.center)]
+        person_in_roi = [d for d in detections
+                         if d.cls_name == 'person' and _in(d.center)]
+
+        # Greedy IOU dedup — each physical hand becomes ONE entity even if
+        # detected as both 'hand' and 'glove'.
+        entities = []
+        used: set[int] = set()
+        for i, d1 in enumerate(hand_or_glove):
+            if i in used:
+                continue
+            used.add(i)
+            d1.is_duplicate = False
+            for j in range(i + 1, len(hand_or_glove)):
+                if j in used:
+                    continue
+                if iou(d1.bbox, hand_or_glove[j].bbox) > 0.5:
+                    used.add(j)
+                    hand_or_glove[j].is_duplicate = True
+            entities.append(d1)
+        # Mark any not-in-roi detections as duplicates too so they don't show twice
+        for d in detections:
+            if d not in entities and d.cls_name in ('hand', 'glove'):
+                d.is_duplicate = getattr(d, "is_duplicate", True)
+            else:
+                d.is_duplicate = getattr(d, "is_duplicate", False)
+
+        any_holding = bool(entities)
+
+        if entities:
+            centers = [d.center for d in entities]
+        elif person_in_roi:
+            centers = [d.center for d in person_in_roi]
+        else:
+            self.motion.prune(set())
+            for d in detections:
+                d.is_moving = False
             return 0, 0, False
 
-        cx_avg = sum(c[0] for c in glove_centers) // gloves_in_roi
-        cy_avg = sum(c[1] for c in glove_centers) // gloves_in_roi
+        n_in_roi = len(centers)
+        cx_avg = sum(c[0] for c in centers) // n_in_roi
+        cy_avg = sum(c[1] for c in centers) // n_in_roi
         is_moving = self.motion.update("centroid", cx_avg, cy_avg)
         self.motion.prune({"centroid"})
 
-        # Annotate detections with motion state (used by _annotate_yolo for color)
         for d in detections:
-            d.is_moving = is_moving and d.cls_name == 'glove'
+            d.is_moving = is_moving
 
-        return gloves_in_roi, (1 if is_moving else 0), True
+        return n_in_roi, (1 if is_moving else 0), any_holding
 
-    def _annotate_yolo(self, frame, detections, state):
+    def _annotate_yolo(self, frame, detections, mp_hands, state):
+        """Draws YOLO bboxes (hand+glove deduped + person) and MediaPipe hand skeletons.
+
+        Duplicate hand/glove detections (overlapping pairs) are skipped — each
+        physical hand is drawn as a single box. MediaPipe skeleton landmarks are
+        overlaid for visualization only (they don't influence activity state).
+        """
         out = frame.copy()
         h, w = out.shape[:2]
         rx1 = int(self.cfg.roi[0] * w); ry1 = int(self.cfg.roi[1] * h)
@@ -707,15 +902,27 @@ class StationWorker:
         cv2.rectangle(out, (rx1, ry1), (rx2, ry2), (0, 200, 255), 2)
 
         for d in detections:
+            if d.is_duplicate:
+                continue   # overlapping hand/glove pair already represented by the primary box
             x1, y1, x2, y2 = d.bbox
-            if d.cls_name == 'glove':
-                col = (0, 220, 0) if d.is_moving else (0, 165, 255)   # green moving / amber still
+            if d.cls_name in ('hand', 'glove'):
+                # Both classes represent the same physical entity (a worker's hand)
+                col = (0, 220, 0) if d.is_moving else (0, 165, 255)     # green / amber
+                label = f"hand {d.score:.2f}"
             else:  # person
-                col = (255, 100, 255)                                 # magenta
+                col = (0, 220, 0) if d.is_moving else (255, 100, 255)   # green / magenta
+                label = f"person {d.score:.2f}"
             cv2.rectangle(out, (x1, y1), (x2, y2), col, 2)
-            label = f"{d.cls_name} {d.score:.2f}"
             cv2.putText(out, label, (x1, max(15, y1 - 5)),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.55, col, 2)
+
+        # MediaPipe 21-keypoint hand skeleton overlay — visualization only
+        for mh in mp_hands:
+            sk_col = (255, 220, 0)   # bright cyan
+            for a, b in HAND_CONNECTIONS:
+                cv2.line(out, mh.landmarks_px[a], mh.landmarks_px[b], sk_col, 2)
+            for px in mh.landmarks_px:
+                cv2.circle(out, px, 4, sk_col, -1)
 
         state_col = {State.ACTIVE: (0, 220, 0), State.IDLE: (0, 165, 255),
                      State.NO_WORKER: (180, 180, 180), State.CAMERA_LOST: (0, 0, 220)}[state]
@@ -766,9 +973,19 @@ class StationWorker:
 
     def _emit(self, state: State, detections: list, fps: float):
         avg_conf = sum(d.score for d in detections) / len(detections) if detections else 0.0
-        # MediaPipe detections have .handedness and .grip; YOLO detections do not.
+        # Detection objects may be HandObs (.grip), GestureObs (.gesture), or GloveObs (neither).
         left  = next((d for d in detections if getattr(d, "handedness", None) == "Left"),  None)
         right = next((d for d in detections if getattr(d, "handedness", None) == "Right"), None)
+
+        def _hand_label(d):
+            if d is None:
+                return None
+            if hasattr(d, "grip"):           # HandObs from MediaPipeHands
+                return d.grip.value
+            if hasattr(d, "gesture"):        # GestureObs from MediaPipeGestures
+                return d.gesture
+            return None
+
         self.on_event({
             "ts": datetime.now(tz=timezone.utc).isoformat(),
             "station_id": self.cfg.id,
@@ -776,8 +993,8 @@ class StationWorker:
             "state": state.value,
             "fps": fps,
             "conf": round(avg_conf, 3),
-            "grip_l": left.grip.value if left else None,
-            "grip_r": right.grip.value if right else None,
+            "grip_l": _hand_label(left),
+            "grip_r": _hand_label(right),
             "n_hands": len(detections),
         })
 

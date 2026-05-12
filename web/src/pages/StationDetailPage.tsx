@@ -39,9 +39,9 @@ export default function StationDetailPage() {
     enabled: !!stationId,
   });
 
-  // Force preview <img> reload at 4 fps so the live frame updates
+  // Force preview <img> reload at 10 fps so the live frame updates smoothly
   useEffect(() => {
-    const id = setInterval(() => setPreviewBust((b) => b + 1), 250);
+    const id = setInterval(() => setPreviewBust((b) => b + 1), 100);
     return () => clearInterval(id);
   }, []);
 

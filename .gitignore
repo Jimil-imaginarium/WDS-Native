@@ -18,7 +18,11 @@ snapshots/               # captured idle anomaly frames
 diag_frames/             # diagnostic frame dumps
 diag_pipeline/           # diagnostic frame dumps
 test_glove_result.jpg    # local sanity-check output
-models/hand_landmarker.task   # auto-downloaded by MediaPipe on first run
+models/hand_landmarker.task     # auto-downloaded by MediaPipe on first run
+models/gesture_recognizer.task  # auto-downloaded by MediaPipe on first run
+
+# ── Claude Code ─────────────────────────────────────
+.claude/
 
 # ── Editor / OS ─────────────────────────────────────
 .vscode/
