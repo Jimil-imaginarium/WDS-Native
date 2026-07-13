@@ -178,30 +178,30 @@ divyaforge/
 
 ## 4. Task checklist
 
-- [ ] **T0 Plan** — PLAN.md + DECISIONS.md committed
-- [ ] **T1 Scaffold** — Next 14 + TS + Tailwind + r3f/drei + zustand + vitest; builds clean
-- [ ] **T2 Core libs** — schema, catalog (+slot model), constraints engine, pricing engine,
+- [x] **T0 Plan** — PLAN.md + DECISIONS.md committed
+- [x] **T1 Scaffold** — Next 14 + TS + Tailwind + r3f/drei + zustand + vitest; builds clean
+- [x] **T2 Core libs** — schema, catalog (+slot model), constraints engine, pricing engine,
       share codec — **with unit tests** (pricing + constraints properly tested)
-- [ ] **T3 Placeholder assets** — GLB generator script; 3 vastra, 4 ayudha (modak, ankusha,
+- [x] **T3 Placeholder assets** — GLB generator script; 3 vastra, 4 ayudha (modak, ankusha,
       pasha, lotus), 2 bases; SVG thumbnails
-- [ ] **T4 3D core** — canvas (touch: 1-finger rotate, 2-finger pan/zoom), procedural
+- [x] **T4 3D core** — canvas (touch: 1-finger rotate, 2-finger pan/zoom), procedural
       parametric Ganesh (elephant head, morphs, 2/4 arms, bones), generic part sockets,
       lazy GLB loading
-- [ ] **T5 Tabs 1–3** — Deity (forms + Divine Inspiration), Face & Expression (6 sliders),
+- [x] **T5 Tabs 1–3** — Deity (forms + Divine Inspiration), Face & Expression (6 sliders),
       Body (height/weight/arm-count → dynamic gear slots)
-- [ ] **T6 Tabs 4–7** — Vastra (layered slots), Ayudha (per-hand, L/R aware, constraint-
+- [x] **T6 Tabs 4–7** — Vastra (layered slots), Ayudha (per-hand, L/R aware, constraint-
       gated UI), Pose (3 presets), Base (2 options)
-- [ ] **T7 Tab 8** — Color: zone list + click-zone-in-3D, palette picker, 3 preset palettes
-- [ ] **T8 Share** — save (auth-gated), share link `/d/[configId]`, read-only viewer + fork,
+- [x] **T7 Tab 8** — Color: zone list + click-zone-in-3D, palette picker, 3 preset palettes
+- [x] **T8 Share** — save (auth-gated), share link `/d/[configId]`, read-only viewer + fork,
       PNG snapshot export
-- [ ] **T9 Auth + designs** — Supabase auth, designs list; storage adapter + demo mode
-- [ ] **T10 Buy** — material/size selector, live price breakdown, checkout stub → orders row,
+- [x] **T9 Auth + designs** — Supabase auth, designs list; storage adapter + demo mode
+- [x] **T10 Buy** — material/size selector, live price breakdown, checkout stub → orders row,
       marked Razorpay integration point; server-side validation on both APIs
-- [ ] **T11 Supabase provisioning** — migrations + seed applied to a real project (MCP),
+- [x] **T11 Supabase provisioning** — migrations + seed applied to a real project (MCP),
       `.env.example`; graceful demo mode verified
-- [ ] **T12 Polish + NFRs** — mobile 380px layout, lazy loading/bundle check, Devanagari
+- [x] **T12 Polish + NFRs** — mobile 380px layout, lazy loading/bundle check, Devanagari
       labels, respectful defaults audit
-- [ ] **T13 Ship** — README demo script, `npm run build` + tests green, push, draft PR
+- [x] **T13 Ship** — README demo script, `npm run build` + tests green, push, draft PR
       (+ optional Vercel preview deploy)
 
 Commit after each increment with descriptive messages.
