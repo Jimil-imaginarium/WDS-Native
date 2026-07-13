@@ -138,6 +138,7 @@ function buildGlb(nodes) {
         metallicFactor: spec.metallic ?? 0.05,
         roughnessFactor: spec.roughness ?? 0.85,
       },
+      ...(spec.doubleSided ? { doubleSided: true } : {}),
     });
     json.meshes.push({
       name: spec.name,
@@ -188,6 +189,8 @@ function buildGlb(nodes) {
 
 /* ------------------------------------------------------------ part geometry */
 
+// Profile points must run bottom-to-top (increasing y) so lathe normals
+// face outward.
 const lathe = (points, segments = 40) =>
   new THREE.LatheGeometry(points.map(([x, y]) => new THREE.Vector2(x, y)), segments);
 
@@ -233,13 +236,13 @@ function buildPart(id) {
   switch (id) {
     case "dhoti-classic": {
       const cloth = lathe([
-        [0.345, 0.02], [0.36, -0.02], [0.40, -0.28], [0.43, -0.52], [0.465, -0.76],
+        [0.465, -0.76], [0.43, -0.52], [0.40, -0.28], [0.36, -0.02], [0.345, 0.02],
       ]);
       const border = new THREE.TorusGeometry(0.465, 0.022, 10, 48);
       border.rotateX(Math.PI / 2);
       border.translate(0, -0.76, 0);
       return [
-        { name: "cloth", geometry: cloth },
+        { name: "cloth", geometry: cloth, doubleSided: true },
         { name: "border", geometry: border, metallic: 0.6, roughness: 0.4 },
       ];
     }
@@ -249,7 +252,7 @@ function buildPart(id) {
       border.rotateX(Math.PI / 2);
       border.translate(0, -0.775, 0);
       return [
-        { name: "cloth", geometry: cloth },
+        { name: "cloth", geometry: cloth, doubleSided: true },
         { name: "border", geometry: border, metallic: 0.6, roughness: 0.4 },
       ];
     }
@@ -258,7 +261,7 @@ function buildPart(id) {
       sash.rotateZ(Math.PI * 0.55);
       sash.rotateY(0.35);
       sash.rotateX(0.25);
-      return [{ name: "cloth", geometry: sash }];
+      return [{ name: "cloth", geometry: sash, doubleSided: true }];
     }
     case "modak": {
       const sweet = lathe([

@@ -96,7 +96,7 @@ export default function BuilderCanvas({ config, interactive = true }: BuilderCan
     <Canvas
       shadows
       dpr={[1, 2]}
-      camera={{ position: [1.9, 1.9, 3.4], fov: 40 }}
+      camera={{ position: [2.2, 2.1, 4.6], fov: 40 }}
       gl={{ preserveDrawingBuffer: true, antialias: true }}
       onCreated={({ gl }) => {
         if (interactive) setGlCanvas(gl.domElement);
@@ -121,7 +121,7 @@ export default function BuilderCanvas({ config, interactive = true }: BuilderCan
         <meshStandardMaterial color="#EFE6D6" />
       </mesh>
       <OrbitControls
-        target={[0, 1.15, 0]}
+        target={[0, 1.25, 0]}
         enableDamping
         dampingFactor={0.08}
         minDistance={1.6}
