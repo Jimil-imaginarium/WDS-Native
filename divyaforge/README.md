@@ -32,7 +32,10 @@ npm run assets     # regenerate placeholder part GLBs + thumbnails
 
 1. **Landing** (`/`) → **Start creating** → the builder loads with the
    respectful default: standing Ganesh, modak in the left hand, classic
-   dhoti, lotus pedestal, Tanjore Gold palette.
+   dhoti, lotus pedestal. The Deity tab also offers **Krishna** (shyam-blue
+   Murlidhar in tribhanga with bansuri, peacock-feather mukut, yellow
+   pitambar) — switching deities starts a fresh design; Ganesh-only face
+   morphs (trunk, tusk) disappear for Krishna.
 2. **Deity tab** — switch **Standing ↔ Seated (Lalitasana)**. Hit
    **✦ Inspire me** (Divine Inspiration) a few times: it randomizes form,
    face, body, pose, parts, and palette — but *only within sacred-rule-valid

@@ -306,6 +306,29 @@ function buildPart(id) {
         { name: "petals", geometry: mergeGeometries([bud, petals]) },
       ];
     }
+    case "bansuri": {
+      // Transverse flute: grip about a third along; +Y along the shaft.
+      const shaft = new THREE.CylinderGeometry(0.018, 0.018, 0.55, 12);
+      shaft.translate(0, 0.095, 0); // grip at origin: shaft spans -0.18 .. +0.37
+      const capTop = new THREE.SphereGeometry(0.019, 8, 8);
+      capTop.translate(0, 0.37, 0);
+      const capBottom = new THREE.SphereGeometry(0.019, 8, 8);
+      capBottom.translate(0, -0.18, 0);
+      return [{ name: "flute", geometry: mergeGeometries([shaft, capTop, capBottom]), roughness: 0.5 }];
+    }
+    case "makhan-matki": {
+      const pot = lathe([
+        [0.002, 0.0], [0.075, 0.005], [0.105, 0.05], [0.115, 0.1],
+        [0.095, 0.15], [0.07, 0.165], [0.078, 0.185],
+      ], 28);
+      const butter = new THREE.SphereGeometry(0.062, 14, 10);
+      butter.scale(1, 0.55, 1);
+      butter.translate(0, 0.19, 0);
+      return [
+        { name: "pot", geometry: pot, roughness: 0.9 },
+        { name: "butter", geometry: butter, roughness: 0.6 },
+      ];
+    }
     case "lotus-peetha": {
       const seat = lathe([
         [0.66, 0.0], [0.68, 0.05], [0.60, 0.10], [0.50, 0.13],
@@ -346,6 +369,8 @@ function thumbnailSvg(part) {
     ankusha: `<rect x="29" y="20" width="5" height="32" rx="2" fill="${zone(0)}"/><path d="M31 20 q0 -10 14 -6" stroke="${zone(1)}" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M31 22 l0 -12" stroke="${zone(1)}" stroke-width="5" stroke-linecap="round"/>`,
     pasha: `<circle cx="32" cy="26" r="13" stroke="${zone(0)}" stroke-width="6" fill="none"/><rect x="29" y="38" width="6" height="14" rx="3" fill="${zone(0)}"/>`,
     "lotus-flower": `<rect x="30.5" y="30" width="3" height="22" rx="1.5" fill="${zone(1)}"/><g fill="${zone(0)}"><ellipse cx="32" cy="18" rx="5" ry="10"/><ellipse cx="22" cy="21" rx="5" ry="9" transform="rotate(-30 22 21)"/><ellipse cx="42" cy="21" rx="5" ry="9" transform="rotate(30 42 21)"/></g>`,
+    bansuri: `<rect x="10" y="29" width="44" height="6" rx="3" fill="${zone(0)}" transform="rotate(-18 32 32)"/><g fill="#00000033"><circle cx="26" cy="33" r="1.5"/><circle cx="32" cy="31" r="1.5"/><circle cx="38" cy="29" r="1.5"/></g>`,
+    "makhan-matki": `<path d="M18 30 q-2 14 14 14 q16 0 14 -14 q-1 -6 -5 -8 h-18 q-4 2 -5 8 z" fill="${zone(0)}"/><ellipse cx="32" cy="22" rx="11" ry="5" fill="${zone(1)}"/>`,
     "lotus-peetha": `<ellipse cx="32" cy="40" rx="24" ry="9" fill="${zone(1)}"/><g fill="${zone(0)}"><ellipse cx="14" cy="34" rx="4" ry="7" transform="rotate(-35 14 34)"/><ellipse cx="23" cy="31" rx="4" ry="8" transform="rotate(-15 23 31)"/><ellipse cx="32" cy="30" rx="4" ry="8"/><ellipse cx="41" cy="31" rx="4" ry="8" transform="rotate(15 41 31)"/><ellipse cx="50" cy="34" rx="4" ry="7" transform="rotate(35 50 34)"/></g>`,
     "square-peetha": `<rect x="10" y="30" width="44" height="14" rx="2" fill="${zone(0)}"/><rect x="14" y="24" width="36" height="6" rx="2" fill="${zone(1)}"/>`,
   };

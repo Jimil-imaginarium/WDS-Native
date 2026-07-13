@@ -1,12 +1,13 @@
 "use client";
 
-import { getDeity } from "@/lib/catalog";
+import { CATALOG, getDeity } from "@/lib/catalog";
 import { useBuilderStore } from "@/store/builderStore";
 import { OptionCard } from "@/components/ui/OptionCard";
 import { SectionLabel } from "@/components/ui/SectionLabel";
 
 export function DeityTab() {
   const config = useBuilderStore((s) => s.config);
+  const setDeity = useBuilderStore((s) => s.setDeity);
   const setForm = useBuilderStore((s) => s.setForm);
   const inspire = useBuilderStore((s) => s.inspire);
   const deity = getDeity(config.deityId);
@@ -14,25 +15,41 @@ export function DeityTab() {
 
   return (
     <div>
-      <SectionLabel en="Deity" hi="देवता" />
-      <div className="rounded-xl border border-saffron-500 bg-saffron-50 p-3 ring-2 ring-saffron-400">
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="font-semibold text-stone-900">{deity.name.en}</p>
-            <p className="text-sm text-stone-500">{deity.name.hi}</p>
-          </div>
-          <span
-            className="rounded-full bg-saffron-500 px-2 py-0.5 text-[10px] font-bold uppercase text-white"
-            title="Customization tier A — full customization"
+      <SectionLabel
+        en="Deity"
+        hi="देवता"
+        hint="Switching starts a fresh design for that deity."
+      />
+      <div className="grid grid-cols-2 gap-2">
+        {CATALOG.deities.map((d) => (
+          <button
+            key={d.id}
+            type="button"
+            onClick={() => setDeity(d.id)}
+            className={[
+              "rounded-xl border p-3 text-left transition",
+              config.deityId === d.id
+                ? "border-saffron-500 bg-saffron-50 ring-2 ring-saffron-400"
+                : "border-stone-200 bg-white hover:border-saffron-300",
+            ].join(" ")}
           >
-            Tier {deity.tier}
-          </span>
-        </div>
-        <p className="mt-2 text-xs text-stone-500">
-          M0 prototype: one deity, end to end. The 21-figure catalog (PRD §6.1)
-          plugs into this same menu.
-        </p>
+            <span className="flex items-center justify-between">
+              <span className="font-semibold text-stone-900">{d.name.en}</span>
+              <span
+                className="rounded-full bg-saffron-500 px-1.5 py-0.5 text-[9px] font-bold uppercase text-white"
+                title={`Customization tier ${d.tier}`}
+              >
+                {d.tier}
+              </span>
+            </span>
+            <span className="block text-sm text-stone-500">{d.name.hi}</span>
+          </button>
+        ))}
       </div>
+      <p className="mt-2 text-xs text-stone-400">
+        M0+ prototype: the full 21-figure catalog (PRD §6.1) plugs into this
+        same menu as data.
+      </p>
 
       <SectionLabel en="Form" hi="स्वरूप" hint="Canonical form presets" />
       <div className="grid grid-cols-2 gap-2">

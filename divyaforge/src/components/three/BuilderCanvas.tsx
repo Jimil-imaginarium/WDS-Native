@@ -6,7 +6,7 @@ import { ContactShadows, OrbitControls } from "@react-three/drei";
 import type { DesignConfig } from "@/lib/schema/config";
 import { getPart } from "@/lib/catalog";
 import { useBuilderStore } from "@/store/builderStore";
-import { GaneshModel } from "./GaneshModel";
+import { getBodyModel } from "./bodies";
 import { EquippedPart } from "./EquippedPart";
 
 /**
@@ -28,6 +28,7 @@ export function ModelRig({
   config, colorPick, onZoneClick, baseTopY, onBaseMeasured,
 }: ModelRigProps) {
   const basePart = config.parts.base ? getPart(config.parts.base) : null;
+  const BodyModel = getBodyModel(config.deityId);
   return (
     <group>
       {basePart && (
@@ -41,7 +42,7 @@ export function ModelRig({
         </Suspense>
       )}
       <group position={[0, basePart ? baseTopY : 0, 0]}>
-        <GaneshModel config={config} colorPick={colorPick} onZoneClick={onZoneClick} />
+        <BodyModel config={config} colorPick={colorPick} onZoneClick={onZoneClick} />
       </group>
     </group>
   );

@@ -21,6 +21,10 @@ treated as settled.
 | D14 | Per-part color zones are keyed `partId:zone` and body zones `body:zone`, stored flat in `config.colors` | Survives part swaps without orphaning body colors; orphaned part colors are pruned on unequip. |
 | D15 | Config schema carries `tier` on the **deity record**, not per-design; the builder reads allowed customization surface from the deity’s tier (`A` full, `B` size/material/base, `C` parametric toggles) | Tier must exist in schema now (kickoff); M0 implements tier A behavior only, engine checks are written so B/C simply disable tab groups. |
 
+| D16 | **Krishna added as second deity** (post-M0 "prove the catalog" step). Body models live in a registry (`components/three/bodies.ts`) — the only deity-id→code mapping in the app; everything else is catalog data. Deity records now carry `faceSliders` so Ganesh-only morphs (trunk/tusk) hide for other deities while the config schema stays at version 1. | Requested via session follow-up. |
+| D17 | Defaults now use each zone's canonical default color (Krishna: shyam-blue skin, yellow pitambar) instead of force-applying Tanjore Gold; preset palettes recolor only when explicitly applied | PRD §6.1 Tab 4 canonical skin presets. **⚑ Palettes still overwrite skin when applied — decide whether canonical skins should be palette-immune.** |
+| D18 | Krishna seed rules: makhan matki → left hand; bansuri tagged unique-item with **no hand-side rule** (flute-holding conventions vary; the murali pose raises both hands regardless) | **⚑ Cultural — confirm flute/butter-pot hand conventions with advisors.** |
+
 ## Open flags for Jimil
 
 1. **⚑ D5 iconography rules** — confirm hand assignments with an advisor; also decide

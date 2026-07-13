@@ -21,6 +21,16 @@ export interface PoseDef {
 }
 
 export const POSES: Record<string, PoseDef> = {
+  // Both front hands raised toward the lips, holding the flute transversely.
+  murali: {
+    armR1: { shoulder: [-0.55, 0.15, -0.95], elbow: [-1.95, 0.35, 0.1] },
+    armL1: { shoulder: [-0.7, -0.1, 0.75], elbow: [-2.05, -0.45, -0.1] },
+    armR2: { shoulder: [-0.15, 0, -1.05], elbow: [-0.85, 0, 0] },
+    armL2: { shoulder: [-0.15, 0, 1.05], elbow: [-0.85, 0, 0] },
+    rootTilt: 0.05,
+    headTilt: -0.14,
+    legLiftL: 0,
+  },
   // Front right hand raised in abhaya (blessing), left low holding offerings.
   ashirwad: {
     armR1: { shoulder: [-0.35, 0, -0.35], elbow: [-2.05, 0, 0.15] },

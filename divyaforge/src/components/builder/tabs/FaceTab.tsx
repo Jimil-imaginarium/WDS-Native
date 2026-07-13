@@ -1,5 +1,6 @@
 "use client";
 
+import { getDeity } from "@/lib/catalog";
 import { useBuilderStore } from "@/store/builderStore";
 import { Slider } from "@/components/ui/Slider";
 import { SectionLabel } from "@/components/ui/SectionLabel";
@@ -15,7 +16,14 @@ const FACE_SLIDERS = [
 
 export function FaceTab() {
   const face = useBuilderStore((s) => s.config.face);
+  const deityId = useBuilderStore((s) => s.config.deityId);
   const setFaceParam = useBuilderStore((s) => s.setFaceParam);
+  const deity = getDeity(deityId);
+  // The deity record says which canonical morphs apply (e.g. no trunk/tusk
+  // sliders for Krishna); omitted = all.
+  const active = FACE_SLIDERS.filter(
+    (s) => !deity?.faceSliders || deity.faceSliders.includes(s.key),
+  );
 
   return (
     <div>
@@ -25,7 +33,7 @@ export function FaceTab() {
         hint="Placeholder morphs — artist blendshapes swap in via the same 0–1 parameters."
       />
       <div className="space-y-4">
-        {FACE_SLIDERS.map((s) => (
+        {active.map((s) => (
           <Slider
             key={s.key}
             label={s.en}
@@ -37,9 +45,11 @@ export function FaceTab() {
           />
         ))}
       </div>
-      <p className="mt-4 text-xs text-stone-400">
-        The right tusk stays short — Ekadanta iconography.
-      </p>
+      {deityId === "ganesh" && (
+        <p className="mt-4 text-xs text-stone-400">
+          The right tusk stays short — Ekadanta iconography.
+        </p>
+      )}
     </div>
   );
 }

@@ -54,6 +54,7 @@ interface BuilderState {
   ruleNotice: LocalizedName | null;
 
   setActiveTab: (tab: TabId) => void;
+  setDeity: (deityId: string) => void;
   setForm: (formId: string) => void;
   setFaceParam: (key: keyof DesignConfig["face"], value: number) => void;
   setBodyParam: (key: "height" | "weight", value: number) => void;
@@ -115,6 +116,22 @@ export const useBuilderStore = create<BuilderState>((set, get) => ({
   ruleNotice: null,
 
   setActiveTab: (tab) => set({ activeTab: tab }),
+
+  setDeity: (deityId) =>
+    set((s) => {
+      if (s.config.deityId === deityId || !getDeity(deityId)) return s;
+      // Fresh respectful default for the new deity; keep material/size.
+      const config = defaultConfig(deityId);
+      config.material = s.config.material;
+      config.sizeInches = s.config.sizeInches;
+      return {
+        config,
+        savedDesignId: null,
+        designName: "",
+        dirty: true,
+        selectedZoneKey: null,
+      };
+    }),
 
   setForm: (formId) =>
     set((s) => ({ config: { ...s.config, form: formId }, dirty: true })),

@@ -170,6 +170,45 @@ describe("validateConfig — server-side gate", () => {
   });
 });
 
+describe("multi-deity catalog (Krishna)", () => {
+  const krishna = getDeity("krishna")!;
+  const kRules = rulesForDeity("krishna");
+  const kParts = partsForDeity("krishna");
+
+  it("krishna's respectful default validates clean", () => {
+    expect(validateConfig(defaultConfig("krishna"), CATALOG, kRules)).toEqual([]);
+  });
+
+  it("ganesh-only parts are not equippable on krishna (and vice versa)", () => {
+    const config = defaultConfig("krishna");
+    expect(canEquip({ deity: krishna, config, part: modak, slot: SLOTS.handL1, rules: kRules }).allowed).toBe(false);
+    const gConfig = defaultConfig();
+    const bansuri = getPart("bansuri")!;
+    expect(canEquip({ deity, config: gConfig, part: bansuri, slot: SLOTS.handR1, rules }).allowed).toBe(false);
+  });
+
+  it("makhan matki is left-hand only", () => {
+    const config = defaultConfig("krishna");
+    const makhan = getPart("makhan-matki")!;
+    expect(canEquip({ deity: krishna, config, part: makhan, slot: SLOTS.handL1, rules: kRules }).allowed).toBe(true);
+    const right = canEquip({ deity: krishna, config, part: makhan, slot: SLOTS.handR1, rules: kRules });
+    expect(right.allowed).toBe(false);
+    if (!right.allowed) expect(right.ruleId).toBe("krishna-makhan-left-hand");
+  });
+
+  it("divine inspiration stays constraint-clean for krishna across 100 seeded runs", () => {
+    for (let seed = 1; seed <= 100; seed++) {
+      const result = divineInspiration(
+        defaultConfig("krishna"), krishna, kParts, kRules, mulberry32(seed),
+      );
+      expect(validateConfig(result, CATALOG, kRules)).toEqual([]);
+      for (const [slotId, partId] of Object.entries(result.parts)) {
+        if (partId === "makhan-matki") expect(slotId.startsWith("handL")).toBe(true);
+      }
+    }
+  });
+});
+
 describe("divineInspiration — randomizes only within allowed combinations", () => {
   it("produces constraint-clean configs across 200 seeded runs", () => {
     for (let seed = 1; seed <= 200; seed++) {

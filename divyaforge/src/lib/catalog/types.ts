@@ -45,6 +45,11 @@ export interface DeityDef {
   poses: PosePreset[];
   /** Colorable zones on the figure itself (parts declare their own). */
   bodyZones: BodyZone[];
+  /**
+   * Which canonical face-morph sliders apply to this deity (the config always
+   * carries all six keys; the Face tab shows only these). Omitted = all.
+   */
+  faceSliders?: string[];
 }
 
 export type PartCategory = "attire" | "ornament" | "ayudha" | "base" | "vahana";

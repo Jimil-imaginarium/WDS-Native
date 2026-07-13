@@ -39,7 +39,50 @@
         { "id": "tusk", "name": { "en": "Tusks", "hi": "दन्त" }, "defaultColor": "#F5EFE2" },
         { "id": "eyes", "name": { "en": "Eyes", "hi": "नेत्र" }, "defaultColor": "#2E2014" },
         { "id": "mukut", "name": { "en": "Mukut (Crown)", "hi": "मुकुट" }, "defaultColor": "#D4A017" }
-      ]
+      ],
+      "faceSliders": ["eyeOpen", "browTilt", "smile", "trunkCurl", "earSize", "tuskLength"]
+    },
+    {
+      "id": "krishna",
+      "name": { "en": "Krishna", "hi": "कृष्ण" },
+      "tier": "A",
+      "styleTags": ["saumya"],
+      "forms": [
+        {
+          "id": "murlidhar",
+          "name": { "en": "Murlidhar (Tribhanga)", "hi": "मुरलीधर" },
+          "description": { "en": "Standing in the triple-bend stance", "hi": "त्रिभंग मुद्रा में खड़े" }
+        },
+        {
+          "id": "seated",
+          "name": { "en": "Seated (Lalitasana)", "hi": "ललितासन" },
+          "description": { "en": "Seated in royal ease", "hi": "ललितासन में विराजमान" }
+        }
+      ],
+      "poses": [
+        {
+          "id": "murali",
+          "name": { "en": "Murali (Flute-playing)", "hi": "मुरली" },
+          "description": { "en": "Both hands raised to the flute", "hi": "मुरली बजाते हुए" }
+        },
+        {
+          "id": "ashirwad",
+          "name": { "en": "Ashirwad (Blessing)", "hi": "आशीर्वाद" },
+          "description": { "en": "Front right hand raised in abhaya", "hi": "अभय मुद्रा में उठा दाहिना हाथ" }
+        },
+        {
+          "id": "nritya",
+          "name": { "en": "Nritya (Dancing)", "hi": "नृत्य" },
+          "description": { "en": "Joyful dancing bearing", "hi": "आनंदमय नृत्य भाव" }
+        }
+      ],
+      "bodyZones": [
+        { "id": "skin", "name": { "en": "Skin", "hi": "त्वचा" }, "defaultColor": "#4A6FA5" },
+        { "id": "eyes", "name": { "en": "Eyes", "hi": "नेत्र" }, "defaultColor": "#14100A" },
+        { "id": "mukut", "name": { "en": "Mukut (Crown)", "hi": "मुकुट" }, "defaultColor": "#D4A017" },
+        { "id": "feather", "name": { "en": "Mor Pankh (Feather)", "hi": "मोर पंख" }, "defaultColor": "#146B5C" }
+      ],
+      "faceSliders": ["eyeOpen", "browTilt", "smile", "earSize"]
     }
   ],
   "parts": [
@@ -160,6 +203,39 @@
       "styleTags": ["classic"]
     },
     {
+      "id": "bansuri",
+      "deityId": "krishna",
+      "category": "ayudha",
+      "tab": "ayudha",
+      "slot": "hand",
+      "name": { "en": "Bansuri (flute)", "hi": "बाँसुरी" },
+      "meshUrl": "/assets/parts/bansuri.glb",
+      "thumbnailUrl": "/assets/thumbs/bansuri.svg",
+      "colorZones": [
+        { "id": "flute", "name": { "en": "Flute", "hi": "बाँसुरी" }, "defaultColor": "#C9A227" }
+      ],
+      "constraintTags": ["unique-item"],
+      "priceVolume": 1.2,
+      "styleTags": ["classic"]
+    },
+    {
+      "id": "makhan-matki",
+      "deityId": "krishna",
+      "category": "ayudha",
+      "tab": "ayudha",
+      "slot": "hand",
+      "name": { "en": "Makhan Matki (butter pot)", "hi": "माखन मटकी" },
+      "meshUrl": "/assets/parts/makhan-matki.glb",
+      "thumbnailUrl": "/assets/thumbs/makhan-matki.svg",
+      "colorZones": [
+        { "id": "pot", "name": { "en": "Pot", "hi": "मटकी" }, "defaultColor": "#A05A2C" },
+        { "id": "butter", "name": { "en": "Butter", "hi": "माखन" }, "defaultColor": "#F5EFDD" }
+      ],
+      "constraintTags": ["makhan", "unique-item"],
+      "priceVolume": 1.3,
+      "styleTags": ["classic"]
+    },
+    {
       "id": "lotus-peetha",
       "deityId": null,
       "category": "base",
@@ -226,6 +302,17 @@
       "reason": {
         "en": "The modak is traditionally held in a left hand, within the trunk's reach.",
         "hi": "मोदक परम्परागत रूप से बाएँ हाथ में रखा जाता है।"
+      }
+    },
+    {
+      "id": "krishna-makhan-left-hand",
+      "deityId": "krishna",
+      "ruleType": "slot_allow",
+      "partTag": "makhan",
+      "slotSide": "left",
+      "reason": {
+        "en": "The makhan matki is traditionally held in a left hand.",
+        "hi": "माखन मटकी परम्परागत रूप से बाएँ हाथ में रखी जाती है।"
       }
     },
     {
