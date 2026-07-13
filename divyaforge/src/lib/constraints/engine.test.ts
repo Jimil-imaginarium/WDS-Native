@@ -209,6 +209,37 @@ describe("multi-deity catalog (Krishna)", () => {
   });
 });
 
+describe("multi-deity catalog (Shankar)", () => {
+  const shankar = getDeity("shankar")!;
+  const sRules = rulesForDeity("shankar");
+  const sParts = partsForDeity("shankar");
+
+  it("shankar's respectful default validates clean", () => {
+    expect(validateConfig(defaultConfig("shankar"), CATALOG, sRules)).toEqual([]);
+  });
+
+  it("trishul is right-hand only; damaru is unrestricted", () => {
+    const config = defaultConfig("shankar");
+    config.parts.handR1 = null;
+    config.parts.handL1 = null;
+    const trishul = getPart("trishul")!;
+    const damaru = getPart("damaru")!;
+    expect(canEquip({ deity: shankar, config, part: trishul, slot: SLOTS.handR1, rules: sRules }).allowed).toBe(true);
+    expect(canEquip({ deity: shankar, config, part: trishul, slot: SLOTS.handL1, rules: sRules }).allowed).toBe(false);
+    expect(canEquip({ deity: shankar, config, part: damaru, slot: SLOTS.handR1, rules: sRules }).allowed).toBe(true);
+    expect(canEquip({ deity: shankar, config, part: damaru, slot: SLOTS.handL1, rules: sRules }).allowed).toBe(true);
+  });
+
+  it("divine inspiration stays constraint-clean for shankar across 100 seeded runs", () => {
+    for (let seed = 1; seed <= 100; seed++) {
+      const result = divineInspiration(
+        defaultConfig("shankar"), shankar, sParts, sRules, mulberry32(seed),
+      );
+      expect(validateConfig(result, CATALOG, sRules)).toEqual([]);
+    }
+  });
+});
+
 describe("divineInspiration — randomizes only within allowed combinations", () => {
   it("produces constraint-clean configs across 200 seeded runs", () => {
     for (let seed = 1; seed <= 200; seed++) {

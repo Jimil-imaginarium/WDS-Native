@@ -48,6 +48,18 @@ const DEITY_DEFAULTS: Record<
       base: "lotus-peetha",
     },
   },
+  shankar: {
+    form: "padmasana",
+    pose: "dhyana",
+    weight: 0.5,
+    parts: {
+      vastraLower: "dhoti-classic",
+      vastraUpper: null,
+      handR1: "trishul",
+      handL1: "damaru",
+      base: "square-peetha",
+    },
+  },
 };
 
 export function defaultConfig(deityId: string = "ganesh"): DesignConfig {

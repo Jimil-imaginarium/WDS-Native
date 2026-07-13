@@ -4,6 +4,7 @@ import type { ComponentType } from "react";
 import type { DesignConfig } from "@/lib/schema/config";
 import { GaneshModel } from "./GaneshModel";
 import { KrishnaModel } from "./KrishnaModel";
+import { ShankarModel } from "./ShankarModel";
 
 export interface BodyModelProps {
   config: DesignConfig;
@@ -20,6 +21,7 @@ export interface BodyModelProps {
 const BODY_MODELS: Record<string, ComponentType<BodyModelProps>> = {
   ganesh: GaneshModel,
   krishna: KrishnaModel,
+  shankar: ShankarModel,
 };
 
 export function getBodyModel(deityId: string): ComponentType<BodyModelProps> {

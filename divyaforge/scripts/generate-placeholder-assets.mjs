@@ -329,6 +329,36 @@ function buildPart(id) {
         { name: "butter", geometry: butter, roughness: 0.6 },
       ];
     }
+    case "trishul": {
+      const shaft = new THREE.CylinderGeometry(0.02, 0.024, 0.85, 12);
+      shaft.translate(0, 0.22, 0); // grip at origin, long staff
+      const mid = new THREE.ConeGeometry(0.03, 0.18, 10);
+      mid.translate(0, 0.74, 0);
+      const prongL = new THREE.ConeGeometry(0.022, 0.15, 8);
+      prongL.translate(-0.07, 0.7, 0);
+      const prongR = new THREE.ConeGeometry(0.022, 0.15, 8);
+      prongR.translate(0.07, 0.7, 0);
+      const cross = new THREE.TorusGeometry(0.07, 0.014, 8, 20, Math.PI);
+      cross.translate(0, 0.6, 0);
+      return [
+        { name: "shaft", geometry: shaft, roughness: 0.7 },
+        { name: "prongs", geometry: mergeGeometries([mid, prongL, prongR, cross]), metallic: 0.85, roughness: 0.25 },
+      ];
+    }
+    case "damaru": {
+      const top = new THREE.ConeGeometry(0.075, 0.09, 16);
+      top.rotateX(Math.PI);
+      top.translate(0, 0.165, 0);
+      const bottom = new THREE.ConeGeometry(0.075, 0.09, 16);
+      bottom.translate(0, 0.075, 0);
+      const cords = new THREE.TorusGeometry(0.055, 0.008, 6, 20);
+      cords.rotateX(Math.PI / 2);
+      cords.translate(0, 0.12, 0);
+      return [
+        { name: "drum", geometry: mergeGeometries([top, bottom]), roughness: 0.75 },
+        { name: "cords", geometry: cords, roughness: 0.5 },
+      ];
+    }
     case "lotus-peetha": {
       const seat = lathe([
         [0.66, 0.0], [0.68, 0.05], [0.60, 0.10], [0.50, 0.13],
@@ -371,6 +401,8 @@ function thumbnailSvg(part) {
     "lotus-flower": `<rect x="30.5" y="30" width="3" height="22" rx="1.5" fill="${zone(1)}"/><g fill="${zone(0)}"><ellipse cx="32" cy="18" rx="5" ry="10"/><ellipse cx="22" cy="21" rx="5" ry="9" transform="rotate(-30 22 21)"/><ellipse cx="42" cy="21" rx="5" ry="9" transform="rotate(30 42 21)"/></g>`,
     bansuri: `<rect x="10" y="29" width="44" height="6" rx="3" fill="${zone(0)}" transform="rotate(-18 32 32)"/><g fill="#00000033"><circle cx="26" cy="33" r="1.5"/><circle cx="32" cy="31" r="1.5"/><circle cx="38" cy="29" r="1.5"/></g>`,
     "makhan-matki": `<path d="M18 30 q-2 14 14 14 q16 0 14 -14 q-1 -6 -5 -8 h-18 q-4 2 -5 8 z" fill="${zone(0)}"/><ellipse cx="32" cy="22" rx="11" ry="5" fill="${zone(1)}"/>`,
+    trishul: `<rect x="29.5" y="22" width="5" height="32" rx="2" fill="${zone(0)}"/><path d="M32 10 v10 M22 14 q0 8 10 8 q10 0 10 -8 M22 14 v-4 M42 14 v-4" stroke="${zone(1)}" stroke-width="4" fill="none" stroke-linecap="round"/>`,
+    damaru: `<path d="M18 16 h28 l-10 14 h-8 z" fill="${zone(0)}"/><path d="M18 44 h28 l-10 -14 h-8 z" fill="${zone(0)}"/><path d="M14 30 q18 -6 36 0" stroke="${zone(1)}" stroke-width="3" fill="none"/>`,
     "lotus-peetha": `<ellipse cx="32" cy="40" rx="24" ry="9" fill="${zone(1)}"/><g fill="${zone(0)}"><ellipse cx="14" cy="34" rx="4" ry="7" transform="rotate(-35 14 34)"/><ellipse cx="23" cy="31" rx="4" ry="8" transform="rotate(-15 23 31)"/><ellipse cx="32" cy="30" rx="4" ry="8"/><ellipse cx="41" cy="31" rx="4" ry="8" transform="rotate(15 41 31)"/><ellipse cx="50" cy="34" rx="4" ry="7" transform="rotate(35 50 34)"/></g>`,
     "square-peetha": `<rect x="10" y="30" width="44" height="14" rx="2" fill="${zone(0)}"/><rect x="14" y="24" width="36" height="6" rx="2" fill="${zone(1)}"/>`,
   };

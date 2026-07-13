@@ -83,6 +83,48 @@
         { "id": "feather", "name": { "en": "Mor Pankh (Feather)", "hi": "मोर पंख" }, "defaultColor": "#146B5C" }
       ],
       "faceSliders": ["eyeOpen", "browTilt", "smile", "earSize"]
+    },
+    {
+      "id": "shankar",
+      "name": { "en": "Shankar (Shiva)", "hi": "शंकर" },
+      "tier": "A",
+      "styleTags": ["saumya"],
+      "forms": [
+        {
+          "id": "padmasana",
+          "name": { "en": "Meditating (Padmasana)", "hi": "पद्मासन" },
+          "description": { "en": "Seated in deep meditation", "hi": "ध्यानमग्न पद्मासन" }
+        },
+        {
+          "id": "standing",
+          "name": { "en": "Standing (Blessing)", "hi": "स्थानक" },
+          "description": { "en": "Upright blessing stance", "hi": "आशीर्वाद मुद्रा में खड़े" }
+        }
+      ],
+      "poses": [
+        {
+          "id": "dhyana",
+          "name": { "en": "Dhyana (Meditative)", "hi": "ध्यान" },
+          "description": { "en": "Hands low and restful, serene bearing", "hi": "शांत ध्यानमग्न भाव" }
+        },
+        {
+          "id": "ashirwad",
+          "name": { "en": "Ashirwad (Blessing)", "hi": "आशीर्वाद" },
+          "description": { "en": "Front right hand raised in abhaya", "hi": "अभय मुद्रा में उठा दाहिना हाथ" }
+        },
+        {
+          "id": "nritya",
+          "name": { "en": "Nritya (Dancing)", "hi": "नृत्य" },
+          "description": { "en": "Dynamic dancing bearing", "hi": "नृत्य भाव" }
+        }
+      ],
+      "bodyZones": [
+        { "id": "skin", "name": { "en": "Skin", "hi": "त्वचा" }, "defaultColor": "#7A8FA6" },
+        { "id": "eyes", "name": { "en": "Eyes", "hi": "नेत्र" }, "defaultColor": "#14100A" },
+        { "id": "jata", "name": { "en": "Jata (matted hair)", "hi": "जटा" }, "defaultColor": "#4A3524" },
+        { "id": "chandra", "name": { "en": "Chandra (crescent)", "hi": "चन्द्र" }, "defaultColor": "#F5EFE2" }
+      ],
+      "faceSliders": ["eyeOpen", "browTilt", "smile", "earSize"]
     }
   ],
   "parts": [
@@ -236,6 +278,40 @@
       "styleTags": ["classic"]
     },
     {
+      "id": "trishul",
+      "deityId": "shankar",
+      "category": "ayudha",
+      "tab": "ayudha",
+      "slot": "hand",
+      "name": { "en": "Trishul (trident)", "hi": "त्रिशूल" },
+      "meshUrl": "/assets/parts/trishul.glb",
+      "thumbnailUrl": "/assets/thumbs/trishul.svg",
+      "colorZones": [
+        { "id": "shaft", "name": { "en": "Shaft", "hi": "दण्ड" }, "defaultColor": "#8A5A2B" },
+        { "id": "prongs", "name": { "en": "Prongs", "hi": "शूल" }, "defaultColor": "#C9CDD4" }
+      ],
+      "constraintTags": ["trishul", "unique-item"],
+      "priceVolume": 1.8,
+      "styleTags": ["classic"]
+    },
+    {
+      "id": "damaru",
+      "deityId": "shankar",
+      "category": "ayudha",
+      "tab": "ayudha",
+      "slot": "hand",
+      "name": { "en": "Damaru (drum)", "hi": "डमरू" },
+      "meshUrl": "/assets/parts/damaru.glb",
+      "thumbnailUrl": "/assets/thumbs/damaru.svg",
+      "colorZones": [
+        { "id": "drum", "name": { "en": "Drum", "hi": "डमरू" }, "defaultColor": "#8E4A2B" },
+        { "id": "cords", "name": { "en": "Cords", "hi": "डोरी" }, "defaultColor": "#C9A227" }
+      ],
+      "constraintTags": ["unique-item"],
+      "priceVolume": 1.1,
+      "styleTags": ["classic"]
+    },
+    {
       "id": "lotus-peetha",
       "deityId": null,
       "category": "base",
@@ -313,6 +389,17 @@
       "reason": {
         "en": "The makhan matki is traditionally held in a left hand.",
         "hi": "माखन मटकी परम्परागत रूप से बाएँ हाथ में रखी जाती है।"
+      }
+    },
+    {
+      "id": "shankar-trishul-right-hand",
+      "deityId": "shankar",
+      "ruleType": "slot_allow",
+      "partTag": "trishul",
+      "slotSide": "right",
+      "reason": {
+        "en": "The trishul is traditionally held in a right hand.",
+        "hi": "त्रिशूल परम्परागत रूप से दाहिने हाथ में धारण किया जाता है।"
       }
     },
     {
