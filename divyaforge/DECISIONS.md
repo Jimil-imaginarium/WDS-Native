@@ -25,6 +25,8 @@ treated as settled.
 | D17 | Defaults now use each zone's canonical default color (Krishna: shyam-blue skin, yellow pitambar) instead of force-applying Tanjore Gold; preset palettes recolor only when explicitly applied | PRD §6.1 Tab 4 canonical skin presets. **⚑ Palettes still overwrite skin when applied — decide whether canonical skins should be palette-immune.** |
 | D18 | Krishna seed rules: makhan matki → left hand; bansuri tagged unique-item with **no hand-side rule** (flute-holding conventions vary; the murali pose raises both hands regardless) | **⚑ Cultural — confirm flute/butter-pot hand conventions with advisors.** |
 
+| D19 | **Shankar (Shiva) added** — padmasana/standing forms, jata+chandra+third-eye placeholder body, trishul (right-hand rule) and damaru parts | **⚑ Cultural — trishul hand convention and damaru placement need advisor confirmation.** |
+
 ## Open flags for Jimil
 
 1. **⚑ D5 iconography rules** — confirm hand assignments with an advisor; also decide
