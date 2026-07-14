@@ -27,10 +27,27 @@ Lock mechanics (already built):
   joke. Forgiving fuzzy matching, a hint after 3 misses, mercy unlock after 6.
 - **The ceremony lock** ("The Last Secret") — she must press and hold a wax seal for
   3 seconds. Melodramatic on purpose. This is where your Q10 answer lives.
-- Days unlock in order. Day 4 needs all nine keys. Progress is saved on her phone, so
-  she can close the tab and come back.
+- Progress is saved on her phone, so she can close the tab and come back.
 - At the end she gets a **"Send him your answers"** button that shares everything she
   typed back to you. That's your prize.
+
+## The four-day schedule
+
+She cannot binge it. The game is paced across four real days, and each lock inside a
+day stays sealed until its time:
+
+- **Day 1 starts the day she first opens the vault** (default). Day 2 is the next
+  calendar day, Day 3 the day after, and Day 4 — the date reveal — the day after that.
+  Locked days show *"This door opens tomorrow."* on the map.
+- Prefer exact dates? Set `startDate: "2026-07-20"` to pin Day 1 (each day can also be
+  pinned individually with its `opensOn`).
+- **Within a day, the three locks open at set times** via each lock's `opensAt` —
+  defaults are **9:00** (morning), **14:00** (afternoon), and **20:00** (evening), so
+  the game follows her through the whole day. A not-yet lock shows
+  *"Sealed until 8:00 PM today."*
+- Days still unlock in order (Day 2 needs Day 1 finished), and Day 4 needs all nine
+  keys **and** its day to arrive. The map refreshes itself when a gate opens, so if
+  she's staring at the screen at 7:59 PM, the lock appears at 8:00.
 
 ## ✏️ Make it yours (the important part)
 
@@ -58,8 +75,7 @@ Also set:
 - `herName` — turns on the name gate ("this vault opens for one person")
 - `yourName` — signs the final letter
 - `finale.when / time / where / note` — the actual date details
-- `opensOn` on each day (optional, `"YYYY-MM-DD"`) — set real dates to force the
-  four-day pacing instead of letting her binge it in one night
+- `startDate` and each lock's `opensAt` — the four-day schedule (see above)
 
 Writing tips baked into the placeholders: quote her exact words, name tiny sensory
 details, and make every reveal contain something you've *never told her before* —
@@ -67,8 +83,10 @@ that's the reward, not the key.
 
 ## Test it, then reset it
 
-Play through the whole thing yourself first. When you're done, open
-`index.html?reset` once to wipe all progress before giving it to her.
+Play through the whole thing yourself first — open **`index.html?preview`**, which
+ignores every date/time gate so you can play all four days in one sitting. When you're
+done, open **`index.html?reset`** once to wipe all progress (including the Day 1
+anchor) before giving it to her. Send her the plain link — never the `?preview` one.
 
 ⚠️ Search the file for `✏️` before gifting — any leftover marker means a placeholder
 she was never meant to see.

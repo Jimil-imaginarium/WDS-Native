@@ -284,13 +284,24 @@
    THE VAULT OF US — personalization lives entirely in this VAULT object.
    Every line marked ✏️ is yours to rewrite. See vault-of-us/README.md for
    the map of the 10 questions → the fields below.
-   Test freely, then open index.html?reset to wipe progress before gifting.
+   Test with index.html?preview (ignores every date/time gate), then open
+   index.html?reset to wipe all progress before gifting.
    ═══════════════════════════════════════════════════════════════════════ */
 const VAULT = {
 
   herName: "",                      // ✏️ her name — the vault will only open for her. Leave "" to skip the name gate.
   yourName: "Jimil",                // ✏️ how you sign the final letter
   relationshipLength: "1 year and 5 months",
+
+  /* ── THE FOUR-DAY SCHEDULE ──
+     The game is paced across four real days, and each lock inside a day
+     stays sealed until its `opensAt` time of day.
+     • startDate "" (default): Day 1 is whatever day she first opens the
+       vault; Day 2 is the next day, Day 3 the day after, Day 4 after that.
+     • startDate "2026-07-20": pin Day 1 to an exact date instead.
+     Days also unlock in order — Day 2 needs Day 1 finished, etc.
+     While testing, index.html?preview ignores every date/time gate. */
+  startDate: "",                    // ✏️ "" = starts the day she first opens it, or pin e.g. "2026-07-20"
 
   days: [
 
@@ -300,11 +311,12 @@ const VAULT = {
     tagline: "How we became us.",
     glyph: "🌱",
     epigraph: "✏️ [One line about how you two met — Q1. e.g. \"It started with a borrowed pen and a terrible excuse to talk to you.\"]",
-    opensOn: null,                  // optional "YYYY-MM-DD" to date-gate this day
+    opensOn: "",                    // optional: pin THIS day to an exact "YYYY-MM-DD" (overrides startDate)
     locks: [
       {
         id: "moment-i-knew",
         type: "guesses",
+        opensAt: "09:00",           // ✏️ Day 1 — the morning key
         title: "The Moment I Knew",
         teaser: "Three guesses. One moment.",
         lines: [
@@ -334,6 +346,7 @@ const VAULT = {
       {
         id: "five-minutes-before",
         type: "story",
+        opensAt: "14:00",           // ✏️ Day 1 — the afternoon key
         title: "Five Minutes Before",
         teaser: "You'll need your gallery for this one.",
         lines: [
@@ -358,6 +371,7 @@ const VAULT = {
       {
         id: "the-confession",
         type: "guesses",
+        opensAt: "20:00",           // ✏️ Day 1 — the evening key
         title: "The Confession",
         teaser: "You were there. But you don't know all of it.",
         lines: [
@@ -390,11 +404,12 @@ const VAULT = {
     tagline: "The tiny moments you don't realize I remember.",
     glyph: "🫙",
     epigraph: "The big days were easy to remember. These are the ones I chose to keep.",
-    opensOn: null,
+    opensOn: "",                    // optional: pin THIS day to an exact "YYYY-MM-DD" (overrides startDate)
     locks: [
       {
         id: "words-that-stayed",
         type: "guesses",
+        opensAt: "09:00",           // ✏️ Day 2 — the morning key
         title: "The Words That Stayed",
         teaser: "You said it casually. I never put it down.",
         lines: [
@@ -422,6 +437,7 @@ const VAULT = {
       {
         id: "the-adorable-thing",
         type: "guesses",
+        opensAt: "14:00",           // ✏️ Day 2 — the afternoon key
         title: "The Thing You Do",
         teaser: "You don't even know you do it.",
         lines: [
@@ -448,6 +464,7 @@ const VAULT = {
       {
         id: "only-us",
         type: "passphrase",
+        opensAt: "20:00",           // ✏️ Day 2 — the evening key
         title: "Only Us",
         teaser: "This lock has a real answer. Two people know it.",
         lines: [
@@ -485,11 +502,12 @@ const VAULT = {
     tagline: "Where we're going.",
     glyph: "🔭",
     epigraph: "The vault isn't just for keeping what happened. It's for keeping what's next.",
-    opensOn: null,
+    opensOn: "",                    // optional: pin THIS day to an exact "YYYY-MM-DD" (overrides startDate)
     locks: [
       {
         id: "one-memory",
         type: "story",
+        opensAt: "09:00",           // ✏️ Day 3 — the morning key
         title: "The One You'd Save",
         teaser: "There is no correct answer.",
         lines: [
@@ -515,6 +533,7 @@ const VAULT = {
       {
         id: "the-list",
         type: "guesses",
+        opensAt: "14:00",           // ✏️ Day 3 — the afternoon key
         title: "The List",
         teaser: "Somewhere in my head, there's a list.",
         lines: [
@@ -542,6 +561,7 @@ const VAULT = {
       {
         id: "the-last-secret",
         type: "ceremony",
+        opensAt: "20:00",           // ✏️ Day 3 — the evening key
         title: "The Last Secret",
         teaser: "The deepest shelf in the vault.",
         lines: [
@@ -599,10 +619,12 @@ try{
   const s = JSON.parse(localStorage.getItem(STORE) || 'null');
   if (s && typeof s === 'object') state = Object.assign(state, s);
 }catch(e){}
-if (new URLSearchParams(location.search).has('reset')){
+const QUERY = new URLSearchParams(location.search);
+const PREVIEW = QUERY.has('preview'); // ?preview ignores every date/time gate — for his test runs
+if (QUERY.has('reset')){
   localStorage.removeItem(STORE);
   state = { entered:false, keys:{}, answers:{} };
-  history.replaceState(null, '', location.pathname);
+  history.replaceState(null, '', location.pathname + (PREVIEW ? '?preview' : ''));
 }
 const save = () => { try{ localStorage.setItem(STORE, JSON.stringify(state)); }catch(e){} };
 
@@ -616,8 +638,61 @@ const TOTAL = ALL_LOCKS.length;
 const memoryNo = lock => ALL_LOCKS.findIndex(l => l.id === lock.id) + 1;
 const keyCount = () => ALL_LOCKS.filter(l => state.keys[l.id]).length;
 const dayDone  = day => day.locks.every(l => state.keys[l.id]);
-const dayDateOk = day => !day.opensOn || (new Date(day.opensOn + 'T00:00:00') <= new Date());
-const dayAvailable = i => dayDateOk(VAULT.days[i]) && (i === 0 || dayDone(VAULT.days[i-1]));
+
+/* ── date & time gates ── */
+const pad2 = n => String(n).padStart(2, '0');
+const todayStr = () => { const d = new Date(); return d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate()); };
+const validDate = s => typeof s === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(s);
+const anchorDate = () => validDate(VAULT.startDate) ? VAULT.startDate : (validDate(state.firstOpened) ? state.firstOpened : null);
+function dateFor(i){ /* midnight when day i opens (i = VAULT.days.length → the finale); null = ungated */
+  const day = VAULT.days[i];
+  if (day && validDate(day.opensOn)) return new Date(day.opensOn + 'T00:00:00');
+  const a = anchorDate();
+  if (!a) return null;
+  const d = new Date(a + 'T00:00:00');
+  d.setDate(d.getDate() + i);
+  return d;
+}
+function lockOpensAt(dayIdx, lock){
+  const base = dateFor(dayIdx);
+  if (!base) return null;
+  const d = new Date(base);
+  if (typeof lock.opensAt === 'string' && /^\d{1,2}:\d{2}$/.test(lock.opensAt)){
+    const parts = lock.opensAt.split(':');
+    d.setHours(+parts[0], +parts[1], 0, 0);
+  }
+  return d;
+}
+const dayDateOk = i => { const d = dateFor(i); return !d || new Date() >= d; };
+const lockTimeOk = (dayIdx, lock) => { const d = lockOpensAt(dayIdx, lock); return !d || new Date() >= d; };
+const dayAvailable = i => PREVIEW || (dayDateOk(i) && (i === 0 || dayDone(VAULT.days[i - 1])));
+const lockAvailable = (dayIdx, j) => {
+  const locks = VAULT.days[dayIdx].locks;
+  return PREVIEW || ((j === 0 || !!state.keys[locks[j - 1].id]) && lockTimeOk(dayIdx, locks[j]));
+};
+const fmtTime = d => d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+function fmtWhen(d){
+  const now = new Date();
+  const days = Math.round((new Date(d.getFullYear(), d.getMonth(), d.getDate()) - new Date(now.getFullYear(), now.getMonth(), now.getDate())) / 86400000);
+  if (days <= 0) return 'today';
+  if (days === 1) return 'tomorrow';
+  return 'on ' + d.toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric' });
+}
+
+let liveScreen = null; // map/day screens re-render themselves when a gate flips open
+function gateSig(){
+  let s = '';
+  VAULT.days.forEach((day, i) => {
+    s += dayAvailable(i) ? '1' : '0';
+    day.locks.forEach((l, j) => { s += lockAvailable(i, j) ? '1' : '0'; });
+  });
+  return s + (dayDateOk(VAULT.days.length) ? '1' : '0');
+}
+setInterval(() => {
+  if (!liveScreen) return;
+  const sig = gateSig();
+  if (sig !== liveScreen.sig){ liveScreen.sig = sig; liveScreen.fn(); }
+}, 15000);
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const buzz = ms => { try{ if (navigator.vibrate) navigator.vibrate(ms); }catch(e){} };
@@ -628,7 +703,7 @@ function el(tag, cls, text){
   if (text != null) n.textContent = text;
   return n;
 }
-function clear(){ app.replaceChildren(); window.scrollTo(0,0); }
+function clear(){ liveScreen = null; app.replaceChildren(); window.scrollTo(0,0); }
 function snap(node){ try{ node.scrollIntoView({behavior:'smooth', block:'end'}); }catch(e){} }
 
 function toast(msg){
@@ -716,7 +791,9 @@ function renderGate(){
   dock.style.marginTop = '30px';
 
   const enter = () => {
-    state.entered = true; save();
+    state.entered = true;
+    if (!validDate(state.firstOpened)) state.firstOpened = todayStr(); // anchors Day 1 in auto mode
+    save();
     sc.classList.add('opening');
     buzz(30);
     setTimeout(renderMap, 1600);
@@ -755,6 +832,7 @@ function renderGate(){
 
 function renderMap(){
   clear();
+  liveScreen = { fn: renderMap, sig: gateSig() };
   const sc = el('div','screen');
   sc.appendChild(el('div','eyebrow','The Vault of Us'));
   const h = el('h1','title serif', VAULT.herName ? ('For ' + VAULT.herName) : 'Four days. Nine keys.');
@@ -776,8 +854,8 @@ function renderMap(){
     body.appendChild(el('h3', null, day.title));
     let sub = day.tagline;
     if (!avail){
-      sub = !dayDateOk(day)
-        ? ('Opens on ' + day.opensOn + '.')
+      sub = !dayDateOk(i)
+        ? ('This door opens ' + fmtWhen(dateFor(i)) + '.')
         : ('Finish Day ' + i + ' to open this door.');
     }
     body.appendChild(el('p', null, fmt(sub)));
@@ -794,14 +872,19 @@ function renderMap(){
   });
 
   const allDays = VAULT.days.every(dayDone);
-  const fin = el('button','day-card' + (allDays ? '' : ' locked'));
-  fin.appendChild(el('div','glyph', allDays ? VAULT.finale.glyph : '🔒'));
+  const finOpen = PREVIEW || (allDays && dayDateOk(VAULT.days.length));
+  const fin = el('button','day-card' + (finOpen ? '' : ' locked'));
+  fin.appendChild(el('div','glyph', finOpen ? VAULT.finale.glyph : '🔒'));
   const fb = el('div');
   fb.appendChild(el('div','d-eyebrow','Day ' + (VAULT.days.length + 1)));
   fb.appendChild(el('h3', null, VAULT.finale.title));
-  fb.appendChild(el('p', null, allDays ? fmt(VAULT.finale.tagline) : ('The final door needs all ' + TOTAL + ' keys. ' + (TOTAL - keyCount()) + ' to go.')));
+  let finSub;
+  if (finOpen) finSub = fmt(VAULT.finale.tagline);
+  else if (!allDays) finSub = 'The final door needs all ' + TOTAL + ' keys. ' + (TOTAL - keyCount()) + ' to go.';
+  else finSub = 'The final door opens ' + fmtWhen(dateFor(VAULT.days.length)) + '.';
+  fb.appendChild(el('p', null, finSub));
   fin.appendChild(fb);
-  if (allDays) fin.addEventListener('click', renderFinale);
+  if (finOpen) fin.addEventListener('click', renderFinale);
   days.appendChild(fin);
 
   sc.appendChild(days);
@@ -811,6 +894,7 @@ function renderMap(){
 
 function renderDay(i){
   clear();
+  liveScreen = { fn: () => renderDay(i), sig: gateSig() };
   const day = VAULT.days[i];
   const sc = el('div','screen');
 
@@ -829,12 +913,17 @@ function renderDay(i){
   const list = el('div','locks');
   day.locks.forEach((lock, j) => {
     const done = !!state.keys[lock.id];
-    const avail = done || j === 0 || !!state.keys[day.locks[j-1].id];
+    const avail = done || lockAvailable(i, j);
     const row = el('button','lock-row' + (done ? ' done' : (avail ? '' : ' locked')));
     row.appendChild(el('div','num', String(memoryNo(lock))));
     const body = el('div');
     body.appendChild(el('h4', null, lock.title));
-    body.appendChild(el('p', null, done ? 'Unlocked — tap to reread the memory.' : (avail ? fmt(lock.teaser) : 'Open the lock above first.')));
+    let desc;
+    if (done) desc = 'Unlocked — tap to reread the memory.';
+    else if (avail) desc = fmt(lock.teaser);
+    else if (!(j === 0 || state.keys[day.locks[j-1].id])) desc = 'Open the lock above first.';
+    else { const t = lockOpensAt(i, lock); desc = 'Sealed until ' + fmtTime(t) + ' ' + fmtWhen(t) + '.'; }
+    body.appendChild(el('p', null, desc));
     row.appendChild(body);
     row.appendChild(el('div','state', done ? '🔑' : '🔒'));
     if (done) row.addEventListener('click', () => renderReveal(i, lock, true));
@@ -1078,7 +1167,7 @@ function renderReveal(dayIdx, lock, replay){
 
 function renderFinale(){
   clear();
-  if (keyCount() < TOTAL) return renderMap();
+  if (keyCount() < TOTAL || !(PREVIEW || dayDateOk(VAULT.days.length))) return renderMap();
   const sc = el('div','screen gate');
 
   const wrap = el('div','dial-wrap');
