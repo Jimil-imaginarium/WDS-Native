@@ -1,0 +1,112 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-serif: "Cormorant Garamond";
+  --font-sans: "Manrope";
+
+  /* Light: cream, soft pink, rose gold */
+  --background: 33 45% 97%;
+  --foreground: 340 25% 16%;
+  --card: 30 50% 99%;
+  --card-foreground: 340 25% 16%;
+  --popover: 30 50% 99%;
+  --popover-foreground: 340 25% 16%;
+  --primary: 343 55% 55%;
+  --primary-foreground: 30 50% 99%;
+  --secondary: 340 35% 93%;
+  --secondary-foreground: 340 30% 26%;
+  --muted: 33 30% 92%;
+  --muted-foreground: 340 12% 45%;
+  --accent: 340 40% 92%;
+  --accent-foreground: 340 35% 26%;
+  --destructive: 0 65% 51%;
+  --destructive-foreground: 30 50% 99%;
+  --border: 340 25% 87%;
+  --input: 340 25% 85%;
+  --ring: 343 55% 55%;
+  --glow: 343 70% 70%;
+  --radius: 1.25rem;
+}
+
+.dark {
+  --background: 340 25% 7%;
+  --foreground: 33 40% 92%;
+  --card: 340 22% 10%;
+  --card-foreground: 33 40% 92%;
+  --popover: 340 22% 10%;
+  --popover-foreground: 33 40% 92%;
+  --primary: 343 60% 62%;
+  --primary-foreground: 340 30% 8%;
+  --secondary: 340 18% 16%;
+  --secondary-foreground: 33 35% 88%;
+  --muted: 340 15% 15%;
+  --muted-foreground: 33 15% 62%;
+  --accent: 340 20% 18%;
+  --accent-foreground: 33 35% 90%;
+  --destructive: 0 62% 45%;
+  --destructive-foreground: 33 40% 95%;
+  --border: 340 15% 20%;
+  --input: 340 15% 22%;
+  --ring: 343 60% 62%;
+  --glow: 343 65% 45%;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  h1, h2, h3, h4 {
+    @apply font-serif;
+  }
+  ::selection {
+    @apply bg-rose-300/50;
+  }
+}
+
+@layer components {
+  /* Glassmorphism surface */
+  .glass {
+    @apply border border-white/40 bg-white/60 backdrop-blur-xl shadow-glass dark:border-white/10 dark:bg-white/5;
+  }
+
+  /* Ambient romantic backdrop */
+  .romance-bg {
+    background:
+      radial-gradient(ellipse 80% 50% at 50% -10%, hsl(var(--glow) / 0.22), transparent),
+      radial-gradient(ellipse 60% 40% at 90% 100%, hsl(38 60% 70% / 0.14), transparent),
+      hsl(var(--background));
+  }
+
+  .text-gradient-rose {
+    @apply bg-gradient-to-r from-rose-500 via-rose-400 to-gold-400 bg-clip-text text-transparent;
+  }
+
+  .luxe-ring {
+    box-shadow: 0 0 0 1px hsl(var(--glow) / 0.25), 0 8px 40px -12px hsl(var(--glow) / 0.35);
+  }
+}
+
+/* Elegant thin scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--primary) / 0.25);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--primary) / 0.45);
+}
