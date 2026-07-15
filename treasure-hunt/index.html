@@ -691,7 +691,7 @@ function playerRiddleView(a){
     <div class="card fadein">
       <div class="row" style="justify-content:space-between">
         <span class="pill info">Chapter ${n}</span>
-        <span class="pill ${st==='completed'?'ok':'info'}">${esc(statusLabel(st))}</span>
+        <span class="pill ${st==='completed'?'ok':st==='answer_pending'?'wait':'info'}">${esc(st==='completed'?'Completed':st==='answer_pending'?'In review':st==='retry_unlocked'?'Answer again':'Ready')}</span>
       </div>
       <h1 style="font-size:32px;margin:12px 0 10px">${esc(c.title||r.title)}</h1>
       <p style="font-size:17px;line-height:1.8;margin-top:10px;white-space:pre-wrap">${nl2br(c.story||'')}</p>
