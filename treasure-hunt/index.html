@@ -224,7 +224,13 @@ if(typeof supabase==='undefined' || !supabase.createClient){
     'The app needs to reach the Supabase and jsDelivr networks.</div></div>';
   throw new Error('supabase-js failed to load');
 }
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON, { realtime:{ params:{ eventsPerSecond:5 } } });
+// Per-TAB auth storage: lets you keep Admin open in one tab and Player in another
+// (e.g. for testing) without the two logins overwriting each other. On real
+// separate devices this behaves exactly like normal "stay logged in for this session".
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON, {
+  auth:{ storage: window.sessionStorage, storageKey:'th-auth', persistSession:true, autoRefreshToken:true, detectSessionInUrl:false },
+  realtime:{ params:{ eventsPerSecond:5 } }
+});
 
 /* ============================================================
    SMALL HELPERS
