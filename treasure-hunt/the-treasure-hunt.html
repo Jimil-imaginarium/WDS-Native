@@ -1,0 +1,853 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>The Treasure Hunt ❤️</title>
+<style>
+/* ═══════════════════════════════════════════════════════════
+   The Treasure Hunt ❤️ — single-file romantic treasure hunt
+   A committed dark "night-sky treasure map" world.
+   ═══════════════════════════════════════════════════════════ */
+:root{
+  --ink:#140a22;
+  --ink-2:#1e1236;
+  --panel:rgba(255,255,255,.045);
+  --panel-line:rgba(255,255,255,.10);
+  --rose:#f472b6;
+  --rose-deep:#db2777;
+  --gold:#fbbf24;
+  --gold-soft:#fde68a;
+  --paper:#f7ecd8;
+  --text:#f4e9f3;
+  --mist:#b7a6cc;         /* plum-biased neutral, chosen not defaulted */
+  --good:#34d399;
+  --bad:#fb7185;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --r:18px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{
+  font-family:var(--sans);
+  color:var(--text);
+  background:var(--ink);
+  min-height:100dvh;
+  overflow-x:hidden;
+  line-height:1.6;
+  background-image:
+    radial-gradient(120% 80% at 50% -10%, #3a1d5e 0%, transparent 55%),
+    radial-gradient(90% 60% at 85% 115%, rgba(219,39,119,.30) 0%, transparent 60%),
+    linear-gradient(180deg,#160b28 0%,#0f0720 100%);
+  background-attachment:fixed;
+}
+::selection{background:rgba(244,114,182,.35)}
+
+/* ── ambient background layers ── */
+#sky,#hearts{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.star{position:absolute;border-radius:50%;background:#fff;opacity:.5;animation:tw var(--d,3s) ease-in-out infinite}
+.star.gold{background:var(--gold-soft);box-shadow:0 0 6px var(--gold-soft)}
+@keyframes tw{0%,100%{opacity:.15;transform:scale(1)}50%{opacity:.95;transform:scale(1.5)}}
+.heart{position:absolute;bottom:-40px;color:var(--rose);opacity:.25;animation:rise linear infinite}
+@keyframes rise{
+  0%{transform:translateY(0) rotate(0);opacity:0}
+  10%{opacity:var(--o,.25)}
+  90%{opacity:var(--o,.25)}
+  100%{transform:translateY(-112vh) rotate(var(--rot,15deg));opacity:0}
+}
+#fx{position:fixed;inset:0;pointer-events:none;z-index:60}
+
+/* ── shell ── */
+.wrap{position:relative;z-index:10;max-width:760px;margin:0 auto;padding:22px 20px 80px}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px;min-height:44px}
+.brand{display:flex;align-items:center;gap:9px;font-family:var(--serif);font-size:1.15rem;letter-spacing:.2px}
+.brand .g{background:linear-gradient(100deg,#f9a8d4,#f472b6,#fbcfe8,#f472b6);-webkit-background-clip:text;background-clip:text;color:transparent}
+.iconbtn{width:42px;height:42px;border-radius:50%;border:1px solid var(--panel-line);background:var(--panel);
+  color:var(--text);display:grid;place-items:center;cursor:pointer;font-size:1.05rem;
+  backdrop-filter:blur(8px);transition:transform .15s,background .2s}
+.iconbtn:hover{background:rgba(255,255,255,.09)}
+.iconbtn:active{transform:scale(.94)}
+.iconbtn:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(--rose);outline-offset:2px}
+
+/* ── glass panel ── */
+.glass{background:var(--panel);border:1px solid var(--panel-line);border-radius:var(--r);
+  backdrop-filter:blur(12px);box-shadow:0 24px 60px -30px rgba(0,0,0,.8)}
+
+/* ── type ── */
+.eyebrow{font-size:.72rem;letter-spacing:.32em;text-transform:uppercase;color:var(--mist)}
+.display{font-family:var(--serif);line-height:1.08;text-wrap:balance;font-weight:600}
+.romantic{background:linear-gradient(100deg,#f9a8d4 10%,#f472b6 40%,#fde6f2 52%,#f472b6 64%,#f9a8d4 90%);
+  background-size:200% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:sh 5s linear infinite}
+.treasure{background:linear-gradient(100deg,var(--gold-soft) 20%,var(--gold) 42%,#fff7db 52%,var(--gold) 62%,var(--gold-soft) 82%);
+  background-size:200% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:sh 4s linear infinite}
+@keyframes sh{to{background-position:200% center}}
+.muted{color:var(--mist)}
+.serif-body{font-family:var(--serif);font-style:italic;color:#efe2ee}
+
+/* ── buttons ── */
+.btn{appearance:none;border:0;cursor:pointer;font-family:var(--sans);font-weight:600;font-size:1rem;
+  padding:14px 26px;border-radius:999px;display:inline-flex;align-items:center;gap:9px;
+  transition:transform .15s,box-shadow .25s,filter .2s;color:#fff}
+.btn:active{transform:scale(.97)}
+.btn-rose{background:linear-gradient(100deg,var(--rose-deep),var(--rose));box-shadow:0 12px 30px -10px rgba(244,114,182,.7)}
+.btn-rose:hover{box-shadow:0 16px 40px -10px rgba(244,114,182,.9)}
+.btn-gold{background:linear-gradient(100deg,var(--gold),var(--gold-soft));color:#5a3d05;
+  box-shadow:0 12px 30px -10px rgba(251,191,36,.7)}
+.btn-gold:hover{filter:brightness(1.05)}
+.btn-ghost{background:var(--panel);border:1px solid var(--panel-line);color:var(--text)}
+.btn-ghost:hover{background:rgba(255,255,255,.09)}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+.btn-lg{padding:17px 40px;font-size:1.08rem}
+
+/* ── input ── */
+.field{width:100%;padding:15px 18px;border-radius:14px;border:1px solid var(--panel-line);
+  background:rgba(0,0,0,.28);color:var(--text);font-size:1.05rem;font-family:var(--serif)}
+.field::placeholder{color:#8f7fa6;font-style:italic}
+
+/* ── screens ── */
+.screen{animation:fade .55s ease both}
+@keyframes fade{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+/* ── welcome ── */
+.welcome{min-height:74dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:22px}
+.bigheart{font-size:3.4rem;animation:beat 1.5s ease-in-out infinite;filter:drop-shadow(0 6px 20px rgba(244,114,182,.6))}
+@keyframes beat{0%,100%{transform:scale(1)}50%{transform:scale(1.16)}}
+
+/* ── map ── */
+.progresswrap{margin:6px 0 26px}
+.pbar{height:12px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden}
+.pfill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--rose-deep),var(--rose),var(--gold));
+  box-shadow:0 0 14px rgba(244,114,182,.6);transition:width .8s cubic-bezier(.22,1,.36,1)}
+.map{display:flex;flex-direction:column;gap:26px;position:relative}
+.island{position:relative;overflow:hidden;padding:22px 20px}
+.island .eyebrow{margin-bottom:2px}
+.island h3{font-size:1.55rem;margin-top:2px}
+.island .isle-story{font-size:.9rem;margin-top:6px}
+.chests{display:flex;justify-content:space-around;align-items:flex-end;gap:10px;margin-top:20px}
+.chest{background:none;border:0;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;
+  padding:6px;border-radius:14px;transition:transform .15s}
+.chest:hover:not([disabled]){transform:translateY(-4px)}
+.chest[disabled]{cursor:not-allowed}
+.chest .cap{font-size:.72rem;font-weight:700;padding:2px 10px;border-radius:999px;white-space:nowrap}
+.cap.locked{background:rgba(255,255,255,.06);color:#9686ab}
+.cap.open{background:rgba(244,114,182,.18);color:#fbcfe8}
+.cap.done{background:rgba(251,191,36,.18);color:var(--gold-soft)}
+.palm{position:absolute;right:-10px;top:-14px;width:140px;height:140px;opacity:.16;pointer-events:none}
+.island.done{border-color:rgba(251,191,36,.4);box-shadow:0 0 44px -18px rgba(251,191,36,.5)}
+.island.active{border-color:rgba(244,114,182,.35)}
+
+/* ── riddle / punishment card ── */
+.card{padding:26px 22px}
+.center{text-align:center}
+.stack{display:flex;flex-direction:column;gap:20px}
+.chest-stage{display:flex;justify-content:center;margin:6px 0}
+.qbox{background:rgba(0,0,0,.22);border:1px solid var(--panel-line);border-radius:14px;padding:18px 18px}
+.answer-row{display:flex;gap:10px;flex-wrap:wrap}
+.answer-row .field{flex:1;min-width:180px}
+.note{border-radius:14px;padding:16px 18px;text-align:center}
+.note.wait{background:rgba(251,191,36,.10);border:1px solid rgba(251,191,36,.3);color:var(--gold-soft)}
+.note.good{background:rgba(52,211,153,.10);border:1px solid rgba(52,211,153,.3);color:#a7f3d0}
+.note.bad{background:rgba(251,113,133,.10);border:1px solid rgba(251,113,133,.32);color:#fecdd3}
+.pill{display:inline-block;font-size:.7rem;letter-spacing:.06em;padding:3px 10px;border-radius:999px;
+  background:rgba(255,255,255,.08);color:var(--mist)}
+.backlink{display:inline-flex;align-items:center;gap:6px;color:var(--mist);text-decoration:none;font-size:.9rem;margin-bottom:16px}
+.backlink:hover{color:var(--text)}
+
+/* ── countdown ── */
+.countdown{display:flex;flex-direction:column;align-items:center;gap:12px}
+.cd-digits{display:flex;align-items:flex-start;gap:8px}
+.cd-cell{display:flex;flex-direction:column;align-items:center;gap:6px}
+.cd-num{font-family:var(--serif);font-weight:700;font-variant-numeric:tabular-nums;
+  background:rgba(0,0,0,.35);border:1px solid rgba(251,191,36,.22);border-radius:12px;
+  color:var(--gold-soft);min-width:58px;text-align:center;padding:10px 6px;font-size:2rem;line-height:1}
+.cd-lab{font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--mist)}
+.cd-colon{font-family:var(--serif);font-size:1.6rem;color:rgba(251,191,36,.5);padding-top:12px}
+
+/* ── finale ── */
+.finale{min-height:70dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:26px}
+.letter{white-space:pre-wrap;font-family:var(--serif);font-size:1.12rem;line-height:1.9;color:#3a2a17;
+  background:linear-gradient(170deg,#f7ecd8,#efdcbf);border-radius:16px;padding:34px 30px;text-align:left;
+  box-shadow:0 30px 70px -30px rgba(0,0,0,.8);position:relative}
+.letter::before{content:"💌";position:absolute;top:-16px;left:50%;transform:translateX(-50%);font-size:1.8rem}
+.treasure-img{max-width:100%;max-height:340px;border-radius:16px;border:1px solid rgba(251,191,36,.3);
+  box-shadow:0 0 60px -20px rgba(251,191,36,.5)}
+
+@media (max-width:520px){
+  .cd-num{min-width:46px;font-size:1.5rem;padding:8px 4px}
+  .island h3{font-size:1.35rem}
+  .display.hero{font-size:2.6rem}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.001ms!important;animation-iteration-count:1!important}
+  .romantic,.treasure{animation:none}
+}
+</style>
+</head>
+<body>
+<div id="sky" aria-hidden="true"></div>
+<div id="hearts" aria-hidden="true"></div>
+<canvas id="fx" aria-hidden="true"></canvas>
+<div class="wrap" id="root"></div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════════
+   ❤️  CONFIG — this is the ONLY part you edit. No coding needed.
+   ───────────────────────────────────────────────────────────────────
+   • startDate : the first day of the hunt, "YYYY-MM-DD" (her local time)
+   • slotTimes : the three unlock times each day (24-hour "HH:MM")
+   • unlockAll : set to true to unlock everything now (handy for testing),
+                 false for the real timed hunt.
+   • For each riddle:
+       answers: ["accepted","words"]  → she must type one of these
+                (matching is forgiving: lowercase, spacing & punctuation
+                 ignored, and a short answer inside a longer sentence counts)
+       answers: null                  → accepts ANY non-empty answer
+                                        (nice for "describe a memory" riddles)
+   ═══════════════════════════════════════════════════════════════════ */
+const CONFIG = {
+  playerName: "My Love",
+  startDate: "2026-07-14",
+  slotTimes: ["10:00", "14:00", "21:00"],
+  unlockAll: false,
+
+  finale: {
+    treasureTitle: "The Final Treasure",
+    treasureMessage: "You found it. The treasure was never gold — it was every moment that led you here. Come find me for your real prize. ❤️",
+    treasureImage: "",  // optional: paste an image URL between the quotes
+    loveLetter:
+`My love,
+
+If you are reading this, you solved every riddle — of course you did. You know our story better than anyone, because you wrote it with me.
+
+Every island on that map was a piece of us. Every chest you opened was a memory I never want to lose. And this letter is a promise: the map keeps growing, and I intend to fill every corner of it with you.
+
+Forever yours. ❤️`
+  },
+
+  days: [
+    {
+      title: "Where It All Began",
+      island: "Isle of First Glances",
+      story: "We sail back to the moments that started everything — the first looks, the first laughs, the first butterflies.",
+      riddles: [
+        { title:"The First Hello",
+          story:"Close your eyes and drift back… a nervous heartbeat, a first hello. Somewhere in our story two strangers stopped being strangers.",
+          question:"Where did we meet for the very first time?",
+          answers:["EDIT ME"],   /* ← put the real place here, e.g. ["the library","college library"] */
+          punishment:{title:"The Dramatic Retelling", description:"Record a 30-second dramatic re-enactment of the moment we first met. Bonus points for fake tears and slow motion."} },
+        { title:"The Song of Us",
+          story:"Every love story has a soundtrack. Ours has one song that turns the world's volume down and ours up.",
+          question:"What song do we both call ‘our song’?",
+          answers:["EDIT ME"],
+          punishment:{title:"Sing It Loud", description:"Sing the chorus of my favorite song — full feeling, full volume. No whispering allowed!"} },
+        { title:"First Date Detective",
+          story:"A table for two, nervous smiles, and someone talking way too fast. That evening is a treasure in itself.",
+          question:"What did we eat on our first date?",
+          answers:["EDIT ME"],
+          punishment:{title:"Chef's Apology", description:"Take a funny selfie holding whatever snack is nearest to you, captioned ‘I should have remembered the menu.’"} }
+      ]
+    },
+    {
+      title: "Little Things, Big Love",
+      island: "Cove of Tiny Details",
+      story: "Love hides in the little things — the habits, the inside jokes, the details only we would notice.",
+      riddles: [
+        { title:"The Guardian of My Sleep",
+          story:"There is something of mine you always steal, and honestly… it looks better on you anyway.",
+          question:"Which piece of my clothing do you steal the most?",
+          answers:["EDIT ME"],
+          punishment:{title:"The Hoodie Tax", description:"Wear my hoodie, strike your most dramatic model pose, and take a photo. Work it."} },
+        { title:"Nickname Chronicles",
+          story:"Real names are for strangers and paperwork. We have our own language, and it started with one silly name.",
+          question:"What was the very first nickname I called you?",
+          answers:["EDIT ME"],
+          punishment:{title:"Twenty Times the Love", description:"Say ‘I love you’ 20 times, each in a different style — whisper, opera, robot, villain… get creative."} },
+        { title:"The Coffee Code",
+          story:"I could order for you blindfolded. Could you order for me? Let's find out, barista.",
+          question:"What is my usual order at our favorite café?",
+          answers:["EDIT ME"],
+          punishment:{title:"Barista Dance", description:"Dance for 30 seconds like nobody is watching (I will be watching)."} }
+      ]
+    },
+    {
+      title: "Adventures & Memories",
+      island: "Bay of Golden Days",
+      story: "We have collected days like seashells — bright ones, silly ones, unforgettable ones. Today we open the shell box.",
+      riddles: [
+        { title:"The Great Escape",
+          story:"Bags packed, playlists ready, the world waiting. One trip together beats a hundred alone.",
+          question:"Where did we go on our first trip together?",
+          answers:["EDIT ME"],
+          punishment:{title:"Travel Vlogger", description:"Film a 30-second ‘travel vlog’ about the room you're in, narrated like it's the most exotic place on Earth."} },
+        { title:"Laughing Fit",
+          story:"There is one memory that makes us laugh every single time, no matter how often we tell it.",
+          question:"Describe the story behind our biggest laughing fit ever.",
+          answers:null,  /* open-ended — accepts any heartfelt answer */
+          punishment:{title:"Comedy Special", description:"Tell your best joke out loud. If it doesn't make me laugh, the punishment repeats. High stakes!"} },
+        { title:"The Photo That Says It All",
+          story:"Thousands of photos, but one of them is simply… us. The one we both come back to.",
+          question:"Describe my absolute favorite photo of us (when & where it was taken).",
+          answers:null,
+          punishment:{title:"Recreate the Masterpiece", description:"Recreate any photo of us as closely as you can, by yourself, using props."} }
+      ]
+    },
+    {
+      title: "The Heart of the Map",
+      island: "Isle of Forever",
+      story: "The final island. The compass no longer points north — it points to us. Three riddles stand between you and the treasure.",
+      riddles: [
+        { title:"Dreams We Share",
+          story:"Somewhere between ‘someday’ and ‘promise’, we built a dream we keep coming back to.",
+          question:"What is the one dream we always talk about doing together?",
+          answers:null,
+          punishment:{title:"Architect of Dreams", description:"Draw our dream (stick figures welcome) and keep it to show me."} },
+        { title:"The Exact Moment",
+          story:"Love doesn't arrive with fireworks. It sneaks in quietly — and then one day you just know.",
+          question:"When did I first say ‘I love you’? (Where were we, what was happening?)",
+          answers:null,
+          punishment:{title:"The Love Monologue", description:"Perform a 30-second dramatic monologue about how amazing I am. Shakespeare-level drama required."} },
+        { title:"X Marks the Heart",
+          story:"The last riddle. Past every island, every chest, every clue — there was only ever one treasure on this map.",
+          question:"What is the treasure at the end of this hunt? (Hint: look in a mirror…)",
+          answers:["you","me","us","yourself","my love","your heart","love"],
+          punishment:{title:"The Victory Lap", description:"So close and still teasing me?! Slow-dance with a pillow for 30 seconds."} }
+      ]
+    }
+  ]
+};
+
+/* ═══════════════════════════════════════════════════════════════════
+   Engine — you don't need to edit anything below this line.
+   ═══════════════════════════════════════════════════════════════════ */
+(function(){
+  "use strict";
+  const $ = (s,el=document)=>el.querySelector(s);
+  const root = document.getElementById("root");
+  const STORE_KEY = "treasure-hunt-v1";
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // riddle id helper
+  const rid = (d,r)=>`${d}-${r}`;
+
+  // ── persistent state ──
+  let state = load();
+  function load(){
+    try{ return JSON.parse(localStorage.getItem(STORE_KEY)) || fresh(); }
+    catch{ return fresh(); }
+  }
+  function fresh(){ return { started:false, solved:{}, punish:{}, music:false }; }
+  function save(){ localStorage.setItem(STORE_KEY, JSON.stringify(state)); }
+
+  // ── unlock schedule ──
+  function unlockAt(dayIdx, riddleIdx){
+    const [h,m] = CONFIG.slotTimes[riddleIdx].split(":").map(Number);
+    const base = new Date(CONFIG.startDate + "T00:00:00");
+    const d = new Date(base.getTime());
+    d.setDate(d.getDate() + dayIdx);
+    d.setHours(h, m, 0, 0);
+    return d;
+  }
+  function isUnlocked(dayIdx, riddleIdx){
+    if(CONFIG.unlockAll) return true;
+    return Date.now() >= unlockAt(dayIdx, riddleIdx).getTime();
+  }
+
+  // ── answer checking ──
+  function norm(s){ return (s||"").toLowerCase().normalize("NFKD").replace(/[^a-z0-9\s]/g," ").replace(/\s+/g," ").trim(); }
+  function checks(input, answers){
+    if(answers === null || (Array.isArray(answers) && answers.length===0)) return input.trim().length>0;
+    const n = norm(input);
+    if(!n) return false;
+    return answers.some(a=>{ const na=norm(a); return na && (n===na || n.includes(na) || na.includes(n)); });
+  }
+
+  // ── riddle state machine ──
+  // returns: "locked" | "open" | "punish" | "done"
+  function riddleState(dayIdx, riddleIdx){
+    const id = rid(dayIdx,riddleIdx);
+    if(state.solved[id]) return "done";
+    if(!isUnlocked(dayIdx,riddleIdx)) return "locked";
+    if(state.punish[id]) return "punish";
+    return "open";
+  }
+  function totals(){
+    let total=0, done=0;
+    CONFIG.days.forEach((day,di)=>day.riddles.forEach((_,ri)=>{ total++; if(state.solved[rid(di,ri)]) done++; }));
+    return {total, done};
+  }
+  function firstUnsolved(){
+    for(let di=0; di<CONFIG.days.length; di++)
+      for(let ri=0; ri<CONFIG.days[di].riddles.length; ri++)
+        if(!state.solved[rid(di,ri)]) return {di,ri};
+    return null;
+  }
+  function nextLockedUnlock(){
+    let soonest=null;
+    CONFIG.days.forEach((day,di)=>day.riddles.forEach((_,ri)=>{
+      if(state.solved[rid(di,ri)]) return;
+      if(!isUnlocked(di,ri)){ const t=unlockAt(di,ri).getTime(); if(soonest===null||t<soonest) soonest=t; }
+    }));
+    return soonest;
+  }
+
+  /* ── treasure chest SVG ── */
+  function chestSVG(variant, open, size){
+    const golden = variant==="done", locked = variant==="locked";
+    const isOpen = open || golden;
+    const wood = golden?"#b45309":locked?"#4b3826":"#8a5a2b";
+    const woodD = golden?"#92400e":locked?"#38291b":"#6b4423";
+    const trim = golden?"#fbbf24":locked?"#6b7280":"#d4a34f";
+    const glow = golden
+      ? "radial-gradient(circle,rgba(251,191,36,.55),transparent 70%)"
+      : locked ? "none" : "radial-gradient(circle,rgba(244,114,182,.45),transparent 70%)";
+    const bob = locked ? "" : golden ? "chest-pulse" : "chest-bob";
+    return `
+    <div class="chestwrap ${bob}" style="width:${size}px;height:${size}px;position:relative;display:inline-block">
+      <div style="position:absolute;inset:-8%;border-radius:50%;filter:blur(14px);background:${glow}"></div>
+      <svg viewBox="0 0 100 100" width="${size}" height="${size}" style="position:relative">
+        ${isOpen?`<g class="rays">${[-30,-15,0,15,30].map(a=>`<rect x="48" y="6" width="4" height="34" rx="2" transform="rotate(${a} 50 44)" fill="url(#ray)"/>`).join("")}</g>`:""}
+        <defs>
+          <linearGradient id="ray" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#fde68a" stop-opacity="0"/><stop offset="100%" stop-color="#fde68a" stop-opacity=".9"/></linearGradient>
+          <linearGradient id="pile" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#fde68a"/><stop offset="100%" stop-color="#f59e0b"/></linearGradient>
+        </defs>
+        <rect x="14" y="46" width="72" height="38" rx="6" fill="${wood}"/>
+        <rect x="14" y="46" width="72" height="8" fill="${woodD}"/>
+        <line x1="30" y1="54" x2="30" y2="84" stroke="${woodD}" stroke-width="2"/>
+        <line x1="50" y1="54" x2="50" y2="84" stroke="${woodD}" stroke-width="2"/>
+        <line x1="70" y1="54" x2="70" y2="84" stroke="${woodD}" stroke-width="2"/>
+        <rect x="12" y="44" width="76" height="5" rx="2.5" fill="${trim}"/>
+        <rect x="12" y="80" width="76" height="5" rx="2.5" fill="${trim}"/>
+        ${isOpen?`
+          <ellipse cx="50" cy="47" rx="30" ry="7" fill="url(#pile)"/>
+          <circle cx="38" cy="44" r="4" fill="#fde68a"/><circle cx="52" cy="42" r="4.5" fill="#fcd34d"/><circle cx="64" cy="44" r="4" fill="#fde68a"/>
+          <text x="50" y="41" text-anchor="middle" font-size="13">💖</text>`:""}
+        <g style="transform-origin:50px 46px;${isOpen?"transform:translateY(-24px) scaleY(.55)":""};transition:transform .5s cubic-bezier(.34,1.56,.64,1)">
+          <path d="M14 46 Q14 22 50 22 Q86 22 86 46 Z" fill="${wood}"/>
+          <path d="M14 46 Q14 22 50 22 Q86 22 86 46" fill="none" stroke="${trim}" stroke-width="4"/>
+          <line x1="35" y1="26" x2="35" y2="45" stroke="${woodD}" stroke-width="2"/>
+          <line x1="65" y1="26" x2="65" y2="45" stroke="${woodD}" stroke-width="2"/>
+        </g>
+        ${!isOpen?`<rect x="44" y="42" width="12" height="14" rx="2" fill="${trim}"/>${locked?`
+          <rect x="45" y="50" width="10" height="9" rx="2" fill="#374151"/>
+          <path d="M47 50 v-3 a3 3 0 0 1 6 0 v3" fill="none" stroke="#6b7280" stroke-width="2"/>`:`<circle cx="50" cy="49" r="2.5" fill="#2a1a10"/>`}`:""}
+      </svg>
+    </div>`;
+  }
+
+  /* ── countdown ── */
+  let cdTimer=null;
+  function mountCountdown(el, target, onZero, label){
+    function tick(){
+      const rem = target - Date.now();
+      if(rem<=0){ clearInterval(cdTimer); onZero&&onZero(); return; }
+      const s=Math.floor(rem/1000);
+      const dd=Math.floor(s/86400), hh=Math.floor(s%86400/3600), mm=Math.floor(s%3600/60), ss=s%60;
+      const cell=(v,l)=>`<div class="cd-cell"><div class="cd-num">${String(v).padStart(2,"0")}</div><div class="cd-lab">${l}</div></div>`;
+      const colon=`<div class="cd-colon">:</div>`;
+      el.innerHTML=`<div class="countdown">
+        ${label?`<div class="eyebrow">${label}</div>`:""}
+        <div class="cd-digits">
+          ${dd>0?cell(dd,"days")+colon:""}${cell(hh,"hrs")}${colon}${cell(mm,"min")}${colon}${cell(ss,"sec")}
+        </div></div>`;
+    }
+    clearInterval(cdTimer); tick(); cdTimer=setInterval(tick,1000);
+  }
+
+  /* ── router ── */
+  let view = state.started ? {name:"map"} : {name:"welcome"};
+  function go(v){ view=v; clearInterval(cdTimer); render(); window.scrollTo({top:0,behavior:"smooth"}); }
+
+  function topbar(){
+    return `<div class="topbar">
+      <div class="brand"><span>🗺️</span><span class="g">The Treasure Hunt</span></div>
+      <div style="display:flex;gap:8px">
+        <button class="iconbtn" id="music" title="Background music" aria-label="Toggle music">${state.music?"🎵":"🔇"}</button>
+      </div></div>`;
+  }
+
+  function render(){
+    if(view.name==="welcome") return renderWelcome();
+    if(view.name==="map") return renderMap();
+    if(view.name==="riddle") return renderRiddle(view.di, view.ri);
+    if(view.name==="punish") return renderPunish(view.di, view.ri);
+    if(view.name==="finale") return renderFinale();
+  }
+
+  function renderWelcome(){
+    root.innerHTML = `<div class="screen welcome">
+      <div class="bigheart">❤️</div>
+      <div>
+        <div class="eyebrow" style="margin-bottom:10px">Four days · Twelve riddles · One treasure</div>
+        <h1 class="display romantic hero" style="font-size:3.2rem">The Treasure Hunt</h1>
+        <p class="muted" style="margin-top:14px;max-width:26rem">A little adventure, made just for you. Solve each riddle to sail closer to what's waiting at the end.</p>
+      </div>
+      <button class="btn btn-rose btn-lg" id="begin">Begin the Adventure ✨</button>
+      <p class="muted" style="font-size:.8rem">Made with love, for the one who finds it.</p>
+    </div>`;
+    $("#begin").onclick=()=>{ state.started=true; save(); ensureMusicOnGesture(); go({name:"map"}); };
+  }
+
+  function renderMap(){
+    const {total,done}=totals();
+    const pct = total? Math.round(done/total*100):0;
+    const allDone = total>0 && done===total;
+    const cur = firstUnsolved();
+    const nextLock = nextLockedUnlock();
+
+    const islands = CONFIG.days.map((day,di)=>{
+      const dayDone = day.riddles.every((_,ri)=>state.solved[rid(di,ri)]);
+      const anyOpen = day.riddles.some((_,ri)=>riddleState(di,ri)!=="locked");
+      const chests = day.riddles.map((r,ri)=>{
+        const st=riddleState(di,ri);
+        const variant = st==="done"?"done":st==="locked"?"locked":"unlocked";
+        const cap = st==="done"?`<span class="cap done">✨ solved</span>`
+          : st==="locked"?`<span class="cap locked">🔒</span>`
+          : `<span class="cap open">riddle ${ri+1}</span>`;
+        return `<button class="chest" ${st==="locked"?"disabled":""} data-open="${di}-${ri}" aria-label="${day.riddles[ri].title}">
+          ${chestSVG(variant,false,58)}${cap}</button>`;
+      }).join("");
+      return `<div class="glass island ${dayDone?"done":anyOpen?"active":""}">
+        <svg class="palm" viewBox="0 0 100 90" aria-hidden="true"><g transform="translate(50,40)">
+          <rect x="-2" y="0" width="4" height="26" rx="2" fill="#6b4a24"/>
+          <path d="M0,2 Q-16,-8 -24,0 Q-11,-3 0,5 Z" fill="#3f7a4f"/><path d="M0,2 Q16,-8 24,0 Q11,-3 0,5 Z" fill="#3f7a4f"/>
+          <path d="M0,0 Q-5,-16 -16,-16 Q-5,-11 0,3 Z" fill="#4c9a63"/><path d="M0,0 Q5,-16 16,-16 Q5,-11 0,3 Z" fill="#4c9a63"/>
+        </g></svg>
+        <div class="eyebrow">Day ${di+1} · ${day.island}${dayDone?" · 🏆":""}</div>
+        <h3 class="display">${day.title}</h3>
+        <p class="isle-story muted serif-body">${day.story}</p>
+        <div class="chests">${chests}</div>
+      </div>`;
+    }).join("");
+
+    root.innerHTML = topbar() + `<div class="screen">
+      <div class="center" style="margin:6px 0 18px">
+        <div class="eyebrow">Day ${cur?cur.di+1:CONFIG.days.length} of ${CONFIG.days.length}</div>
+        <h1 class="display romantic" style="font-size:2.3rem;margin-top:4px">Hello, ${escapeHtml(CONFIG.playerName)} ❤️</h1>
+      </div>
+
+      <div class="glass card progresswrap">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+          <span class="muted" style="font-size:.9rem">Treasure progress</span>
+          <span class="display treasure" style="font-size:1.2rem">${done} / ${total}</span>
+        </div>
+        <div class="pbar"><div class="pfill" style="width:${pct}%"></div></div>
+        ${allDone?`<div class="center" style="margin-top:18px"><button class="btn btn-gold" id="toFinale">🏆 Claim your treasure →</button></div>`:""}
+      </div>
+
+      ${!allDone && cur ? currentMission(cur) : ""}
+      ${!allDone && nextLock && cur && riddleState(cur.di,cur.ri)!=="locked" ? `<div class="glass card" id="nextcd" style="margin-bottom:26px"></div>`:""}
+
+      <h2 class="center display treasure" style="font-size:1.5rem;margin:8px 0 20px">🗺️ The Treasure Map</h2>
+      <div class="map">${islands}</div>
+    </div>`;
+
+    // wire chests
+    root.querySelectorAll("[data-open]").forEach(b=>b.onclick=()=>{
+      const [di,ri]=b.dataset.open.split("-").map(Number); openRiddle(di,ri);
+    });
+    const mus=$("#music"); if(mus) mus.onclick=toggleMusic;
+    const tf=$("#toFinale"); if(tf) tf.onclick=()=>go({name:"finale"});
+    const cm=$("#missionBtn"); if(cm) cm.onclick=()=>{ const c=firstUnsolved(); if(c) openRiddle(c.di,c.ri); };
+
+    // mission countdown (for a locked current mission)
+    const mcd=$("#missioncd");
+    if(mcd && cur){ mountCountdown(mcd, unlockAt(cur.di,cur.ri).getTime(), ()=>go({name:"map"}), "Next riddle unlocks in"); }
+    const ncd=$("#nextcd");
+    if(ncd && nextLock){ mountCountdown(ncd, nextLock, ()=>go({name:"map"}), "Next chest unlocks in"); }
+  }
+
+  function currentMission(cur){
+    const st = riddleState(cur.di,cur.ri);
+    const r = CONFIG.days[cur.di].riddles[cur.ri];
+    if(st==="locked"){
+      return `<div class="glass card" style="margin-bottom:26px">
+        <div class="center stack">
+          <div class="eyebrow">Current mission</div>
+          <h2 class="display" style="font-size:1.6rem">🔒 Locked</h2>
+          <p class="muted">The next chest is sealed by time itself. It opens on its own — no refresh needed.</p>
+          <div id="missioncd"></div>
+        </div></div>`;
+    }
+    const label = st==="punish" ? "🎭 Punishment awaits" : st==="open" ? "🗝️ Ready to solve" : "";
+    return `<div class="glass card" style="margin-bottom:26px;border-color:rgba(244,114,182,.3)">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap">
+        <div>
+          <div class="eyebrow">Current mission</div>
+          <h2 class="display" style="font-size:1.5rem;margin-top:4px">${escapeHtml(r.title)}</h2>
+          <p class="muted" style="font-size:.9rem">${CONFIG.days[cur.di].island} · ${label}</p>
+        </div>
+        <button class="btn btn-rose" id="missionBtn">Open the chest →</button>
+      </div></div>`;
+  }
+
+  function openRiddle(di,ri){
+    const st=riddleState(di,ri);
+    if(st==="locked"){ go({name:"riddle",di,ri}); return; }
+    if(st==="punish"){ go({name:"punish",di,ri}); return; }
+    go({name:"riddle",di,ri});
+  }
+
+  function renderRiddle(di,ri){
+    const day=CONFIG.days[di], r=day.riddles[ri];
+    const st=riddleState(di,ri);
+
+    if(st==="locked"){
+      root.innerHTML = topbar() + `<div class="screen">
+        <a class="backlink" id="back">← Back to the map</a>
+        <div class="glass card center stack">
+          <div class="chest-stage">${chestSVG("locked",false,140)}</div>
+          <h1 class="display" style="font-size:2.2rem">🔒 Locked</h1>
+          <p class="muted">This chest is sealed until its moment arrives. It opens all by itself — magic needs no refresh button.</p>
+          <div id="cd"></div>
+        </div></div>`;
+      wireBack(); wireMusic();
+      mountCountdown($("#cd"), unlockAt(di,ri).getTime(), ()=>go({name:"riddle",di,ri}), "Opens in");
+      return;
+    }
+
+    root.innerHTML = topbar() + `<div class="screen">
+      <a class="backlink" id="back">← Back to the map</a>
+      <div class="stack">
+        <div class="center">
+          <div class="eyebrow">Day ${di+1} · Riddle ${ri+1}</div>
+          <h1 class="display romantic" style="font-size:2.6rem;margin-top:6px">${escapeHtml(r.title)}</h1>
+        </div>
+        <div class="chest-stage">${chestSVG(st==="done"?"done":"unlocked",false,150)}</div>
+        ${r.story?`<p class="center serif-body" style="font-size:1.12rem;max-width:34rem;margin:0 auto">${escapeHtml(r.story)}</p>`:""}
+        <div class="glass card">
+          <div class="qbox">
+            <div class="eyebrow" style="margin-bottom:8px">The question</div>
+            <p class="display" style="font-size:1.35rem">${escapeHtml(r.question)}</p>
+          </div>
+          <div id="answerArea" style="margin-top:18px"></div>
+        </div>
+      </div></div>`;
+    wireBack(); wireMusic();
+    renderAnswerArea(di,ri);
+  }
+
+  function renderAnswerArea(di,ri){
+    const area=$("#answerArea"); if(!area) return;
+    const r=CONFIG.days[di].riddles[ri];
+    area.innerHTML = `
+      <div class="answer-row">
+        <input class="field" id="ans" placeholder="Whisper your answer…" autocomplete="off" maxlength="400"/>
+        <button class="btn btn-rose" id="submit">Submit</button>
+      </div>
+      <p class="muted" style="font-size:.78rem;margin-top:10px;text-align:center">
+        ${r.answers===null?"Answer from the heart — anything you write is accepted.":"Type your best guess. Trust yourself. 💫"}
+      </p>`;
+    const input=$("#ans"), btn=$("#submit");
+    input.focus();
+    const submit=()=>{
+      const val=input.value;
+      if(!val.trim()) return;
+      if(checks(val, r.answers)){ onCorrect(di,ri); }
+      else { onWrong(di,ri); }
+    };
+    btn.onclick=submit;
+    input.addEventListener("keydown",e=>{ if(e.key==="Enter") submit(); });
+  }
+
+  function onCorrect(di,ri){
+    state.solved[rid(di,ri)]=true; delete state.punish[rid(di,ri)]; save();
+    const area=$("#answerArea");
+    // celebrate
+    burstConfetti(); setTimeout(heartConfetti,300);
+    // swap chest to golden
+    const stage=$(".chest-stage"); if(stage) stage.innerHTML=chestSVG("done",true,150);
+    const {total,done}=totals();
+    const allDone = done===total;
+    if(area){
+      area.innerHTML=`<div class="note good" style="animation:fade .5s both">
+        <p class="display" style="font-size:1.9rem">✨ Correct!</p>
+        <p class="muted" style="margin-top:6px">Another piece of the map is yours.</p>
+        <div style="margin-top:16px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+          ${allDone
+            ? `<button class="btn btn-gold" id="fin">🏆 Claim your treasure →</button>`
+            : `<button class="btn btn-rose" id="cont">Continue the voyage →</button>`}
+        </div></div>`;
+      const cont=$("#cont"); if(cont) cont.onclick=()=>go({name:"map"});
+      const fin=$("#fin"); if(fin) fin.onclick=()=>go({name:"finale"});
+    }
+  }
+
+  function onWrong(di,ri){
+    state.punish[rid(di,ri)]=true; save();
+    go({name:"punish",di,ri});
+  }
+
+  function renderPunish(di,ri){
+    const r=CONFIG.days[di].riddles[ri];
+    const p=r.punishment||{title:"A Tiny Dare",description:"Blow me a kiss and try again."};
+    root.innerHTML = topbar() + `<div class="screen">
+      <a class="backlink" id="back">← Back to the map</a>
+      <div class="stack">
+        <div class="center">
+          <div style="font-size:3.4rem;animation:${reduce?"none":"beat 1.6s ease-in-out infinite"}">🎭</div>
+          <div class="eyebrow" style="margin-top:8px">Wrong answer!</div>
+          <h1 class="display romantic" style="font-size:2.3rem;margin-top:4px">${escapeHtml(p.title)}</h1>
+        </div>
+        <div class="glass card center">
+          <p class="serif-body" style="font-size:1.15rem">${escapeHtml(p.description)}</p>
+        </div>
+        <div class="note bad center">
+          Before you can try “${escapeHtml(r.title)}” again, you must complete your punishment. 😌
+        </div>
+        <div class="center">
+          <button class="btn btn-gold btn-lg" id="did">I did it — let me try again 💪</button>
+        </div>
+      </div></div>`;
+    wireBack(); wireMusic();
+    $("#did").onclick=()=>{ delete state.punish[rid(di,ri)]; save(); go({name:"riddle",di,ri}); };
+  }
+
+  function renderFinale(){
+    const {total,done}=totals();
+    if(!(total>0 && done===total)){
+      root.innerHTML = topbar() + `<div class="screen center stack" style="min-height:60dvh;justify-content:center">
+        <div style="font-size:3rem">🔐</div>
+        <h1 class="display" style="font-size:2rem">Not yet, my love…</h1>
+        <p class="muted">The final treasure only appears when every riddle is solved.</p>
+        <div><button class="btn btn-rose" id="back2">← Back to the hunt</button></div>
+      </div>`;
+      $("#back2").onclick=()=>go({name:"map"}); wireMusic(); return;
+    }
+
+    const f=CONFIG.finale;
+    root.innerHTML = `<div class="screen finale" id="finaleRoot">
+      <div>
+        <div class="eyebrow" style="margin-bottom:10px">Every riddle solved</div>
+        <h1 class="display treasure" style="font-size:3rem">${escapeHtml(f.treasureTitle||"The Final Treasure")}</h1>
+      </div>
+      <div id="finaleChest">${chestSVG("unlocked",false,190)}</div>
+      <button class="btn btn-gold btn-lg" id="openChest">Open the chest ✨</button>
+    </div>`;
+    ensureMusicOnGesture();
+    $("#openChest").onclick=revealFinale;
+  }
+
+  function revealFinale(){
+    const f=CONFIG.finale;
+    const el=$("#finaleRoot");
+    el.innerHTML = `<div id="finaleChest">${chestSVG("done",true,200)}</div>`;
+    burstConfetti();
+    fireworks(9000);
+    setTimeout(heartConfetti,700);
+    setTimeout(()=>{
+      el.innerHTML = `
+        <div class="center">
+          <div style="font-size:2.6rem;animation:${reduce?"none":"beat 1.5s ease-in-out infinite"}">❤️</div>
+          <h1 class="display treasure" style="font-size:2.8rem;margin-top:8px">${escapeHtml(f.treasureTitle||"The Final Treasure")}</h1>
+        </div>
+        <div class="chest-stage">${chestSVG("done",true,150)}</div>
+        ${f.treasureImage?`<img class="treasure-img" src="${escapeAttr(f.treasureImage)}" alt="Your treasure"/>`:""}
+        ${f.treasureMessage?`<p class="serif-body center" style="font-size:1.2rem;max-width:34rem">${escapeHtml(f.treasureMessage)}</p>`:""}
+        ${f.loveLetter?`<div class="letter">${escapeHtml(f.loveLetter)}</div>`:""}
+        <p class="muted" style="font-size:.9rem">The End… and also, always, the beginning. ❤️</p>
+        <button class="btn btn-ghost" id="replay">Return to the map</button>`;
+      const rp=$("#replay"); if(rp) rp.onclick=()=>go({name:"map"});
+    }, 1500);
+  }
+
+  // ── shared wiring ──
+  function wireBack(){ const b=$("#back"); if(b) b.onclick=()=>go({name:"map"}); }
+  function wireMusic(){ const m=$("#music"); if(m) m.onclick=toggleMusic; }
+
+  function escapeHtml(s){ return (s==null?"":String(s)).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+  function escapeAttr(s){ return escapeHtml(s); }
+
+  /* ═══ ambient starfield + hearts ═══ */
+  function buildSky(){
+    const sky=document.getElementById("sky"); if(!sky) return;
+    let html="";
+    const N = window.innerWidth<600?42:70;
+    for(let i=0;i<N;i++){
+      const gold=Math.random()<0.25, s=1+Math.random()*(gold?2.5:2.2);
+      html+=`<span class="star ${gold?"gold":""}" style="left:${Math.random()*100}%;top:${Math.random()*100}%;width:${s}px;height:${s}px;--d:${2+Math.random()*3}s;animation-delay:${Math.random()*4}s"></span>`;
+    }
+    sky.innerHTML=html;
+    const hearts=document.getElementById("hearts"); if(!hearts) return;
+    let hh="";
+    const H=window.innerWidth<600?7:12;
+    for(let i=0;i<H;i++){
+      const size=12+Math.random()*22, dur=15+Math.random()*16;
+      hh+=`<span class="heart" style="left:${Math.random()*100}%;font-size:${size}px;--o:${.12+Math.random()*.22};--rot:${(Math.random()*40-20)}deg;animation-duration:${dur}s;animation-delay:${Math.random()*20}s">❤</span>`;
+    }
+    hearts.innerHTML=hh;
+  }
+
+  /* ═══ confetti / fireworks (tiny canvas engine) ═══ */
+  const cv=document.getElementById("fx"), ctx=cv.getContext("2d");
+  let parts=[], raf=null;
+  function sizeCanvas(){ cv.width=innerWidth*devicePixelRatio; cv.height=innerHeight*devicePixelRatio; ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0); }
+  sizeCanvas();
+  const COLORS=["#f472b6","#fbbf24","#fb7185","#fde68a","#ffffff","#c084fc"];
+  function spawn(x,y,n,power,heart){
+    for(let i=0;i<n;i++){
+      const a=Math.random()*Math.PI*2, sp=power*(0.4+Math.random());
+      parts.push({x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp-power*0.4,
+        life:1,size:heart?9:5+Math.random()*5,color:COLORS[i%COLORS.length],heart,rot:Math.random()*6.28,vr:(Math.random()-.5)*.3});
+    }
+    if(!raf) loop();
+  }
+  function loop(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(p=>{
+      p.vy+=0.12; p.x+=p.vx; p.y+=p.vy; p.vx*=0.99; p.life-=0.012; p.rot+=p.vr;
+      ctx.globalAlpha=Math.max(0,p.life);
+      ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot);
+      if(p.heart){ ctx.font=`${p.size*2}px serif`; ctx.textAlign="center"; ctx.fillText("❤️",0,0); }
+      else { ctx.fillStyle=p.color; ctx.fillRect(-p.size/2,-p.size/2,p.size,p.size*0.6); }
+      ctx.restore();
+    });
+    ctx.globalAlpha=1;
+    parts=parts.filter(p=>p.life>0 && p.y<innerHeight+40);
+    if(parts.length){ raf=requestAnimationFrame(loop); } else { raf=null; ctx.clearRect(0,0,cv.width,cv.height); }
+  }
+  function burstConfetti(){ if(reduce) return; const w=innerWidth; spawn(w*0.5,innerHeight*0.55,120,9,false); }
+  function heartConfetti(){ if(reduce) return; spawn(innerWidth*0.5,innerHeight*0.5,22,7,true); }
+  function fireworks(ms){
+    if(reduce) return;
+    const end=Date.now()+ms;
+    (function shoot(){
+      if(Date.now()>end) return;
+      spawn(innerWidth*(0.15+Math.random()*0.7), innerHeight*(0.2+Math.random()*0.4), 46, 8, false);
+      setTimeout(shoot, 350);
+    })();
+  }
+
+  /* ═══ background music — generated music-box (no external files) ═══ */
+  let audioCtx=null, musicTimer=null, master=null;
+  function startMusic(){
+    if(audioCtx) return;
+    try{
+      const AC=window.AudioContext||window.webkitAudioContext; audioCtx=new AC();
+      master=audioCtx.createGain(); master.gain.value=0.16; master.connect(audioCtx.destination);
+      const chords=[[220,261.63,329.63],[174.61,220,261.63],[130.81,164.81,196,261.63],[196,246.94,293.66]];
+      let step=0;
+      const note=(f,t,d)=>{ const o=audioCtx.createOscillator(),g=audioCtx.createGain();
+        o.type="sine"; o.frequency.value=f*2; g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(.5,t+.02);
+        g.gain.exponentialRampToValueAtTime(.001,t+d); o.connect(g); g.connect(master); o.start(t); o.stop(t+d+.05); };
+      musicTimer=setInterval(()=>{
+        const ch=chords[Math.floor(step/8)%chords.length]; note(ch[step%ch.length],audioCtx.currentTime,1.6);
+        if(step%8===0) note(ch[0]/2,audioCtx.currentTime,3);
+        step++;
+      },400);
+    }catch(e){/* audio unavailable */}
+  }
+  function stopMusic(){ if(musicTimer){clearInterval(musicTimer);musicTimer=null;} if(audioCtx){audioCtx.close();audioCtx=null;} }
+  function toggleMusic(){ state.music=!state.music; save(); const m=$("#music"); if(m) m.textContent=state.music?"🎵":"🔇"; if(state.music) startMusic(); else stopMusic(); }
+  function ensureMusicOnGesture(){ if(state.music && !audioCtx) startMusic(); }
+
+  /* ═══ boot ═══ */
+  window.addEventListener("resize",()=>{ sizeCanvas(); });
+  buildSky();
+  render();
+  // resume music if she had it on (needs a gesture; the Begin/Open buttons count)
+  document.addEventListener("click",()=>{ if(state.music && !audioCtx) startMusic(); }, {once:false});
+})();
+</script>
+</body>
+</html>
