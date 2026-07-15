@@ -236,6 +236,8 @@ const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON, {
 
 // Background music — your song. Points to song.mp3 sitting next to this file.
 const SONG_URL = "song.mp3";
+// The moment you two started dating (IST). Powers the live "together for" timer.
+const LOVE_START = "2025-04-01T02:13:00+05:30";
 
 /* ============================================================
    SMALL HELPERS
@@ -432,6 +434,7 @@ function playerStatusById(){ const m={}; state.board.forEach(r=>m[r.riddle_id]=r
 let clockInt=null;
 function startClock(){ if(clockInt) clearInterval(clockInt); clockInt=setInterval(tickClocks,1000); }
 function tickClocks(){
+  updateLoveTimer();
   let unlockedSomething=false;
   document.querySelectorAll('[data-until]').forEach(node=>{
     const target=+node.dataset.until; const diff=target-Date.now();
@@ -498,6 +501,7 @@ function render(){
   el('root').innerHTML = `<div class="app">${topbar()}<div class="wrap fadein">${body}</div></div>`;
   wireGlobal();
   if(state.role==='admin') wireAdmin(); else wirePlayer();
+  updateLoveTimer();
 }
 
 /* ============================================================
@@ -570,6 +574,7 @@ function playerDash(){
         <div class="ring" style="--p:${pct}"><div class="v"><b>${done}/${total}</b><span class="muted" style="font-size:12px">solved</span></div></div>
       </div>
     </div>
+    ${loveTimerCard()}
     ${curBlock}
     <div class="row wrap-flex" style="gap:10px">
       <button class="tab" data-nav="memories">🖼️ Memories</button>
@@ -604,6 +609,37 @@ function countdownHTML(unlockAt){
     <div class="u"><div class="n mm">00</div><div class="l">Minutes</div></div>
     <div class="u"><div class="n ss">00</div><div class="l">Seconds</div></div>
   </div>`;
+}
+
+/* ---- live "together for" timer ---- */
+function loveParts(){
+  const start=new Date(LOVE_START), now=new Date();
+  let y=now.getFullYear()-start.getFullYear();
+  let mo=now.getMonth()-start.getMonth();
+  let d=now.getDate()-start.getDate();
+  let h=now.getHours()-start.getHours();
+  let mi=now.getMinutes()-start.getMinutes();
+  let s=now.getSeconds()-start.getSeconds();
+  if(s<0){ s+=60; mi--; }
+  if(mi<0){ mi+=60; h--; }
+  if(h<0){ h+=24; d--; }
+  if(d<0){ d+=new Date(now.getFullYear(), now.getMonth(), 0).getDate(); mo--; }
+  if(mo<0){ mo+=12; y--; }
+  return {y,mo,d,h,mi,s};
+}
+function loveTimerCard(){
+  return `<div class="card center" style="background:var(--grad);border:none">
+    <div class="muted" style="font-weight:700;letter-spacing:1px;font-size:12.5px;text-transform:uppercase">Together since 1 April 2025 · 2:13 AM 💗</div>
+    <div id="loveTimer" class="count" style="flex-wrap:wrap;margin-top:12px"></div>
+    <div class="muted" style="font-size:12.5px;margin-top:2px">and counting, forever ❤️</div>
+  </div>`;
+}
+function updateLoveTimer(){
+  const box=document.getElementById('loveTimer'); if(!box) return;
+  const p=loveParts();
+  const u=(n,l)=>`<div class="u"><div class="n">${n}</div><div class="l">${l}</div></div>`;
+  const pad=n=>String(n).padStart(2,'0');
+  box.innerHTML = u(p.y,'Years')+u(p.mo,'Months')+u(p.d,'Days')+u(pad(p.h),'Hours')+u(pad(p.mi),'Min')+u(pad(p.s),'Sec');
 }
 
 /* ---- riddle detail ---- */
