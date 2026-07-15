@@ -3,646 +3,1309 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<meta name="theme-color" content="#0F0F10" />
+<meta name="theme-color" content="#f7d9e3" />
 <title>The Story of Us ❤️</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🖤</text></svg>" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>❤️</text></svg>" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.48.1/dist/umd/supabase.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 <style>
+/* ============ THEME ============ */
 :root{
-  --bg:#0F0F10; --bg2:#151517; --panel:rgba(24,24,27,.72); --panel-solid:#161619;
-  --gold:#D4AF37; --gold-2:#E8CE7A; --gold-deep:#B8912E;
-  --ink:#EDE7DA; --ink-soft:#9C9384; --line:rgba(212,175,55,.20); --line-soft:rgba(212,175,55,.10);
-  --radius:18px; --radius-sm:12px;
-  --serif:'Cormorant Garamond',Georgia,serif; --sans:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
-  --gold-grad:linear-gradient(135deg,#E8CE7A 0%,#D4AF37 45%,#B8912E 100%);
-  --shadow:0 30px 80px -30px rgba(0,0,0,.85); --shadow-sm:0 12px 30px -14px rgba(0,0,0,.7);
-  --glow:0 0 24px rgba(212,175,55,.18);
+  --pink-50:#fff5f8; --pink-100:#ffe9f0; --pink-200:#ffd6e4; --pink-300:#f9b8cf;
+  --rose:#e28aa6; --rose-deep:#c8607f; --gold:#c9a24b; --gold-soft:#e7cf9b;
+  --cream:#fbf7f2; --ink:#3a2b32; --ink-soft:#6b5a61; --white:#ffffff;
+  --bg:#fff7fa; --bg2:#fdeef4; --card:rgba(255,255,255,.72); --card-solid:#fff;
+  --border:rgba(200,96,127,.16); --shadow:0 20px 60px -24px rgba(150,60,90,.35);
+  --shadow-sm:0 8px 24px -12px rgba(150,60,90,.28);
+  --radius:22px; --radius-sm:14px; --serif:'Cormorant Garamond',Georgia,serif;
+  --sans:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --grad:linear-gradient(135deg,#f9b8cf 0%,#e7cf9b 100%);
+  --grad-deep:linear-gradient(135deg,#c8607f 0%,#c9a24b 120%);
+  --veil:linear-gradient(rgba(255,247,250,.72),rgba(253,238,244,.86));
+  --wall:url("https://rtqslyatkzwghnejzvjl.supabase.co/storage/v1/object/public/media/memory/1784097541040_WhatsApp_Image_2026-07-15_at_12.05.56_PM.jpeg");
+}
+html[data-theme="dark"]{
+  --pink-50:#241820; --pink-100:#2c1d26; --pink-200:#3a2632; --pink-300:#5a3a48;
+  --rose:#e28aa6; --rose-deep:#f2a7c0; --cream:#1c1419; --ink:#f4e8ee; --ink-soft:#c3a9b5;
+  --white:#241820; --bg:#160f14; --bg2:#1e141b; --card:rgba(42,28,37,.66); --card-solid:#241820;
+  --border:rgba(242,167,192,.16); --shadow:0 24px 70px -28px rgba(0,0,0,.7);
+  --shadow-sm:0 10px 30px -16px rgba(0,0,0,.6);
+  --grad:linear-gradient(135deg,#7d4a60 0%,#8a6f3a 100%);
+  --grad-deep:linear-gradient(135deg,#f2a7c0 0%,#e7cf9b 120%);
+  --veil:linear-gradient(rgba(22,15,20,.78),rgba(30,20,27,.88));
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%}
 body{
   font-family:var(--sans); color:var(--ink); background:var(--bg);
-  background-image:
-    radial-gradient(900px 500px at 50% -8%,rgba(212,175,55,.10),transparent 60%),
-    radial-gradient(700px 600px at 110% 20%,rgba(212,175,55,.06),transparent 55%),
-    radial-gradient(700px 700px at -10% 90%,rgba(212,175,55,.05),transparent 55%);
-  background-attachment:fixed; -webkit-font-smoothing:antialiased; line-height:1.55; overflow-x:hidden;
+  background-image:var(--veil), var(--wall);
+  background-size:cover; background-position:center; background-repeat:no-repeat;
+  background-attachment:fixed; -webkit-font-smoothing:antialiased; line-height:1.55;
+  overflow-x:hidden; transition:background .5s,color .4s;
 }
-h1,h2,h3,.serif{font-family:var(--serif);font-weight:600;letter-spacing:.3px;line-height:1.08}
+h1,h2,h3,.serif{font-family:var(--serif);font-weight:600;letter-spacing:.2px;line-height:1.1}
 .muted{color:var(--ink-soft)}
 .center{text-align:center}
-.gold{color:var(--gold)}
 button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
 input,textarea,select{font-family:inherit;font-size:15px}
-a{color:var(--gold-2);text-decoration:none}
-::selection{background:rgba(212,175,55,.3);color:#fff}
-.eyebrow{font-size:11.5px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);font-weight:600}
+a{color:var(--rose-deep);text-decoration:none}
+::selection{background:var(--pink-300);color:#3a2b32}
 
+/* ============ LAYOUT ============ */
 .app{min-height:100dvh;display:flex;flex-direction:column}
-.wrap{width:100%;max-width:1040px;margin:0 auto;padding:22px 18px 110px;flex:1}
-.topbar{position:sticky;top:0;z-index:40;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
-  background:linear-gradient(180deg,rgba(15,15,16,.85),rgba(15,15,16,.35));border-bottom:1px solid var(--line-soft)}
-.topbar-in{max-width:1040px;margin:0 auto;padding:12px 18px;display:flex;align-items:center;gap:10px}
-.brand{font-family:var(--serif);font-size:20px;font-weight:700;display:flex;align-items:center;gap:9px;cursor:pointer;letter-spacing:.5px}
-.brand .em{background:var(--gold-grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.wrap{width:100%;max-width:1080px;margin:0 auto;padding:20px 18px 96px;flex:1}
+.topbar{position:sticky;top:0;z-index:40;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+  background:linear-gradient(180deg,rgba(255,255,255,.55),rgba(255,255,255,.15));
+  border-bottom:1px solid var(--border)}
+html[data-theme="dark"] .topbar{background:linear-gradient(180deg,rgba(30,20,27,.6),rgba(30,20,27,.2))}
+.topbar-in{max-width:1080px;margin:0 auto;padding:12px 18px;display:flex;align-items:center;gap:12px}
+.brand{font-family:var(--serif);font-size:22px;font-weight:700;display:flex;align-items:center;gap:8px}
+.brand .dot{width:9px;height:9px;border-radius:50%;background:var(--grad-deep);box-shadow:0 0 14px var(--rose)}
 .spacer{flex:1}
-.iconbtn{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:var(--panel);
-  border:1px solid var(--line);box-shadow:var(--shadow-sm);transition:.2s;position:relative;color:var(--ink)}
-.iconbtn:hover{transform:translateY(-2px);border-color:var(--gold)}
-.iconbtn svg{width:18px;height:18px}
+.iconbtn{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:var(--card);
+  border:1px solid var(--border);box-shadow:var(--shadow-sm);transition:.2s;position:relative}
+.iconbtn:hover{transform:translateY(-2px)}
+.iconbtn svg{width:19px;height:19px}
 .badge{position:absolute;top:-4px;right:-4px;min-width:18px;height:18px;padding:0 5px;border-radius:9px;
-  background:var(--gold);color:#1a1508;font-size:11px;font-weight:800;display:grid;place-items:center}
+  background:var(--rose-deep);color:#fff;font-size:11px;font-weight:700;display:grid;place-items:center}
 
-.card{background:var(--panel);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
-  border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px}
-.card.solid{background:var(--panel-solid)}
+/* ============ CARDS ============ */
+.card{background:var(--card);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px}
+.card.solid{background:var(--card-solid)}
 .grid{display:grid;gap:16px}
-.g2{grid-template-columns:repeat(2,1fr)} .g3{grid-template-columns:repeat(3,1fr)} .g4{grid-template-columns:repeat(4,1fr)}
+.g2{grid-template-columns:repeat(2,1fr)}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g4{grid-template-columns:repeat(4,1fr)}
 @media(max-width:760px){.g2,.g3,.g4{grid-template-columns:1fr}}
-.row{display:flex;gap:12px;align-items:center} .wrap-flex{flex-wrap:wrap}
-.divider{height:1px;background:var(--line-soft);margin:16px 0}
+.row{display:flex;gap:12px;align-items:center}
+.wrap-flex{flex-wrap:wrap}
 
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 22px;border-radius:999px;
-  font-weight:700;font-size:14px;letter-spacing:.3px;background:var(--gold-grad);color:#1a1407;box-shadow:var(--shadow-sm);
+/* ============ BUTTONS ============ */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 20px;border-radius:999px;
+  font-weight:600;font-size:14.5px;background:var(--grad-deep);color:#fff;box-shadow:var(--shadow-sm);
   transition:transform .15s,box-shadow .2s,opacity .2s;white-space:nowrap}
-.btn:hover{transform:translateY(-2px);box-shadow:var(--glow)}
+.btn:hover{transform:translateY(-2px)}
+.btn:active{transform:translateY(0)}
 .btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
-.btn.ghost{background:transparent;color:var(--gold);border:1px solid var(--gold)}
-.btn.soft{background:rgba(212,175,55,.12);color:var(--gold-2);border:1px solid var(--line)}
-.btn.danger{background:transparent;color:#e59a8f;border:1px solid rgba(229,154,143,.5)}
-.btn.sm{padding:8px 15px;font-size:12.5px} .btn.block{width:100%}
+.btn.ghost{background:var(--card);color:var(--ink);border:1px solid var(--border)}
+.btn.soft{background:var(--pink-100);color:var(--rose-deep)}
+.btn.gold{background:linear-gradient(135deg,var(--gold),var(--gold-soft));color:#4a3a10}
+.btn.danger{background:linear-gradient(135deg,#e06a6a,#d88)}
+.btn.sm{padding:8px 14px;font-size:13px}
+.btn.block{width:100%}
 
-label.fld{display:block;margin:14px 0 6px;font-size:11.5px;font-weight:600;color:var(--gold);text-transform:uppercase;letter-spacing:1.4px}
-.input,textarea.input,select.input{width:100%;padding:13px 15px;border-radius:var(--radius-sm);border:1px solid var(--line);
-  background:rgba(0,0,0,.35);color:var(--ink);outline:none;transition:.2s}
-.input::placeholder{color:#6d685c}
-.input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(212,175,55,.14)}
-textarea.input{min-height:100px;resize:vertical;line-height:1.7}
+/* ============ FORMS ============ */
+label.fld{display:block;margin:12px 0 6px;font-size:12.5px;font-weight:600;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.6px}
+.input,textarea.input,select.input{width:100%;padding:13px 15px;border-radius:var(--radius-sm);border:1px solid var(--border);
+  background:var(--white);color:var(--ink);outline:none;transition:.2s;box-shadow:inset 0 1px 2px rgba(0,0,0,.02)}
+.input:focus{border-color:var(--rose);box-shadow:0 0 0 4px rgba(226,138,166,.16)}
+textarea.input{min-height:96px;resize:vertical;line-height:1.6}
 
-.pill{display:inline-flex;align-items:center;gap:6px;padding:5px 13px;border-radius:999px;font-size:11.5px;font-weight:700;letter-spacing:.5px;text-transform:uppercase}
-.pill.wait{background:rgba(212,175,55,.14);color:var(--gold-2);border:1px solid var(--line)}
-.pill.ok{background:rgba(120,200,140,.14);color:#8fd6a3;border:1px solid rgba(120,200,140,.3)}
-.pill.bad{background:rgba(229,154,143,.14);color:#e59a8f;border:1px solid rgba(229,154,143,.3)}
-.pill.info{background:rgba(212,175,55,.1);color:var(--gold);border:1px solid var(--line-soft)}
+/* ============ PILLS / TAGS ============ */
+.pill{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:999px;font-size:12px;font-weight:600}
+.pill.wait{background:#fff3d6;color:#9a7a1e}
+.pill.ok{background:#e0f5e6;color:#2f8a52}
+.pill.bad{background:#ffe1e1;color:#c0483f}
+.pill.info{background:var(--pink-100);color:var(--rose-deep)}
+html[data-theme="dark"] .pill.wait{background:#4a3c17;color:#f0d488}
+html[data-theme="dark"] .pill.ok{background:#1f4630;color:#8ee0a8}
+html[data-theme="dark"] .pill.bad{background:#4d2320;color:#f2a49c}
 
-/* wax seal */
-.seal{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;flex:0 0 auto;
-  background:radial-gradient(circle at 35% 30%,#E8CE7A,#B8912E 70%,#8a6c1f);
-  box-shadow:inset 0 2px 6px rgba(255,255,255,.4),inset 0 -4px 10px rgba(0,0,0,.4),var(--glow);
-  font-family:var(--serif);font-weight:700;color:#3a2c07;font-size:20px;letter-spacing:1px}
-.seal.lg{width:74px;height:74px;font-size:26px}
+/* ============ COUNTDOWN ============ */
+.count{display:flex;gap:14px;justify-content:center;margin:8px 0}
+.count .u{background:var(--card-solid);border:1px solid var(--border);border-radius:18px;padding:14px 8px;min-width:78px;text-align:center;box-shadow:var(--shadow-sm)}
+.count .n{font-family:var(--serif);font-size:42px;font-weight:700;line-height:1;background:var(--grad-deep);-webkit-background-clip:text;background-clip:text;color:transparent}
+.count .l{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink-soft);margin-top:6px}
+@media(max-width:520px){.count .u{min-width:64px}.count .n{font-size:32px}}
 
-/* countdown / timer units */
-.count{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin:10px 0}
-.count .u{background:rgba(0,0,0,.35);border:1px solid var(--line);border-radius:14px;padding:12px 10px;min-width:74px;text-align:center}
-.count .n{font-family:var(--serif);font-size:38px;font-weight:700;line-height:1;background:var(--gold-grad);-webkit-background-clip:text;background-clip:text;color:transparent}
-.count .l{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--ink-soft);margin-top:6px}
-@media(max-width:520px){.count .u{min-width:58px}.count .n{font-size:28px}}
+/* ============ RIDDLE TILES ============ */
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media(max-width:760px){.tiles{grid-template-columns:repeat(3,1fr);gap:9px}}
+.tile{position:relative;aspect-ratio:1;border-radius:20px;padding:12px;display:flex;flex-direction:column;justify-content:space-between;
+  border:1px solid var(--border);background:var(--card);box-shadow:var(--shadow-sm);transition:.22s;overflow:hidden;cursor:pointer}
+.tile:hover{transform:translateY(-3px)}
+.tile.locked{opacity:.62;cursor:not-allowed}
+.tile.done{background:linear-gradient(160deg,rgba(201,162,75,.16),rgba(226,138,166,.1))}
+.tile .num{font-family:var(--serif);font-size:30px;font-weight:700;color:var(--rose-deep)}
+.tile .st{font-size:11px;font-weight:600}
+.tile .ic{position:absolute;top:10px;right:10px;opacity:.7}
+.tile .ic svg{width:16px;height:16px}
+.tile.done .num{color:var(--gold)}
 
-/* collage board */
-.board{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;border-radius:16px;overflow:hidden}
-@media(max-width:560px){.board{gap:6px}}
-.cell{position:relative;aspect-ratio:1;background:linear-gradient(160deg,#1b1b1f,#101012);border:1px solid var(--line-soft);
-  display:grid;place-items:center;overflow:hidden;transition:.4s}
-.cell img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;animation:reveal .8s ease both}
-.cell .rn{font-family:var(--serif);font-size:22px;color:rgba(212,175,55,.5);font-weight:700}
-.cell.locked .rn{color:rgba(212,175,55,.28)}
-.cell.current{border-color:var(--gold);box-shadow:inset 0 0 0 1px var(--gold),0 0 18px rgba(212,175,55,.25);animation:pulse 2.2s ease infinite}
-.cell.done{border-color:var(--line)}
-.cell .ck{position:absolute;bottom:6px;right:6px;background:var(--gold);color:#1a1407;border-radius:50%;width:20px;height:20px;display:grid;place-items:center}
-.cell .ck svg{width:12px;height:12px}
-.cellclick{cursor:pointer}
+/* ============ PROGRESS RING ============ */
+.ring{--p:0;width:118px;height:118px;border-radius:50%;display:grid;place-items:center;
+  background:conic-gradient(var(--rose-deep) calc(var(--p)*1%),var(--pink-200) 0);position:relative}
+.ring::after{content:"";position:absolute;inset:9px;border-radius:50%;background:var(--card-solid)}
+.ring .v{position:relative;z-index:1;text-align:center}
+.ring .v b{font-family:var(--serif);font-size:30px;display:block;line-height:1}
 
-.chapline{display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid var(--line-soft)}
-.chapline:last-child{border-bottom:none}
-.chapline .t{flex:1} .chapline .t b{font-family:var(--serif);font-size:20px;font-weight:600;display:block}
-.chapline.locked{opacity:.5}
+/* ============ OVERLAYS ============ */
+.overlay{position:fixed;inset:0;z-index:80;display:grid;place-items:center;padding:20px;
+  background:rgba(60,30,45,.42);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.modal{width:100%;max-width:560px;max-height:88dvh;overflow:auto;background:var(--card-solid);border:1px solid var(--border);
+  border-radius:26px;box-shadow:var(--shadow);padding:26px}
+.celebrate{position:fixed;inset:0;z-index:90;display:grid;place-items:center;pointer-events:none}
+.celebrate .msg{pointer-events:auto;text-align:center;max-width:520px;padding:34px;border-radius:28px;
+  background:var(--card-solid);border:1px solid var(--border);box-shadow:var(--shadow)}
 
-.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:4px 0 20px}
-.tab{padding:9px 16px;border-radius:999px;font-size:13px;font-weight:600;background:var(--panel);border:1px solid var(--line-soft);color:var(--ink-soft);transition:.2s}
-.tab.active{background:var(--gold-grad);color:#1a1407;border-color:transparent}
-
-.overlay{position:fixed;inset:0;z-index:80;display:grid;place-items:center;padding:20px;background:rgba(0,0,0,.7);backdrop-filter:blur(8px)}
-.modal{width:100%;max-width:560px;max-height:88dvh;overflow:auto;background:var(--panel-solid);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);padding:26px}
-.celebrate{position:fixed;inset:0;z-index:90;display:grid;place-items:center;pointer-events:none;padding:20px}
-.celebrate .msg{pointer-events:auto;text-align:center;max-width:520px;padding:34px;border-radius:24px;background:var(--panel-solid);border:1px solid var(--gold);box-shadow:var(--shadow),var(--glow)}
-
+/* toast */
 .toasts{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:100;display:flex;flex-direction:column;gap:8px;width:min(420px,92vw)}
-.toast{background:var(--panel-solid);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:12px 15px;display:flex;gap:10px;align-items:flex-start;animation:slideDown .4s cubic-bezier(.2,.9,.3,1.2)}
-.toast .t{font-weight:700;font-size:14px} .toast .b{font-size:13px;color:var(--ink-soft)}
+.toast{background:var(--card-solid);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow);padding:12px 16px;
+  display:flex;gap:10px;align-items:flex-start;animation:slideDown .4s cubic-bezier(.2,.9,.3,1.2)}
+.toast .t{font-weight:700;font-size:14px}
+.toast .b{font-size:13px;color:var(--ink-soft)}
 
+/* hearts float */
 .hearts{position:fixed;inset:0;pointer-events:none;z-index:85;overflow:hidden}
 .hearts span{position:absolute;bottom:-40px;font-size:22px;animation:floatUp linear forwards;opacity:.9}
-.lightbox{position:fixed;inset:0;z-index:95;background:rgba(0,0,0,.9);display:grid;place-items:center;padding:20px}
-.lightbox img,.lightbox video{max-width:94vw;max-height:90dvh;border-radius:12px;box-shadow:var(--shadow)}
-.mediaThumb{width:100%;border-radius:12px;border:1px solid var(--line);margin-top:8px}
-.kv{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px dashed var(--line-soft);font-size:14px}
+
+/* nav */
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 18px}
+.tab{padding:9px 16px;border-radius:999px;font-size:13.5px;font-weight:600;background:var(--card);border:1px solid var(--border);color:var(--ink-soft);transition:.2s}
+.tab.active{background:var(--grad-deep);color:#fff;border-color:transparent}
+
+/* lightbox */
+.lightbox{position:fixed;inset:0;z-index:95;background:rgba(20,10,15,.86);display:grid;place-items:center;padding:20px}
+.lightbox img,.lightbox video{max-width:94vw;max-height:90dvh;border-radius:16px;box-shadow:var(--shadow)}
+
+/* misc */
+.divider{height:1px;background:var(--border);margin:16px 0}
+.kv{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-bottom:1px dashed var(--border);font-size:14px}
 .kv:last-child{border-bottom:none}
-.empty{text-align:center;padding:44px 16px;color:var(--ink-soft)} .empty .e{font-size:40px;margin-bottom:8px}
-.spin{width:22px;height:22px;border-radius:50%;border:3px solid rgba(212,175,55,.25);border-top-color:var(--gold);animation:spin .8s linear infinite;display:inline-block}
+.mediaThumb{width:100%;border-radius:14px;border:1px solid var(--border);margin-top:8px}
+.empty{text-align:center;padding:40px 16px;color:var(--ink-soft)}
+.empty .e{font-size:40px;margin-bottom:8px}
+.fadein{animation:fadein .5s ease both}
+.pop{animation:pop .5s cubic-bezier(.2,.9,.3,1.4) both}
+.spin{width:22px;height:22px;border-radius:50%;border:3px solid var(--pink-200);border-top-color:var(--rose-deep);animation:spin .8s linear infinite;display:inline-block}
 .loadscreen{position:fixed;inset:0;z-index:200;display:grid;place-items:center;background:var(--bg)}
-.fadein{animation:fadein .5s ease both} .pop{animation:pop .5s cubic-bezier(.2,.9,.3,1.4) both}
-.reward{font-family:var(--serif);font-style:italic;font-size:21px;color:var(--gold-2);line-height:1.6}
 
 @keyframes spin{to{transform:rotate(360deg)}}
 @keyframes fadein{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
-@keyframes pop{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:none}}
-@keyframes reveal{from{opacity:0;transform:scale(1.1);filter:blur(8px)}to{opacity:1;transform:none;filter:none}}
+@keyframes pop{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:none}}
 @keyframes slideDown{from{opacity:0;transform:translateY(-14px)}to{opacity:1;transform:none}}
 @keyframes floatUp{to{transform:translateY(-110vh) rotate(40deg);opacity:0}}
-@keyframes beat{0%,100%{transform:scale(1)}30%{transform:scale(1.16)}45%{transform:scale(1)}60%{transform:scale(1.1)}}
-@keyframes pulse{0%,100%{box-shadow:inset 0 0 0 1px var(--gold),0 0 12px rgba(212,175,55,.15)}50%{box-shadow:inset 0 0 0 1px var(--gold),0 0 26px rgba(212,175,55,.4)}}
-.beat{display:inline-block;animation:beat 1.8s ease infinite}
-.shimmer{background:linear-gradient(90deg,rgba(212,175,55,.06) 25%,rgba(212,175,55,.18) 50%,rgba(212,175,55,.06) 75%);background-size:800px 100%;animation:sh 1.6s infinite}
-@keyframes sh{0%{background-position:-400px 0}100%{background-position:400px 0}}
+@keyframes beat{0%,100%{transform:scale(1)}30%{transform:scale(1.18)}45%{transform:scale(1)}60%{transform:scale(1.12)}}
+.beat{display:inline-block;animation:beat 1.6s ease infinite}
+@keyframes shimmer{0%{background-position:-400px 0}100%{background-position:400px 0}}
+.shimmer{background:linear-gradient(90deg,var(--pink-100) 25%,var(--pink-200) 50%,var(--pink-100) 75%);background-size:800px 100%;animation:shimmer 1.6s infinite}
 </style>
 </head>
 <body>
 <div id="root"></div>
+
 <div class="loadscreen" id="loadscreen">
   <div class="center">
-    <div style="font-size:58px" class="beat">🖤</div>
-    <div class="serif" style="font-size:26px;margin-top:10px;letter-spacing:1px">The Story of Us</div>
-    <div class="muted" style="margin-top:6px">setting the scene…</div>
+    <div style="font-size:64px" class="beat">❤️</div>
+    <div class="serif" style="font-size:26px;margin-top:10px">The Story of Us</div>
+    <div class="muted" style="margin-top:6px">preparing something lovely…</div>
     <div style="margin-top:16px"><span class="spin"></span></div>
   </div>
 </div>
+
 <div class="toasts" id="toasts"></div>
 
 <script>
-/* ============ CONFIG ============ */
+/* ============================================================
+   CONFIG — this single file is already wired to your live
+   Supabase project. Nothing else to set up.
+   ============================================================ */
 const SUPABASE_URL  = "https://rtqslyatkzwghnejzvjl.supabase.co";
 const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ0cXNseWF0a3p3Z2huZWp6dmpsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQwNTAxOTYsImV4cCI6MjA5OTYyNjE5Nn0.pPxFM901AiomGlPTuQLYEZgOLVfQyNghvJfwguHq9iE";
-const SONG_URL   = "song.mp3";                       // your song, sitting next to this file
-const LOVE_START = "2025-04-01T02:13:00+05:30";       // when you started dating (IST)
-
+// Apply saved theme before anything paints
+(function(){ document.documentElement.dataset.theme = localStorage.getItem('th-theme')||'light'; })();
 if(typeof supabase==='undefined' || !supabase.createClient){
-  document.getElementById('loadscreen').innerHTML='<div class="center" style="max-width:420px;padding:24px"><div style="font-size:48px">🌙</div><div class="serif" style="font-size:24px;margin-top:8px">Couldn’t load the library</div><div class="muted" style="margin-top:8px">Check your connection and refresh.</div></div>';
+  document.getElementById('loadscreen').innerHTML =
+    '<div class="center" style="max-width:420px;padding:24px"><div style="font-size:48px">🌙</div>'+
+    '<div class="serif" style="font-size:24px;margin-top:8px">Couldn’t load the library</div>'+
+    '<div class="muted" style="margin-top:8px">Please check your internet connection and refresh. '+
+    'The app needs to reach the Supabase and jsDelivr networks.</div></div>';
   throw new Error('supabase-js failed to load');
 }
+// Per-TAB auth storage: lets you keep Admin open in one tab and Player in another
+// (e.g. for testing) without the two logins overwriting each other. On real
+// separate devices this behaves exactly like normal "stay logged in for this session".
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON, {
-  auth:{ storage: window.sessionStorage, storageKey:'sou-auth', persistSession:true, autoRefreshToken:true, detectSessionInUrl:false },
+  auth:{ storage: window.sessionStorage, storageKey:'th-auth', persistSession:true, autoRefreshToken:true, detectSessionInUrl:false },
   realtime:{ params:{ eventsPerSecond:5 } }
 });
 
-/* ============ HELPERS ============ */
-const $=(s,r=document)=>r.querySelector(s);
-const el=id=>document.getElementById(id);
-const esc=s=>(s==null?"":String(s)).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const nl2br=s=>esc(s).replace(/\n/g,"<br>");
-const fmtDate=ts=>ts?new Date(ts).toLocaleString(undefined,{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}):'';
-function roman(n){const m=[[10,'X'],[9,'IX'],[5,'V'],[4,'IV'],[1,'I']];let r='';for(const[v,s]of m){while(n>=v){r+=s;n-=v;}}return r;}
-const QUOTES=["Every love story is beautiful, but ours is my favourite.","I would find you in any lifetime.","You are my today and all of my tomorrows.","Whatever our souls are made of, yours and mine are the same.","Home is wherever you are."];
+// Background music — your song. Points to song.mp3 sitting next to this file.
+const SONG_URL = "song.mp3";
+// The moment you two started dating (IST). Powers the live "together for" timer.
+const LOVE_START = "2025-04-01T02:13:00+05:30";
 
-let state={ session:null, profile:null, role:null, view:'dash', activeRiddle:null,
-  board:[], collage:{}, notifications:[], settings:null, timeline:[], music:false, channels:[], _celebrated:new Set() };
+/* ============================================================
+   SMALL HELPERS
+   ============================================================ */
+const $ = (s,r=document)=>r.querySelector(s);
+const el = id=>document.getElementById(id);
+const esc = s => (s==null?"":String(s)).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const nl2br = s => esc(s).replace(/\n/g,"<br>");
+const fmtDate = ts => ts? new Date(ts).toLocaleString(undefined,{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}) : '';
+const ROMANTIC_QUOTES = [
+  "In all the world, there is no heart for me like yours.",
+  "You are, and always have been, my dream.",
+  "I have waited a lifetime to find you — and you were worth every second.",
+  "Every love story is beautiful, but ours is my favourite.",
+  "You are my today and all of my tomorrows.",
+  "Whatever our souls are made of, yours and mine are the same.",
+  "I would find you in any lifetime.",
+  "Home is wherever you are."
+];
 
-function toast(title,body,kind){
-  const t=document.createElement('div');t.className='toast';
-  t.innerHTML=`<div style="font-size:18px">${kind==='bad'?'🖤':kind==='ok'?'✨':'💌'}</div><div><div class="t">${esc(title)}</div>${body?`<div class="b">${esc(body)}</div>`:''}</div>`;
-  el('toasts').appendChild(t);
-  setTimeout(()=>{t.style.transition='.4s';t.style.opacity='0';t.style.transform='translateY(-10px)';setTimeout(()=>t.remove(),400);},4400);
+let state = {
+  session:null, profile:null, role:null,
+  view:'dash', activeRiddle:null,
+  board:[], notifications:[], settings:null,
+  progressMap:{}, achievements:[], playerAch:[],
+  music:false, seenComplete:new Set(), channels:[]
+};
+
+function toast(title, body, kind){
+  const wrap = el('toasts'); const t=document.createElement('div'); t.className='toast';
+  t.innerHTML = `<div style="font-size:18px">${kind==='bad'?'💔':kind==='ok'?'✨':'💌'}</div>
+    <div><div class="t">${esc(title)}</div>${body?`<div class="b">${esc(body)}</div>`:''}</div>`;
+  wrap.appendChild(t);
+  setTimeout(()=>{ t.style.transition='.4s'; t.style.opacity='0'; t.style.transform='translateY(-10px)'; setTimeout(()=>t.remove(),400); }, 4200);
 }
-function floatHearts(n=18){const layer=document.createElement('div');layer.className='hearts';document.body.appendChild(layer);const em=['❤️','🖤','✨','🤍','💛'];for(let i=0;i<n;i++){const s=document.createElement('span');s.textContent=em[i%em.length];s.style.left=Math.random()*100+'vw';s.style.fontSize=(16+Math.random()*22)+'px';s.style.animationDuration=(3+Math.random()*3)+'s';s.style.animationDelay=(Math.random()*1.2)+'s';layer.appendChild(s);}setTimeout(()=>layer.remove(),7000);}
-function burstConfetti(){try{const c=window.confetti;if(!c)return;const colors=['#D4AF37','#E8CE7A','#B8912E','#ffffff','#EDE7DA'];c({particleCount:120,spread:80,origin:{y:.6},colors});setTimeout(()=>c({particleCount:70,angle:60,spread:70,origin:{x:0},colors}),150);setTimeout(()=>c({particleCount:70,angle:120,spread:70,origin:{x:1},colors}),300);}catch(e){}}
+function floatHearts(n=18){
+  const layer=document.createElement('div'); layer.className='hearts'; document.body.appendChild(layer);
+  const em=['❤️','💗','💖','🌹','✨','💕'];
+  for(let i=0;i<n;i++){ const s=document.createElement('span'); s.textContent=em[i%em.length];
+    s.style.left=Math.random()*100+'vw'; s.style.fontSize=(16+Math.random()*22)+'px';
+    s.style.animationDuration=(3+Math.random()*3)+'s'; s.style.animationDelay=(Math.random()*1.2)+'s'; layer.appendChild(s); }
+  setTimeout(()=>layer.remove(),7000);
+}
+function burstConfetti(){
+  try{
+    const c=window.confetti; if(!c) return;
+    const colors=['#e28aa6','#c9a24b','#f9b8cf','#ffffff','#c8607f'];
+    c({particleCount:120,spread:80,origin:{y:.6},colors});
+    setTimeout(()=>c({particleCount:80,angle:60,spread:70,origin:{x:0},colors}),150);
+    setTimeout(()=>c({particleCount:80,angle:120,spread:70,origin:{x:1},colors}),300);
+  }catch(e){}
+}
 
-/* ============ AUTH ============ */
-async function loadProfile(){const{data}=await sb.from('profiles').select('*').eq('id',state.session.user.id).maybeSingle();state.profile=data;state.role=data?.role||'player';}
+/* ============================================================
+   AUTH
+   ============================================================ */
+async function loadProfile(){
+  const { data } = await sb.from('profiles').select('*').eq('id', state.session.user.id).maybeSingle();
+  state.profile = data; state.role = data?.role || 'player';
+}
 function renderLogin(msg){
   el('loadscreen').style.display='none';
-  el('root').innerHTML=`<div class="app"><div class="wrap" style="display:grid;place-items:center;min-height:90dvh">
+  el('root').innerHTML = `
+  <div class="app"><div class="wrap" style="display:grid;place-items:center;min-height:90dvh">
     <div class="card solid pop" style="max-width:420px;width:100%;text-align:center">
-      <div class="eyebrow">A Private Invitation</div>
-      <div style="font-size:46px;margin-top:10px" class="beat">🖤</div>
-      <h1 style="font-size:36px;margin-top:6px">The Story of Us</h1>
-      <p class="muted" style="margin:8px 0 18px">Twelve chapters. One picture. Ours.</p>
+      <div style="font-size:52px" class="beat">❤️</div>
+      <h1 style="font-size:34px;margin-top:8px">The Story of Us</h1>
+      <p class="muted" style="margin:6px 0 18px">A little love story, unlocked one clue at a time.</p>
       <form id="loginForm" style="text-align:left">
-        <label class="fld">Email</label><input class="input" id="email" type="email" autocomplete="username" required />
-        <label class="fld">Password</label><input class="input" id="password" type="password" autocomplete="current-password" required />
+        <label class="fld">Email</label>
+        <input class="input" id="email" type="email" autocomplete="username" placeholder="you@treasure.love" required />
+        <label class="fld">Password</label>
+        <input class="input" id="password" type="password" autocomplete="current-password" placeholder="••••••••" required />
         ${msg?`<div class="pill bad" style="margin-top:12px">${esc(msg)}</div>`:''}
-        <button class="btn block" id="loginBtn" style="margin-top:18px" type="submit">Begin</button>
+        <button class="btn block" id="loginBtn" style="margin-top:18px" type="submit">Enter our story</button>
       </form>
-    </div></div></div>`;
-  $('#loginForm').addEventListener('submit',async e=>{e.preventDefault();const b=$('#loginBtn');b.disabled=true;b.innerHTML='<span class="spin"></span>';const{error}=await sb.auth.signInWithPassword({email:$('#email').value.trim(),password:$('#password').value});if(error){renderLogin(error.message);return;}boot();});
-}
-async function boot(){
-  const{data:{session}}=await sb.auth.getSession();
-  if(!session){renderLogin();return;}
-  state.session=session; await loadProfile();
-  if(!state.profile){renderLogin('No profile found for this account.');return;}
-  el('loadscreen').style.display='none';
-  await initData(); subscribeRealtime(); render(); startClock();
+      <p class="muted" style="font-size:12px;margin-top:16px">Two hearts only. Ask your keeper for the key.</p>
+    </div>
+  </div></div>`;
+  $('#loginForm').addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    const b=$('#loginBtn'); b.disabled=true; b.innerHTML='<span class="spin"></span>';
+    const { error } = await sb.auth.signInWithPassword({ email:$('#email').value.trim(), password:$('#password').value });
+    if(error){ renderLogin(error.message); return; }
+    boot();
+  });
 }
 
-/* ============ DATA ============ */
+async function boot(){
+  const { data:{ session } } = await sb.auth.getSession();
+  if(!session){ renderLogin(); return; }
+  state.session = session;
+  await loadProfile();
+  if(!state.profile){ renderLogin('No profile found for this account.'); return; }
+  el('loadscreen').style.display='none';
+  applyTheme();
+  await initData();
+  subscribeRealtime();
+  render();
+  startClock();
+}
+
+/* ============================================================
+   DATA LOADERS
+   ============================================================ */
 async function initData(){
-  const jobs=[loadNotifications(),loadSettings()];
-  if(state.role==='player'){jobs.push(loadBoard(),loadCollage());}else{jobs.push(loadAdminData(),loadCollage());}
+  const jobs=[loadNotifications(), loadSettings()];
+  if(state.role==='player'){ jobs.push(loadBoard(), loadAchievements()); }
+  else { jobs.push(loadAdminData()); }
   await Promise.all(jobs);
 }
-async function loadBoard(){const{data}=await sb.rpc('get_player_board');state.board=(data||[]).slice().sort((a,b)=>a.day_number-b.day_number||a.riddle_number-b.riddle_number);}
-async function loadCollage(){
-  const{data}=await sb.from('media').select('riddle_id,path,created_at').eq('context','misc').order('created_at',{ascending:true});
-  state.collage={};(data||[]).forEach(m=>{if(m.riddle_id)state.collage[m.riddle_id]=publicUrl('media',m.path);});
+async function loadBoard(){
+  const { data } = await sb.rpc('get_player_board');
+  state.board = data||[];
+  // detect newly completed for celebration
+  state.board.forEach(r=>{ if(r.status==='completed') state.seenComplete.add(r.riddle_id); });
 }
-async function loadNotifications(){const{data}=await sb.from('notifications').select('*').order('created_at',{ascending:false}).limit(30);state.notifications=data||[];}
-async function loadSettings(){const{data}=await sb.from('treasure_settings').select('*').maybeSingle();state.settings=data||null;}
-async function loadTimeline(){const{data}=await sb.from('timeline_events').select('*').order('position');state.timeline=data||[];}
+async function loadNotifications(){
+  const { data } = await sb.from('notifications').select('*').order('created_at',{ascending:false}).limit(30);
+  state.notifications = data||[];
+}
+async function loadSettings(){
+  const { data } = await sb.from('treasure_settings').select('*').maybeSingle();
+  state.settings = data||null;
+}
+async function loadAchievements(){
+  const [a,b] = await Promise.all([
+    sb.from('achievements').select('*').order('sort'),
+    sb.from('player_achievements').select('*')
+  ]);
+  state.achievements=a.data||[]; state.playerAch=(b.data||[]).map(x=>x.achievement_code);
+}
 async function loadAdminData(){
-  const[subs,prog,logs,days,riddles]=await Promise.all([
+  const [subs,pun,proofs,prog,logs,days,riddles,media] = await Promise.all([
     sb.from('answer_submissions').select('*').order('created_at',{ascending:false}),
+    sb.from('punishments').select('*').order('created_at',{ascending:false}),
+    sb.from('punishment_proofs').select('*').order('created_at',{ascending:false}),
     sb.from('player_progress').select('*'),
     sb.from('activity_logs').select('*').order('created_at',{ascending:false}).limit(30),
     sb.from('days').select('*').order('day_number'),
-    sb.from('riddles').select('*')
+    sb.from('riddles').select('*').order('day_id'),
+    sb.from('media').select('riddle_id,path,created_at').eq('context','misc').order('created_at',{ascending:true})
   ]);
-  const rs=(riddles.data||[]).slice().sort((a,b)=>{const da=(days.data||[]).find(x=>x.id===a.day_id)?.day_number||0;const db=(days.data||[]).find(x=>x.id===b.day_id)?.day_number||0;return da-db||a.riddle_number-b.riddle_number;});
-  state.admin={subs:subs.data||[],prog:prog.data||[],logs:logs.data||[],days:days.data||[],riddles:rs};
-}
-function publicUrl(bucket,path){const{data}=sb.storage.from(bucket).getPublicUrl(path);return data.publicUrl;}
-function chapterNo(riddleId){const i=state.board.findIndex(r=>r.riddle_id===riddleId);return i>=0?i+1:0;}
-function riddleSeq(){ // admin: ordered list with chapter numbers
-  return (state.admin?.riddles||[]).map((r,i)=>({...r,chapter:i+1}));
+  const photos={}; (media?.data||[]).forEach(m=>{ if(m.riddle_id) photos[m.riddle_id]=publicUrl('media',m.path); });
+  state.admin = {
+    subs:subs.data||[], pun:pun.data||[], proofs:proofs.data||[], prog:prog.data||[],
+    logs:logs.data||[], days:days.data||[], riddles:riddles.data||[], photos
+  };
 }
 
-/* ============ REALTIME ============ */
+/* ============================================================
+   REALTIME
+   ============================================================ */
 function subscribeRealtime(){
-  state.channels.forEach(c=>sb.removeChannel(c));state.channels=[];
-  const ch=sb.channel('rt-'+Math.random().toString(36).slice(2))
-    .on('postgres_changes',{event:'*',schema:'public',table:'notifications'},onNotif)
-    .on('postgres_changes',{event:'*',schema:'public',table:'player_progress'},()=>refresh())
-    .on('postgres_changes',{event:'*',schema:'public',table:'answer_submissions'},()=>refresh())
-    .on('postgres_changes',{event:'*',schema:'public',table:'media'},()=>refresh())
+  state.channels.forEach(c=>sb.removeChannel(c)); state.channels=[];
+  const ch = sb.channel('rt-'+Math.random().toString(36).slice(2))
+    .on('postgres_changes',{event:'*',schema:'public',table:'notifications'}, onNotif)
+    .on('postgres_changes',{event:'*',schema:'public',table:'player_progress'}, ()=>refresh('progress'))
+    .on('postgres_changes',{event:'*',schema:'public',table:'answer_submissions'}, ()=>refresh('subs'))
+    .on('postgres_changes',{event:'*',schema:'public',table:'punishments'}, ()=>refresh('pun'))
+    .on('postgres_changes',{event:'*',schema:'public',table:'punishment_proofs'}, ()=>refresh('proofs'))
     .subscribe();
   state.channels.push(ch);
 }
-async function onNotif(payload){const n=payload.new;if(n&&n.recipient_id===state.session.user.id)toast(n.title,n.body,/reject/.test(n.type)?'bad':'ok');await loadNotifications();paintNotif();}
-let rt=null;
-function refresh(){clearTimeout(rt);rt=setTimeout(async()=>{
-  if(state.role==='player'){
-    const prev={};state.board.forEach(r=>prev[r.riddle_id]=r.status);
-    await Promise.all([loadBoard(),loadCollage()]);
-    state.board.forEach(r=>{if(r.status==='completed'&&prev[r.riddle_id]&&prev[r.riddle_id]!=='completed'&&!state._celebrated.has(r.riddle_id))celebrate(r);});
-    render();
-  }else{await Promise.all([loadAdminData(),loadCollage()]);render();}
-},220);}
+async function onNotif(payload){
+  const n = payload.new;
+  if(n && n.recipient_id === state.session.user.id){
+    toast(n.title, n.body, /reject/.test(n.type)?'bad':'ok');
+  }
+  await loadNotifications(); paintNotif();
+}
+let refreshTimer=null;
+function refresh(which){
+  clearTimeout(refreshTimer);
+  refreshTimer=setTimeout(async ()=>{
+    if(state.role==='player'){
+      const prev = {...playerStatusById()};
+      await loadBoard(); await loadAchievements();
+      // celebration on transition to completed
+      state.board.forEach(r=>{
+        if(r.status==='completed' && prev[r.riddle_id] && prev[r.riddle_id]!=='completed' && !state._celebrated?.has(r.riddle_id)){
+          celebrate(r);
+        }
+      });
+      render();
+    } else {
+      await loadAdminData(); render();
+    }
+  }, 220);
+}
+function playerStatusById(){ const m={}; state.board.forEach(r=>m[r.riddle_id]=r.status); return m; }
 
-/* ============ CLOCK ============ */
+/* ============================================================
+   CLOCK (countdowns)
+   ============================================================ */
 let clockInt=null;
-function startClock(){if(clockInt)clearInterval(clockInt);clockInt=setInterval(tick,1000);}
-function tick(){
-  updateLoveTimer();let unlocked=false;
+function startClock(){ if(clockInt) clearInterval(clockInt); clockInt=setInterval(tickClocks,1000); }
+function tickClocks(){
+  updateLoveTimer();
+  let unlockedSomething=false;
   document.querySelectorAll('[data-until]').forEach(node=>{
-    const diff=+node.dataset.until-Date.now();
-    if(diff<=0){unlocked=true;return;}
-    const d=Math.floor(diff/864e5),h=Math.floor(diff%864e5/36e5),m=Math.floor(diff%36e5/6e4),s=Math.floor(diff%6e4/1e3);
-    const set=(sel,v)=>{const x=node.querySelector(sel);if(x)x.textContent=String(v).padStart(2,'0');};
-    const dd=node.querySelector('.dd');if(dd){if(d>0){dd.parentElement.style.display='';set('.dd',d);}else dd.parentElement.style.display='none';}
-    set('.hh',h);set('.mm',m);set('.ss',s);
+    const target=+node.dataset.until; const diff=target-Date.now();
+    if(diff<=0){ node.dataset.done='1'; unlockedSomething=true; return; }
+    const d=Math.floor(diff/864e5), h=Math.floor(diff%864e5/36e5), m=Math.floor(diff%36e5/6e4), s=Math.floor(diff%6e4/1e3);
+    const set=(sel,v)=>{ const x=node.querySelector(sel); if(x) x.textContent=String(v).padStart(2,'0'); };
+    const dd=node.querySelector('.dd');
+    if(dd){ if(d>0){ dd.parentElement.style.display=''; set('.dd',d);} else { dd.parentElement.style.display='none'; } }
+    set('.hh',h); set('.mm',m); set('.ss',s);
   });
-  if(unlocked&&state.role==='player')loadBoard().then(render);
+  if(unlockedSomething){ // a timer hit zero -> reload board so it unlocks
+    if(state.role==='player'){ loadBoard().then(render); }
+  }
 }
-function loveParts(){const start=new Date(LOVE_START),now=new Date();let y=now.getFullYear()-start.getFullYear(),mo=now.getMonth()-start.getMonth(),d=now.getDate()-start.getDate(),h=now.getHours()-start.getHours(),mi=now.getMinutes()-start.getMinutes(),s=now.getSeconds()-start.getSeconds();if(s<0){s+=60;mi--;}if(mi<0){mi+=60;h--;}if(h<0){h+=24;d--;}if(d<0){d+=new Date(now.getFullYear(),now.getMonth(),0).getDate();mo--;}if(mo<0){mo+=12;y--;}return{y,mo,d,h,mi,s};}
-function loveTimerCard(){return `<div class="card center">
-  <div class="eyebrow">Together since 1 April 2025 · 2:13 AM</div>
-  <div id="loveTimer" class="count" style="margin-top:12px"></div>
-  <div class="muted" style="font-size:12.5px">and counting, forever 🖤</div></div>`;}
-function updateLoveTimer(){const box=el('loveTimer');if(!box)return;const p=loveParts();const u=(n,l)=>`<div class="u"><div class="n">${n}</div><div class="l">${l}</div></div>`;const pad=n=>String(n).padStart(2,'0');box.innerHTML=u(p.y,'Yr')+u(p.mo,'Mo')+u(p.d,'Day')+u(pad(p.h),'Hr')+u(pad(p.mi),'Min')+u(pad(p.s),'Sec');}
 
-/* ============ ACTIONS ============ */
-async function submitChapter(riddleId,text,file,btn){
-  try{
-    const uid=state.session.user.id;
-    const safe=file.name.replace(/[^\w.\-]/g,'_');
-    const path=`collage/${uid}/${riddleId}_${Date.now()}_${safe}`;
-    const up=await sb.storage.from('media').upload(path,file);
-    if(up.error){toast('Photo upload failed',up.error.message,'bad');resetBtn(btn,'Add my piece');return;}
-    const mt=file.type.startsWith('video')?'video':'image';
-    await sb.from('media').insert({context:'misc',riddle_id:riddleId,bucket:'media',path,media_type:mt,uploaded_by:uid});
-    const{error}=await sb.rpc('submit_answer',{_riddle:riddleId,_answer:text});
-    if(error){toast('Could not submit',error.message,'bad');resetBtn(btn,'Add my piece');return;}
-    toast('Sent 💌','Waiting for him to add your piece.');await Promise.all([loadBoard(),loadCollage()]);render();
-  }catch(e){toast('Something went wrong',e.message,'bad');resetBtn(btn,'Add my piece');}
+/* ============================================================
+   ACTIONS (RPCs)
+   ============================================================ */
+async function act(fn){ try{ return await fn(); }catch(e){ toast('Something went wrong', e.message||String(e),'bad'); throw e; } }
+
+async function submitAnswer(riddleId, answer){
+  const { error } = await sb.rpc('submit_answer',{ _riddle:riddleId, _answer:answer });
+  if(error) return toast('Could not submit', error.message,'bad');
+  toast('Answer sent 💌','Waiting for your keeper to review.'); await loadBoard(); render();
 }
-function resetBtn(b,t){if(b){b.disabled=false;b.textContent=t;}}
-async function reviewSubmission(id,approve,feedback){const{error}=await sb.rpc('review_submission',{_submission:id,_approve:approve,_feedback:feedback||null});if(error)return toast('Failed',error.message,'bad');toast(approve?'Piece added ✨':'Sent back 💛','',approve?'ok':'bad');await Promise.all([loadAdminData(),loadCollage()]);render();}
+async function reviewSubmission(id, approve, feedback){
+  const { error } = await sb.rpc('review_submission',{ _submission:id, _approve:approve, _feedback:feedback||null });
+  if(error) return toast('Failed', error.message,'bad');
+  toast(approve?'Approved ✨':'Rejected','', approve?'ok':'bad'); await loadAdminData(); render();
+}
+async function assignPunishment(submissionId, title, desc){
+  const { error } = await sb.rpc('assign_punishment',{ _submission:submissionId, _title:title, _description:desc });
+  if(error) return toast('Failed', error.message,'bad');
+  toast('Forfeit decreed 👑'); await loadAdminData(); render();
+}
+async function reviewProof(id, approve, feedback){
+  const { error } = await sb.rpc('review_proof',{ _proof:id, _approve:approve, _feedback:feedback||null });
+  if(error) return toast('Failed', error.message,'bad');
+  toast(approve?'Proof approved ❤️':'Proof rejected','', approve?'ok':'bad'); await loadAdminData(); render();
+}
+async function submitProof(punishmentId, type, text, bucket, path){
+  const { error } = await sb.rpc('submit_proof',{ _punishment:punishmentId, _type:type, _text:text||null, _bucket:bucket||null, _path:path||null });
+  if(error) return toast('Could not submit proof', error.message,'bad');
+  toast('Proof uploaded ✨','Waiting for approval.'); await loadBoard(); render();
+}
 
-/* ============ RENDER ============ */
-function ICONS(){return{
-  bell:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>',
-  logout:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>',
-  expand:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="M21 3l-7 7"/><path d="M3 21l7-7"/></svg>',
-  musicOn:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>',
-  musicOff:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" opacity=".5"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/><path d="M2 2l20 20"/></svg>',
-  check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>'};}
-function topbar(){const I=ICONS();const unread=state.notifications.filter(n=>!n.read).length;
+/* ============================================================
+   ROOT RENDER
+   ============================================================ */
+function topbar(){
+  const unread = state.notifications.filter(n=>!n.read).length;
   return `<div class="topbar"><div class="topbar-in">
-    <div class="brand" data-nav="dash"><span class="em">The Story of Us</span></div><div class="spacer"></div>
-    <button class="iconbtn" data-act="music">${state.music?I.musicOn:I.musicOff}</button>
-    <button class="iconbtn" data-act="fullscreen">${I.expand}</button>
-    <button class="iconbtn" data-act="notif">${I.bell}${unread?`<span class="badge">${unread}</span>`:''}</button>
-    <button class="iconbtn" data-act="logout">${I.logout}</button>
-  </div></div>`;}
+    <div class="brand" data-nav="dash" style="cursor:pointer"><span class="dot"></span>The Story of Us</div>
+    <div class="spacer"></div>
+    <button class="iconbtn" data-act="music" title="Background music">${state.music?ICON.music:ICON.musicOff}</button>
+    <button class="iconbtn" data-act="fullscreen" title="Fullscreen">${ICON.expand}</button>
+    <button class="iconbtn" data-act="theme" title="Theme">${ICON.moon}</button>
+    <button class="iconbtn" data-act="notif" title="Notifications">${ICON.bell}${unread?`<span class="badge">${unread}</span>`:''}</button>
+    <button class="iconbtn" data-act="logout" title="Sign out">${ICON.logout}</button>
+  </div></div>`;
+}
 function render(){
-  const body=state.role==='admin'?renderAdmin():renderPlayer();
-  el('root').innerHTML=`<div class="app">${topbar()}<div class="wrap fadein">${body}</div></div>`;
-  wireGlobal();state.role==='admin'?wireAdmin():wirePlayer();updateLoveTimer();
+  const body = state.role==='admin' ? renderAdmin() : renderPlayer();
+  el('root').innerHTML = `<div class="app">${topbar()}<div class="wrap fadein">${body}</div></div>`;
+  wireGlobal();
+  if(state.role==='admin') wireAdmin(); else wirePlayer();
+  updateLoveTimer();
 }
 
-/* ============ PLAYER ============ */
-function done(){return state.board.filter(r=>r.status==='completed').length;}
-function allDone(){return state.board.length>0&&done()===state.board.length;}
-function currentChapter(){return state.board.find(r=>r.status!=='completed')||null;}
+/* ============================================================
+   PLAYER APP
+   ============================================================ */
+function currentRiddle(){ return state.board.find(r=>r.status!=='completed') || null; }
+function completedCount(){ return state.board.filter(r=>r.status==='completed').length; }
+function allDone(){ return state.board.length>0 && completedCount()===state.board.length; }
+
 function renderPlayer(){
-  if(state.view==='chapter'&&state.activeRiddle)return chapterView(state.activeRiddle);
-  if(state.view==='treasure')return treasureView();
-  if(state.view==='timeline')return timelineView();
+  if(state.view==='riddle' && state.activeRiddle) return playerRiddleView(state.activeRiddle);
+  if(state.view==='treasure') return treasureView();
+  if(state.view==='memories') return memoriesView();
+  if(state.view==='timeline') return timelineView();
+  if(state.view==='notes') return notesView();
+  if(state.view==='achievements') return achievementsView();
   return playerDash();
 }
-function boardHTML(clickable){
-  return `<div class="board">${state.board.map((r,i)=>{
-    const n=i+1, comp=r.status==='completed', url=state.collage[r.riddle_id];
-    const cur=!comp&&r.is_unlocked;
-    const cls=comp?'done':cur?'current':'locked';
-    const click=(clickable&&(comp||r.is_unlocked))?`data-riddle="${r.riddle_id}" class="cell ${cls} cellclick"`:`class="cell ${cls}"`;
-    return `<div ${click}>${comp&&url?`<img src="${url}" alt="">`:''}${comp?'':`<span class="rn">${roman(n)}</span>`}${comp?'<span class="ck">'+ICONS().check+'</span>':''}</div>`;
-  }).join('')}</div>`;
-}
+
 function playerDash(){
-  const d=done(),total=state.board.length||12;
-  const name=state.profile?.display_name||'my love';
-  const cur=currentChapter();
+  const done=completedCount(), total=state.board.length||12, pct=Math.round(done/total*100);
+  const cur=currentRiddle();
+  const name = state.profile?.display_name || 'my love';
+  const welcome = state.profile?.welcome_message;
   let curBlock='';
   if(allDone()){
-    curBlock=`<div class="card center pop"><div style="font-size:44px">🖼️</div><h2 style="font-size:30px">The picture is complete</h2><p class="muted" style="margin:6px 0 14px">Every piece is yours. One last thing is waiting…</p><button class="btn" data-nav="treasure">Open the final page</button></div>`;
-  }else if(cur){
-    const n=chapterNo(cur.riddle_id);
-    if(cur.is_unlocked){
-      curBlock=`<div class="card"><div class="row" style="justify-content:space-between"><span class="pill info">Chapter ${roman(n)}</span><span class="pill ok">Unlocked</span></div>
-        <h2 style="font-size:28px;margin:12px 0 4px">${esc(cur.title)}</h2><p class="muted">Your next chapter is ready.</p>
-        <button class="btn" style="margin-top:14px" data-riddle="${cur.riddle_id}">Open Chapter ${roman(n)} →</button></div>`;
-    }else{
-      curBlock=`<div class="card center"><span class="pill info">Chapter ${roman(n)} · ${esc(cur.title)}</span><p class="muted" style="margin:10px 0 2px">Unlocks in</p>${countdownHTML(cur.unlock_at)}</div>`;
+    curBlock = `<div class="card center pop" style="background:var(--grad)">
+      <div style="font-size:44px">🗝️</div>
+      <h2 style="font-size:30px">Every riddle is solved</h2>
+      <p class="muted" style="margin:6px 0 14px">The final treasure is waiting for you.</p>
+      <button class="btn gold" data-nav="treasure">Open the treasure</button></div>`;
+  } else if(cur){
+    const day=cur.day_number, unlocked=cur.is_unlocked;
+    if(unlocked){
+      curBlock = `<div class="card">
+        <div class="row" style="justify-content:space-between"><span class="pill info">Day ${day} · Riddle ${cur.riddle_number} of 3</span>
+        <span class="pill ok">Unlocked</span></div>
+        <h2 style="font-size:28px;margin:12px 0 4px">${esc(cur.title)}</h2>
+        <p class="muted">Your next clue is ready for you.</p>
+        <button class="btn" style="margin-top:14px" data-riddle="${cur.riddle_id}">Open riddle →</button></div>`;
+    } else {
+      curBlock = `<div class="card center">
+        <span class="pill info">Day ${day} · Riddle ${cur.riddle_number} of 3</span>
+        <h2 style="font-size:26px;margin:12px 0 2px">${esc(cur.title)}</h2>
+        <p class="muted" style="margin-bottom:8px">Next riddle unlocks in</p>
+        ${countdownHTML(cur.unlock_at)}
+      </div>`;
     }
   }
-  return `<div class="grid" style="gap:18px">
-    <div class="card center">
-      <div class="eyebrow">For ${esc(name)}</div>
-      <h1 style="font-size:40px;margin:6px 0 4px">The Story of Us</h1>
-      <p class="muted" style="max-width:460px;margin:0 auto">Every chapter you complete adds a piece. Twelve pieces, and the picture of us is whole.</p>
-      <div style="margin:18px auto 6px;max-width:560px">${boardHTML(true)}</div>
-      <div class="row" style="justify-content:center;gap:8px;margin-top:12px"><span class="pill info">Pieces found ${d} / ${total}</span></div>
+  // group board by day
+  const days=[...new Set(state.board.map(r=>r.day_number))];
+  const tiles = days.map(dn=>{
+    const rs=state.board.filter(r=>r.day_number===dn);
+    return `<div class="card" style="padding:16px">
+      <div class="row" style="justify-content:space-between;margin-bottom:10px">
+        <div><div class="serif" style="font-size:20px">${esc(rs[0].day_title||('Day '+dn))}</div>
+        <div class="muted" style="font-size:12.5px">${esc(rs[0].day_subtitle||'')}</div></div>
+        <span class="pill info">Day ${dn}</span></div>
+      <div class="tiles">${rs.map(r=>tileHTML(r)).join('')}</div></div>`;
+  }).join('');
+  return `
+  <div class="grid" style="gap:18px">
+    <div class="card" style="background:var(--grad);border:none">
+      <div class="row wrap-flex" style="justify-content:space-between;gap:18px">
+        <div style="min-width:220px">
+          <div class="muted" style="font-weight:600">Welcome back,</div>
+          <h1 style="font-size:38px">${esc(name)} <span class="beat">❤️</span></h1>
+          <p class="muted" style="max-width:440px">${welcome?esc(welcome):'A story made just for you, unlocked one clue at a time. Take your time — I will be watching over every step.'}</p>
+        </div>
+        <div class="ring" style="--p:${pct}"><div class="v"><b>${done}/${total}</b><span class="muted" style="font-size:12px">solved</span></div></div>
+      </div>
     </div>
     ${loveTimerCard()}
     ${curBlock}
-    <div class="row wrap-flex" style="gap:10px;justify-content:center"><button class="tab" data-nav="timeline">📖 Our Timeline</button></div>
+    <div class="row wrap-flex" style="gap:10px">
+      <button class="tab" data-nav="memories">🖼️ Memories</button>
+      <button class="tab" data-nav="timeline">💞 Our Timeline</button>
+      <button class="tab" data-nav="notes">💌 Secret Notes</button>
+      <button class="tab" data-nav="achievements">🏅 Achievements</button>
+    </div>
+    ${tiles || '<div class="card empty"><div class="e">🌸</div>Your story is being written. Check back soon.</div>'}
   </div>`;
 }
-function countdownHTML(at){const t=new Date(at).getTime();return `<div class="count" data-until="${t}"><div class="u" style="display:none"><div class="n dd">00</div><div class="l">Days</div></div><div class="u"><div class="n hh">00</div><div class="l">Hours</div></div><div class="u"><div class="n mm">00</div><div class="l">Min</div></div><div class="u"><div class="n ss">00</div><div class="l">Sec</div></div></div>`;}
-
-async function openChapter(id){
-  const r=state.board.find(x=>x.riddle_id===id);if(!r)return;
-  if(r.status!=='completed'&&!r.is_unlocked){toast('Locked','This chapter isn’t ready yet.','bad');return;}
-  const{data}=await sb.rpc('get_riddle_content',{_riddle:id});
-  state.activeRiddle={board:r,content:(data&&data[0])||{}};state.view='chapter';render();
+function tileHTML(r){
+  const done=r.status==='completed';
+  const locked=!r.is_unlocked && !done;
+  const stTxt = done?'Completed': r.is_unlocked?'Ready': statusLabel(r.status);
+  const cls = done?'done': locked?'locked':'';
+  const ic = done?ICON.check: locked?ICON.lock:ICON.heart;
+  return `<div class="tile ${cls}" ${(!locked||done)?`data-riddle="${r.riddle_id}"`:''}>
+    <div class="ic">${ic}</div>
+    <div class="num">${r.riddle_number}</div>
+    <div class="st ${done?'':'muted'}">${esc(stTxt)}</div></div>`;
 }
-function chapterView(a){
-  const r=a.board,c=a.content||{},st=r.status,n=chapterNo(r.riddle_id);
-  const photo=state.collage[r.riddle_id];
+function statusLabel(s){ return ({
+  not_started:'Locked', answer_pending:'In review', answer_rejected:'Try again soon',
+  punishment_assigned:'Forfeit!', proof_submitted:'Proof sent', retry_unlocked:'Answer again',
+  completed:'Completed'})[s]||'Locked'; }
+
+function countdownHTML(unlockAt){
+  const t=new Date(unlockAt).getTime();
+  return `<div class="count" data-until="${t}">
+    <div class="u" style="display:none"><div class="n dd">00</div><div class="l">Days</div></div>
+    <div class="u"><div class="n hh">00</div><div class="l">Hours</div></div>
+    <div class="u"><div class="n mm">00</div><div class="l">Minutes</div></div>
+    <div class="u"><div class="n ss">00</div><div class="l">Seconds</div></div>
+  </div>`;
+}
+
+/* ---- live "together for" timer ---- */
+function loveParts(){
+  const start=new Date(LOVE_START), now=new Date();
+  let y=now.getFullYear()-start.getFullYear();
+  let mo=now.getMonth()-start.getMonth();
+  let d=now.getDate()-start.getDate();
+  let h=now.getHours()-start.getHours();
+  let mi=now.getMinutes()-start.getMinutes();
+  let s=now.getSeconds()-start.getSeconds();
+  if(s<0){ s+=60; mi--; }
+  if(mi<0){ mi+=60; h--; }
+  if(h<0){ h+=24; d--; }
+  if(d<0){ d+=new Date(now.getFullYear(), now.getMonth(), 0).getDate(); mo--; }
+  if(mo<0){ mo+=12; y--; }
+  return {y,mo,d,h,mi,s};
+}
+function loveTimerCard(){
+  return `<div class="card center" style="background:var(--grad);border:none">
+    <div class="muted" style="font-weight:700;letter-spacing:1px;font-size:12.5px;text-transform:uppercase">Together since 1 April 2025 · 2:13 AM 💗</div>
+    <div id="loveTimer" class="count" style="flex-wrap:wrap;margin-top:12px"></div>
+    <div class="muted" style="font-size:12.5px;margin-top:2px">and counting, forever ❤️</div>
+  </div>`;
+}
+function updateLoveTimer(){
+  const box=document.getElementById('loveTimer'); if(!box) return;
+  const p=loveParts();
+  const u=(n,l)=>`<div class="u"><div class="n">${n}</div><div class="l">${l}</div></div>`;
+  const pad=n=>String(n).padStart(2,'0');
+  box.innerHTML = u(p.y,'Years')+u(p.mo,'Months')+u(p.d,'Days')+u(pad(p.h),'Hours')+u(pad(p.mi),'Min')+u(pad(p.s),'Sec');
+}
+
+/* ---- riddle detail ---- */
+async function openRiddle(id){
+  const r = state.board.find(x=>x.riddle_id===id);
+  if(!r) return;
+  if(r.status!=='completed' && !r.is_unlocked){ toast('Locked','This chapter is not ready yet.','bad'); return; }
+  const { data:content } = await sb.rpc('get_riddle_content',{ _riddle:id });
+  let myPhoto=null;
+  const ph = await sb.from('media').select('path,created_at').eq('context','misc').eq('riddle_id',id).order('created_at',{ascending:false}).limit(1);
+  if(ph.data&&ph.data[0]) myPhoto = publicUrl('media', ph.data[0].path);
+  state.activeRiddle = { board:r, content:(content&&content[0])||null, myPhoto };
+  state.view='riddle'; render();
+}
+function playerRiddleView(a){
+  const r=a.board, c=a.content||{};
+  const st=r.status;
+  const n = state.board.findIndex(x=>x.riddle_id===r.riddle_id)+1;
   let panel='';
   if(st==='completed'){
-    panel=`<div class="card center">
-      ${photo?`<img class="mediaThumb lb" data-lb="${photo}" src="${photo}" style="max-height:340px;object-fit:cover">`:''}
-      <div class="pill ok" style="margin-top:12px">Piece ${roman(n)} secured</div>
-      ${c.reward_message?`<p class="reward" style="margin-top:14px">“${esc(c.reward_message)}”</p>`:''}
+    panel = `<div class="card center" style="background:var(--grad)">
+      ${a.myPhoto?`<img class="mediaThumb lb" data-lb="${a.myPhoto}" src="${a.myPhoto}" style="max-height:320px;object-fit:cover">`:''}
+      <div style="font-size:34px;margin-top:8px">✨</div>
+      <h3 style="font-size:24px">Chapter complete</h3>
+      ${c.reward_message?`<p class="serif" style="font-style:italic;font-size:20px;color:var(--rose-deep);margin-top:8px">“${esc(c.reward_message)}”</p>`:`<p class="muted">${esc(pickQuote(r.riddle_id))}</p>`}
     </div>`;
-  }else if(st==='answer_pending'){
-    panel=`<div class="card center"><span class="pill wait">Waiting for him</span><p class="muted" style="margin-top:10px">Your chapter is with him. Your piece appears the moment he adds it.</p><div class="shimmer" style="height:8px;border-radius:8px;margin-top:14px"></div></div>`;
-  }else{
-    panel=`<div class="card">
-      ${st==='retry_unlocked'?'<span class="pill info">He’d love a little more — send it again 💛</span>':''}
+  } else if(st==='answer_pending'){
+    panel = `<div class="card center"><span class="pill wait">Pending his review</span>
+      <p class="muted" style="margin-top:10px">Your answer and photo are with him. Sit tight, my love.</p>
+      <div class="shimmer" style="height:8px;border-radius:8px;margin-top:14px"></div></div>`;
+  } else {
+    const retry = st==='retry_unlocked';
+    panel = `<div class="card">
+      ${retry?'<span class="pill ok">He’d love a little more — send it again ❤️</span>':''}
       <label class="fld">Your answer</label>
-      <textarea class="input" id="ansText" placeholder="Write it from the heart…"></textarea>
-      <label class="fld">Add a photo for this piece</label>
-      <input class="input" type="file" id="ansFile" accept="image/*">
+      <textarea class="input" id="ansInput" placeholder="Write it from the heart…"></textarea>
+      <label class="fld">Add a photo for this one</label>
+      <input class="input" type="file" id="ansFile" accept="image/*" />
       <div id="ansPrev"></div>
-      <button class="btn block" id="ansBtn" data-riddle="${r.riddle_id}" style="margin-top:14px">Add my piece</button>
-      <p class="muted center" style="font-size:12px;margin-top:10px">Your words + a photo become one piece of our picture.</p>
+      <button class="btn block" id="ansBtn" style="margin-top:14px">Send it 💌</button>
+      <p class="muted center" style="font-size:12.5px;margin-top:10px">He reads every answer himself.</p>
     </div>`;
   }
-  return `<button class="tab" data-nav="dash" style="margin-bottom:14px">← Back</button>
-  <div class="grid" style="gap:16px;max-width:680px;margin:0 auto">
-    <div class="card fadein center">
-      <div class="row" style="justify-content:center;gap:14px;margin-bottom:8px"><div class="seal lg">${roman(n)}</div></div>
-      <div class="eyebrow">Chapter ${roman(n)}</div>
-      <h1 style="font-size:32px;margin:6px 0 12px">${esc(c.title||r.title)}</h1>
-      <p style="font-size:17px;line-height:1.8;white-space:pre-wrap">${nl2br(c.story||'')}</p>
+  return `
+  <button class="tab" data-nav="dash" style="margin-bottom:14px">← Back</button>
+  <div class="grid" style="gap:16px;max-width:720px;margin:0 auto">
+    <div class="card fadein">
+      <div class="row" style="justify-content:space-between">
+        <span class="pill info">Chapter ${n}</span>
+        <span class="pill ${st==='completed'?'ok':'info'}">${esc(statusLabel(st))}</span>
+      </div>
+      <h1 style="font-size:32px;margin:12px 0 10px">${esc(c.title||r.title)}</h1>
+      <p style="font-size:17px;line-height:1.8;margin-top:10px;white-space:pre-wrap">${nl2br(c.story||'')}</p>
       <div class="divider"></div>
-      <div class="eyebrow">The Challenge</div>
-      <div class="serif" style="font-size:22px;color:var(--gold-2);margin-top:6px;white-space:pre-wrap">${nl2br(c.question||'')}</div>
+      <div class="serif" style="font-size:22px;color:var(--rose-deep);white-space:pre-wrap">${nl2br(c.question||'')}</div>
     </div>
     ${panel}
   </div>`;
 }
-function timelineView(){
-  return `<button class="tab" data-nav="dash" style="margin-bottom:14px">← Back</button>
-  <h1 style="font-size:32px;margin-bottom:4px">Our Timeline</h1><p class="muted" style="margin-bottom:16px">How we got here.</p>
-  ${(state.timeline||[]).length?`<div class="grid" style="gap:12px">${state.timeline.map(t=>`<div class="card"><div class="row" style="justify-content:space-between;gap:8px"><div class="serif gold" style="font-size:22px">${esc(t.title)}</div><span class="pill info">${esc(t.event_date||'')}</span></div>${t.description?`<p class="muted" style="margin-top:6px;white-space:pre-wrap">${nl2br(t.description)}</p>`:''}</div>`).join('')}</div>`:'<div class="card empty"><div class="e">📖</div>Coming soon.</div>'}`;
+function pickQuote(seed){ let h=0; const s=String(seed); for(let i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))>>>0; return ROMANTIC_QUOTES[h%ROMANTIC_QUOTES.length]; }
+
+function punishmentPanel(a){
+  const pun=(a.punishments||[])[0];
+  if(!pun) return `<div class="card muted center">Awaiting your forfeit…</div>`;
+  const proofs=a.proofs||[];
+  const latestProof=proofs[0];
+  let proofBlock;
+  if(pun.status==='proof_submitted' || (latestProof&&latestProof.status==='pending')){
+    proofBlock=`<div class="card center"><span class="pill wait">Waiting for approval</span>
+      <p class="muted" style="margin-top:8px">Your proof is with your keeper. The retry unlocks once it's approved.</p></div>`;
+  } else {
+    proofBlock=proofUploader(pun);
+  }
+  const fb = (pun.status==='proof_rejected'&&pun.admin_feedback)?`<div class="pill bad" style="margin-top:8px">${esc(pun.admin_feedback)}</div>`:'';
+  return `
+  <div class="card" style="border:1px solid var(--gold-soft);background:linear-gradient(160deg,rgba(201,162,75,.1),transparent)">
+    <div class="row" style="justify-content:space-between"><span class="pill" style="background:#f7ecd0;color:#8a6d1e">👑 Forfeit</span></div>
+    <h3 style="font-size:24px;margin:8px 0 4px">${esc(pun.title)}</h3>
+    <p style="line-height:1.7">${nl2br(pun.description)}</p>
+    ${fb}
+  </div>
+  ${proofBlock}`;
 }
-function treasureView(){
-  const s=state.settings||{};
-  return `<button class="tab" data-nav="dash" style="margin-bottom:14px">← Back</button>
-  <div class="grid" style="gap:18px;max-width:720px;margin:0 auto">
-    <div class="card center pop">
-      <div style="font-size:52px" class="beat">🖤</div>
-      <h1 style="font-size:40px;margin-top:6px">${esc(s.title||'The Picture Is Complete')}</h1>
-      <p style="font-size:17px;max-width:520px;margin:8px auto 16px">${nl2br(s.message||'')}</p>
-      <div style="max-width:560px;margin:0 auto">${boardHTML(false)}</div>
+function proofUploader(pun){
+  return `<div class="card">
+    <label class="fld">Prove it 😌 — choose how</label>
+    <div class="row" style="gap:8px;margin-bottom:8px">
+      <button class="tab active" data-ptype="text">✍️ Text</button>
+      <button class="tab" data-ptype="image">🖼️ Photo</button>
+      <button class="tab" data-ptype="video">🎬 Video</button>
     </div>
-    ${s.letter?`<div class="card"><div class="eyebrow">A letter for you</div><p style="font-family:var(--serif);font-size:20px;line-height:1.9;white-space:pre-wrap;margin-top:8px">${esc(s.letter)}</p></div>`:''}
-    ${s.location_reveal?`<div class="card center"><div style="font-size:30px">📍</div><h3 style="font-size:22px;margin-top:6px">And then…</h3><p style="font-size:17px;margin-top:6px;white-space:pre-wrap">${nl2br(s.location_reveal)}</p></div>`:''}
+    <div id="proofText"><textarea class="input" id="proofTextInput" placeholder="Describe or write your proof…"></textarea></div>
+    <div id="proofFile" style="display:none">
+      <input class="input" type="file" id="proofFileInput" accept="image/*,video/*" />
+      <div id="proofPreview"></div>
+    </div>
+    <button class="btn block" id="proofBtn" data-pun="${pun.id}" style="margin-top:12px">Send proof</button>
   </div>`;
 }
-async function goTimeline(){await loadTimeline();state.view='timeline';render();}
-async function goTreasure(){await Promise.all([loadSettings(),loadCollage()]);state.view='treasure';render();}
 
+function mediaTag(m, bucket){
+  const url = publicUrl(m.bucket||bucket, m.path);
+  const cap = m.caption?`<div class="muted" style="font-size:12px;margin-top:4px">${esc(m.caption)}</div>`:'';
+  if(m.media_type==='video') return `<video class="mediaThumb" controls src="${url}"></video>${cap}`;
+  if(m.media_type==='audio') return `<audio controls style="width:100%;margin-top:8px" src="${url}"></audio>${cap}`;
+  if(m.media_type==='pdf') return `<a class="btn ghost sm" href="${url}" target="_blank" style="margin-top:8px">📄 Open PDF</a>${cap}`;
+  return `<img class="mediaThumb lb" data-lb="${url}" src="${url}" alt="">${cap}`;
+}
+function publicUrl(bucket,path){ const { data }=sb.storage.from(bucket).getPublicUrl(path); return data.publicUrl; }
+
+/* ---- extras: memories / timeline / notes / achievements ---- */
+async function loadExtras(){
+  const [mem,tl,notes] = await Promise.all([
+    sb.from('memories').select('*').order('position'),
+    sb.from('timeline_events').select('*').order('position'),
+    sb.from('secret_notes').select('*').order('created_at',{ascending:false})
+  ]);
+  state.memories=mem.data||[]; state.timeline=tl.data||[]; state.notes=notes.data||[];
+}
+function memoriesView(){
+  const items=(state.memories||[]);
+  return `<button class="tab" data-nav="dash" style="margin-bottom:14px">← Back</button>
+  <h1 style="font-size:32px;margin-bottom:4px">Memory Gallery</h1><p class="muted" style="margin-bottom:16px">Little frozen moments of us.</p>
+  ${items.length?`<div class="grid g3">${items.map(m=>`<div class="card" style="padding:10px">${mediaTag(m,'media')}${m.title?`<div class="serif" style="font-size:18px;margin-top:6px">${esc(m.title)}</div>`:''}</div>`).join('')}</div>`
+    :'<div class="card empty"><div class="e">🖼️</div>No memories added yet.</div>'}`;
+}
+function timelineView(){
+  const items=(state.timeline||[]);
+  return `<button class="tab" data-nav="dash" style="margin-bottom:14px">← Back</button>
+  <h1 style="font-size:32px;margin-bottom:16px">Our Timeline</h1>
+  ${items.length?`<div class="grid" style="gap:12px">${items.map(t=>`<div class="card"><div class="row" style="justify-content:space-between">
+    <div class="serif" style="font-size:22px">${esc(t.title)}</div><span class="pill info">${esc(t.event_date||'')}</span></div>
+    ${t.description?`<p class="muted" style="margin-top:6px">${nl2br(t.description)}</p>`:''}</div>`).join('')}</div>`
+    :'<div class="card empty"><div class="e">💞</div>Your story is being written.</div>'}`;
+}
+function notesView(){
+  const items=(state.notes||[]);
+  return `<button class="tab" data-nav="dash" style="margin-bottom:14px">← Back</button>
+  <h1 style="font-size:32px;margin-bottom:8px">Secret Notes</h1>
+  <div class="card" style="margin-bottom:16px"><label class="fld">Leave a note for your keeper</label>
+    <textarea class="input" id="noteInput" placeholder="Write something sweet…"></textarea>
+    <button class="btn" id="noteBtn" style="margin-top:10px">Send note 💌</button></div>
+  ${items.length?`<div class="grid g2">${items.map(n=>`<div class="card"><p style="line-height:1.7">${nl2br(n.body)}</p>
+    <div class="muted" style="font-size:12px;margin-top:8px">${fmtDate(n.created_at)}${n.author_id===state.session.user.id?' · you':''}</div></div>`).join('')}</div>`
+    :'<div class="card empty"><div class="e">💌</div>No notes yet — be the first.</div>'}`;
+}
+function achievementsView(){
+  const list=(state.achievements||[]);
+  return `<button class="tab" data-nav="dash" style="margin-bottom:14px">← Back</button>
+  <h1 style="font-size:32px;margin-bottom:16px">Achievements</h1>
+  <div class="grid g3">${list.map(a=>{ const got=state.playerAch.includes(a.code);
+    return `<div class="card center" style="${got?'':'opacity:.5'}"><div style="font-size:40px">${got?a.icon:'🔒'}</div>
+    <div class="serif" style="font-size:20px;margin-top:6px">${esc(a.title)}</div>
+    <div class="muted" style="font-size:13px">${esc(a.description)}</div>
+    ${got?'<span class="pill ok" style="margin-top:8px">Unlocked</span>':''}</div>`;}).join('')}</div>`;
+}
+
+/* ---- treasure ---- */
+async function openTreasure(){ await loadExtras(); await loadSettings(); state.view='treasure'; render(); }
+function treasureView(){
+  const s=state.settings||{};
+  const gallery=(state.memories||[]).slice(0,8);
+  return `<button class="tab" data-nav="dash" style="margin-bottom:14px">← Back</button>
+  <div class="grid" style="gap:18px;max-width:760px;margin:0 auto">
+    <div class="card center pop" style="background:var(--grad);border:none">
+      <div style="font-size:60px" class="beat">💝</div>
+      <h1 style="font-size:44px">${esc(s.title||'You Found It ❤️')}</h1>
+      <p style="font-size:18px;max-width:520px;margin:8px auto 0">${nl2br(s.message||'')}</p>
+    </div>
+    ${gallery.length?`<div class="card"><h3 style="font-size:22px;margin-bottom:10px">Us</h3><div class="grid g4">${gallery.map(m=>`<div>${mediaTag(m,'media')}</div>`).join('')}</div></div>`:''}
+    ${s.letter?`<div class="card" style="background:var(--cream)"><h3 style="font-size:24px;margin-bottom:8px">A letter for you</h3>
+      <p style="font-family:var(--serif);font-size:20px;line-height:1.9;white-space:pre-wrap">${esc(s.letter)}</p></div>`:''}
+    ${s.location_reveal?`<div class="card center gold" style="background:linear-gradient(135deg,var(--gold-soft),var(--pink-200))">
+      <div style="font-size:34px">📍</div><h3 style="font-size:22px">The final reveal</h3><p style="font-size:17px;margin-top:6px">${nl2br(s.location_reveal)}</p></div>`:''}
+  </div>`;
+}
+
+/* ============================================================
+   PLAYER WIRING
+   ============================================================ */
 function wirePlayer(){
-  document.querySelectorAll('[data-riddle]').forEach(n=>{if(n.tagName!=='BUTTON'||n.id!=='ansBtn')n.addEventListener('click',()=>openChapter(n.dataset.riddle));});
-  const pf=$('#ansFile');
-  if(pf)pf.addEventListener('change',()=>{const f=pf.files[0];if(!f)return;$('#ansPrev').innerHTML=`<img class="mediaThumb" src="${URL.createObjectURL(f)}">`;});
-  const ab=$('#ansBtn');
-  if(ab)ab.addEventListener('click',()=>{
-    const text=$('#ansText').value.trim(),f=$('#ansFile').files[0];
-    if(!text){toast('Write something first 💛');return;}
-    if(!f){toast('Add a photo for this piece 📸');return;}
-    ab.disabled=true;ab.innerHTML='<span class="spin"></span>';
-    submitChapter(ab.dataset.riddle,text,f,ab);
+  document.querySelectorAll('[data-riddle]').forEach(n=>n.addEventListener('click',()=>openRiddle(n.dataset.riddle)));
+  const ansBtn=$('#ansBtn');
+  if(ansBtn) ansBtn.addEventListener('click', async ()=>{
+    const v=$('#ansInput').value.trim(); const f=$('#ansFile').files[0];
+    if(!v){ toast('Write something first 💛'); return; }
+    if(!f){ toast('Add a photo for this one 📸'); return; }
+    ansBtn.disabled=true; ansBtn.innerHTML='<span class="spin"></span>';
+    const rid=state.activeRiddle.board.riddle_id, uid=state.session.user.id;
+    try{
+      const path=`collage/${uid}/${rid}_${Date.now()}_${f.name.replace(/[^\w.\-]/g,'_')}`;
+      const up=await sb.storage.from('media').upload(path,f);
+      if(up.error){ toast('Photo upload failed',up.error.message,'bad'); ansBtn.disabled=false; ansBtn.textContent='Send it 💌'; return; }
+      await sb.from('media').insert({ context:'misc', riddle_id:rid, bucket:'media', path, media_type:f.type.startsWith('video')?'video':'image', uploaded_by:uid });
+      await submitAnswer(rid, v);
+    }catch(e){ toast('Failed', e.message,'bad'); ansBtn.disabled=false; ansBtn.textContent='Send it 💌'; }
+  });
+  const apf=$('#ansFile');
+  if(apf) apf.addEventListener('change',()=>{ const f=apf.files[0]; if(!f) return; $('#ansPrev').innerHTML=`<img class="mediaThumb" src="${URL.createObjectURL(f)}">`; });
+  // proof type switch
+  let ptype='text';
+  document.querySelectorAll('[data-ptype]').forEach(b=>b.addEventListener('click',()=>{
+    ptype=b.dataset.ptype;
+    document.querySelectorAll('[data-ptype]').forEach(x=>x.classList.toggle('active',x===b));
+    $('#proofText').style.display= ptype==='text'?'':'none';
+    $('#proofFile').style.display= ptype==='text'?'none':'';
+  }));
+  const pf=$('#proofFileInput');
+  if(pf) pf.addEventListener('change',()=>{
+    const f=pf.files[0]; if(!f) return;
+    const url=URL.createObjectURL(f);
+    $('#proofPreview').innerHTML = f.type.startsWith('video')?`<video class="mediaThumb" controls src="${url}"></video>`:`<img class="mediaThumb" src="${url}">`;
+  });
+  const proofBtn=$('#proofBtn');
+  if(proofBtn) proofBtn.addEventListener('click', async ()=>{
+    const punId=proofBtn.dataset.pun;
+    proofBtn.disabled=true; proofBtn.innerHTML='<span class="spin"></span>';
+    try{
+      if(ptype==='text'){
+        const t=$('#proofTextInput').value.trim(); if(!t){ toast('Empty','Write something','bad'); proofBtn.disabled=false; proofBtn.textContent='Send proof'; return; }
+        await submitProof(punId,'text',t);
+      } else {
+        const f=$('#proofFileInput').files[0]; if(!f){ toast('No file','Choose a file','bad'); proofBtn.disabled=false; proofBtn.textContent='Send proof'; return; }
+        const path=`${state.session.user.id}/${Date.now()}_${f.name.replace(/[^\w.\-]/g,'_')}`;
+        const up=await sb.storage.from('proofs').upload(path,f,{upsert:false});
+        if(up.error){ toast('Upload failed',up.error.message,'bad'); proofBtn.disabled=false; proofBtn.textContent='Send proof'; return; }
+        await submitProof(punId, ptype, null, 'proofs', path);
+      }
+    }catch(e){ toast('Failed', e.message,'bad'); }
+  });
+  const noteBtn=$('#noteBtn');
+  if(noteBtn) noteBtn.addEventListener('click', async ()=>{
+    const b=$('#noteInput').value.trim(); if(!b) return;
+    const { error }=await sb.from('secret_notes').insert({ author_id:state.session.user.id, body:b });
+    if(error) return toast('Failed',error.message,'bad');
+    toast('Note sent 💌'); await loadExtras(); render();
   });
   document.querySelectorAll('.lb').forEach(n=>n.addEventListener('click',()=>lightbox(n.dataset.lb)));
 }
+
 function celebrate(r){
-  state._celebrated.add(r.riddle_id);burstConfetti();floatHearts(24);
-  const n=chapterNo(r.riddle_id);const url=state.collage[r.riddle_id];
-  const wrap=document.createElement('div');wrap.className='celebrate';
-  wrap.innerHTML=`<div class="msg pop"><div class="seal lg" style="margin:0 auto 10px">${roman(n)}</div>
-    <h2 style="font-size:28px">Piece ${roman(n)} added</h2>
-    ${url?`<img src="${url}" style="width:130px;height:130px;object-fit:cover;border-radius:14px;border:1px solid var(--gold);margin:12px auto 0;display:block">`:''}
-    <p class="reward" style="margin:14px 0 16px">“${esc(QUOTES[n%QUOTES.length])}”</p>
+  state._celebrated=state._celebrated||new Set(); state._celebrated.add(r.riddle_id);
+  burstConfetti(); floatHearts(24);
+  const q=pickQuote(r.riddle_id);
+  const wrap=document.createElement('div'); wrap.className='celebrate';
+  wrap.innerHTML=`<div class="msg pop"><div style="font-size:52px" class="beat">💖</div>
+    <h2 style="font-size:30px">Riddle solved</h2>
+    <p class="serif" style="font-size:21px;color:var(--rose-deep);margin:8px 0 16px">"${esc(q)}"</p>
     <button class="btn" id="celebClose">Continue our story</button></div>`;
   document.body.appendChild(wrap);
-  $('#celebClose').addEventListener('click',()=>{wrap.remove();if(allDone())goTreasure();else{state.view='dash';render();}});
-  setTimeout(burstConfetti,600);
+  $('#celebClose').addEventListener('click',()=>{ wrap.remove(); if(allDone()){ openTreasure(); } else { state.view='dash'; render(); } });
+  setTimeout(()=>burstConfetti(),600);
 }
 
-/* ============ ADMIN ============ */
+/* ============================================================
+   ADMIN APP
+   ============================================================ */
 function renderAdmin(){
   const v=state.view;
-  const tabs=`<div class="tabs">${['dash|Overview','answers|Her Answers','content|Chapters','treasure|Finale','extras|Extras'].map(t=>{const[k,l]=t.split('|');return `<button class="tab ${v===k||(v==='riddle'&&k==='content')?'active':''}" data-nav="${k}">${l}</button>`;}).join('')}</div>`;
-  let body;
-  if(v==='answers')body=adminAnswers();
-  else if(v==='content'||v==='riddle')body=adminContent();
-  else if(v==='treasure')body=adminTreasure();
-  else if(v==='extras')body=adminExtras();
+  const tabs=`<div class="tabs">
+    ${['dash|Dashboard','submissions|Answers','punishments|Forfeits','content|Riddles','treasure|Treasure','extras|Extras'].map(t=>{
+      const [k,l]=t.split('|'); return `<button class="tab ${v===k||(v==='riddle'&&k==='content')?'active':''}" data-nav="${k}">${l}</button>`;}).join('')}
+  </div>`;
+  let body='';
+  if(v==='submissions') body=adminSubmissions();
+  else if(v==='punishments') body=adminPunishments();
+  else if(v==='content'||v==='riddle') body=adminContent();
+  else if(v==='treasure') body=adminTreasure();
+  else if(v==='extras') body=adminExtras();
   else body=adminDash();
   return tabs+body;
 }
-function pendingSubs(){return (state.admin?.subs||[]).filter(s=>s.status==='pending');}
-function chTitle(id){const r=(state.admin?.riddles||[]).find(x=>x.id===id);return r?r.title:'a chapter';}
-function chNo(id){const i=(state.admin?.riddles||[]).findIndex(x=>x.id===id);return i>=0?i+1:0;}
+function pendingSubs(){ return (state.admin?.subs||[]).filter(s=>s.status==='pending'); }
+function pendingProofs(){ return (state.admin?.proofs||[]).filter(p=>p.status==='pending'); }
+function progressStatus(){
+  const prog=state.admin?.prog||[]; const done=prog.filter(p=>p.status==='completed').length;
+  const cur=prog.find(p=>p.status!=='completed'); return { done, cur };
+}
 function adminDash(){
-  const d=(state.admin?.prog||[]).filter(p=>p.status==='completed').length,total=(state.admin?.riddles||[]).length||12;
-  const ps=pendingSubs().length,logs=state.admin?.logs||[];
-  const cur=(state.admin?.prog||[]).slice().sort((a,b)=>new Date(b.updated_at)-new Date(a.updated_at))[0];
-  const curT=cur?chTitle(cur.riddle_id):'—';
-  return `<div class="grid g3" style="margin-bottom:16px">
-    <div class="card center"><div class="eyebrow">Pieces</div><div class="serif gold" style="font-size:40px">${d}/${total}</div></div>
-    <div class="card center" style="${ps?'border-color:var(--gold)':''}"><div class="eyebrow">To review</div><div class="serif" style="font-size:40px;color:${ps?'var(--gold)':'var(--ink)'}">${ps}</div>${ps?'<button class="btn sm" data-nav="answers" style="margin-top:8px">Review</button>':''}</div>
-    <div class="card center"><div class="eyebrow">Now on</div><div class="serif" style="font-size:20px;margin-top:8px">${esc(curT)}</div></div>
+  const done=(state.admin?.prog||[]).filter(p=>p.status==='completed').length;
+  const total=(state.admin?.riddles||[]).length||12;
+  const ps=pendingSubs().length, pp=pendingProofs().length;
+  const logs=state.admin?.logs||[];
+  const riddleById=id=>(state.admin?.riddles||[]).find(r=>r.id===id);
+  const curProg=(state.admin?.prog||[]).slice().sort((a,b)=>new Date(b.updated_at)-new Date(a.updated_at))[0];
+  const curR=curProg?riddleById(curProg.riddle_id):null;
+  return `
+  <div class="grid g4" style="margin-bottom:16px">
+    <div class="card center"><div class="muted" style="font-size:12px;text-transform:uppercase;letter-spacing:1px">Solved</div><div class="serif" style="font-size:40px;color:var(--rose-deep)">${done}/${total}</div></div>
+    <div class="card center" style="${ps?'border-color:var(--rose)':''}"><div class="muted" style="font-size:12px;text-transform:uppercase;letter-spacing:1px">Answers to review</div><div class="serif" style="font-size:40px;color:${ps?'var(--rose-deep)':'var(--ink)'}">${ps}</div>${ps?'<button class="btn sm" data-nav="submissions" style="margin-top:8px">Review</button>':''}</div>
+    <div class="card center" style="${pp?'border-color:var(--gold)':''}"><div class="muted" style="font-size:12px;text-transform:uppercase;letter-spacing:1px">Proofs to review</div><div class="serif" style="font-size:40px;color:${pp?'var(--gold)':'var(--ink)'}">${pp}</div>${pp?'<button class="btn sm gold" data-nav="punishments" style="margin-top:8px">Review</button>':''}</div>
+    <div class="card center"><div class="muted" style="font-size:12px;text-transform:uppercase;letter-spacing:1px">Now on</div><div class="serif" style="font-size:20px;margin-top:8px">${curR?esc(curR.title):'—'}</div><div class="pill info" style="margin-top:6px">${curProg?esc(statusLabel(curProg.status)):'Not started'}</div></div>
   </div>
-  <div class="card"><div class="eyebrow">The board so far</div><div style="max-width:520px;margin:12px auto 0">${boardHTML(false)}</div></div>
-  <div class="card" style="margin-top:16px"><h3 style="font-size:22px;margin-bottom:10px">Activity</h3>${logs.length?logs.map(l=>`<div class="kv"><span>${esc(prettyAction(l.action))}</span><span class="muted">${fmtDate(l.created_at)}</span></div>`).join(''):'<p class="muted">Nothing yet.</p>'}</div>`;
-}
-function prettyAction(a){return({answer_submitted:'💌 She answered a chapter',answer_approved:'✨ You added a piece',answer_rejected:'💛 Sent a chapter back',treasure_found:'🖼️ Picture complete'})[a]||a;}
-function adminAnswers(){
-  const subs=state.admin?.subs||[],pend=subs.filter(s=>s.status==='pending'),rest=subs.filter(s=>s.status!=='pending').slice(0,10);
-  return `<h1 style="font-size:30px;margin-bottom:12px">Her Answers</h1>
-  ${pend.length?pend.map(s=>{const url=state.collage[s.riddle_id];const n=chNo(s.riddle_id);
-    return `<div class="card" style="margin-bottom:14px;border-color:var(--gold)">
-      <div class="row" style="justify-content:space-between"><span class="pill wait">Chapter ${roman(n)} · pending</span><span class="muted">${fmtDate(s.created_at)}</span></div>
-      <h3 style="font-size:22px;margin:8px 0 6px">${esc(chTitle(s.riddle_id))}</h3>
-      <div class="card" style="background:rgba(0,0,0,.25)"><p style="white-space:pre-wrap;line-height:1.7">${nl2br(s.answer_text)}</p></div>
-      ${url?`<img class="mediaThumb lb" data-lb="${url}" src="${url}" style="max-height:300px;object-fit:cover">`:'<p class="muted" style="margin-top:8px;font-size:13px">No photo attached.</p>'}
-      <label class="fld">Note (optional — sent to her)</label><input class="input fb" data-fb="${s.id}" placeholder="A little something…">
-      <div class="row" style="margin-top:12px;gap:10px">
-        <button class="btn" data-approve="${s.id}">Add her piece ✨</button>
-        <button class="btn danger" data-reject="${s.id}">Ask for more 💛</button>
-      </div></div>`;}).join(''):'<div class="card empty"><div class="e">🕊️</div>Nothing to review right now.</div>'}
-  ${rest.length?`<h3 class="muted" style="font-size:18px;margin:18px 0 10px">Recent</h3>${rest.map(s=>`<div class="card" style="margin-bottom:8px"><div class="row" style="justify-content:space-between"><span>${esc(chTitle(s.riddle_id))}</span><span class="pill ${s.status==='approved'?'ok':'info'}">${s.status}</span></div></div>`).join('')}`:''}`;
-}
-function adminContent(){
-  if(state.view==='riddle'&&state.editRiddle)return adminEditor();
-  const days=state.admin?.days||[],rs=riddleSeq();
-  return `<div class="row" style="justify-content:space-between;margin-bottom:12px"><h1 style="font-size:30px">Chapters</h1></div>
-  ${days.map(dn=>{const list=rs.filter(r=>r.day_id===dn.id);
-    return `<div class="card" style="margin-bottom:14px"><div class="serif gold" style="font-size:22px">${esc(dn.title)}</div>
-      <div class="grid g3" style="margin-top:12px">${list.map(r=>`<div class="card" style="padding:14px;background:rgba(0,0,0,.25)">
-        <div class="row" style="justify-content:space-between"><span class="pill info">Ch ${roman(r.chapter)}</span></div>
-        <div class="serif" style="font-size:18px;margin:6px 0 2px">${esc(r.title)}</div>
-        <div class="muted" style="font-size:12px">🔓 ${fmtDate(r.unlock_at)}</div>
-        <div class="row" style="gap:6px;margin-top:10px"><button class="btn sm ghost" data-editriddle="${r.id}">Edit</button></div></div>`).join('')}</div></div>`;}).join('')}`;
-}
-function adminEditor(){
-  const r=state.editRiddle;
-  return `<button class="tab" data-nav="content" style="margin-bottom:14px">← Back</button>
-  <h1 style="font-size:30px;margin-bottom:12px">Edit chapter</h1>
-  <div class="card" style="max-width:700px">
-    <label class="fld">Unlocks at</label><input class="input" id="e_unlock" type="datetime-local" value="${toLocalInput(r.unlock_at)}">
-    <label class="fld">Title</label><input class="input" id="e_title" value="${esc(r.title||'')}">
-    <label class="fld">Mission (the intro)</label><textarea class="input" id="e_story">${esc(r.story||'')}</textarea>
-    <label class="fld">Challenge (what she does)</label><textarea class="input" id="e_question">${esc(r.question||'')}</textarea>
-    <label class="fld">Hidden message (revealed after she completes it)</label><textarea class="input" id="e_notes">${esc(r.special_notes||'')}</textarea>
-    <label class="fld">Note to yourself / what to approve</label><input class="input" id="e_answer" value="${esc(r.correct_answer||'')}">
-    <button class="btn block" id="saveRiddle" style="margin-top:16px">Save chapter</button>
+  <div class="card"><h3 style="font-size:22px;margin-bottom:10px">Activity timeline</h3>
+    ${logs.length?logs.map(l=>`<div class="kv"><span>${esc(prettyAction(l.action))}</span><span class="muted">${fmtDate(l.created_at)}</span></div>`).join(''):'<p class="muted">Nothing yet.</p>'}
   </div>`;
 }
-function toLocalInput(ts){if(!ts)return'';const d=new Date(ts),p=n=>String(n).padStart(2,'0');return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}`;}
-function adminTreasure(){const s=state.settings||{};return `<h1 style="font-size:30px;margin-bottom:12px">The Finale</h1>
-  <div class="card" style="max-width:700px">
+function prettyAction(a){ return ({answer_submitted:'💌 Answer submitted',answer_approved:'✨ Answer approved',answer_rejected:'💔 Answer rejected',punishment_assigned:'👑 Forfeit assigned',proof_uploaded:'📸 Proof uploaded',proof_approved:'❤️ Proof approved',proof_rejected:'😌 Proof rejected'})[a]||a; }
+
+function riddleTitle(id){ const r=(state.admin?.riddles||[]).find(x=>x.id===id); return r?r.title:'a riddle'; }
+function riddleAnswer(id){ const r=(state.admin?.riddles||[]).find(x=>x.id===id); return r?r.correct_answer:''; }
+
+function adminSubmissions(){
+  const subs=state.admin?.subs||[];
+  const pend=subs.filter(s=>s.status==='pending');
+  const rest=subs.filter(s=>s.status!=='pending').slice(0,10);
+  return `<h1 style="font-size:30px;margin-bottom:12px">Her Answers</h1>
+  ${pend.length?pend.map(s=>{ const url=(state.admin?.photos||{})[s.riddle_id];
+    return `<div class="card" style="margin-bottom:14px;border-color:var(--rose)">
+      <div class="row" style="justify-content:space-between"><span class="pill wait">Pending review</span><span class="muted">${fmtDate(s.created_at)}</span></div>
+      <h3 style="font-size:22px;margin:8px 0 6px">${esc(riddleTitle(s.riddle_id))}</h3>
+      <div class="card" style="background:var(--cream)"><p style="white-space:pre-wrap;line-height:1.7">${nl2br(s.answer_text)}</p></div>
+      ${url?`<img class="mediaThumb lb" data-lb="${url}" src="${url}" style="max-height:300px;object-fit:cover">`:'<p class="muted" style="margin-top:8px;font-size:13px">No photo attached.</p>'}
+      <div class="kv" style="margin-top:8px"><span class="muted">Approve when…</span><b style="color:var(--rose-deep);text-align:right">${esc(riddleAnswer(s.riddle_id))}</b></div>
+      <label class="fld">Note to her (optional)</label>
+      <input class="input fb" data-fb="${s.id}" placeholder="A little something…" />
+      <div class="row" style="margin-top:12px;gap:10px">
+        <button class="btn" data-approve="${s.id}">Approve ✨</button>
+        <button class="btn danger" data-reject="${s.id}">Ask for more 💛</button>
+      </div>
+    </div>`;}).join(''):'<div class="card empty"><div class="e">🕊️</div>No answers waiting. All caught up.</div>'}
+  ${rest.length?`<h3 style="font-size:20px;margin:18px 0 10px" class="muted">Recent</h3>${rest.map(s=>`<div class="card" style="margin-bottom:10px"><div class="row" style="justify-content:space-between"><span>${esc(riddleTitle(s.riddle_id))} — "${esc(s.answer_text)}"</span><span class="pill ${s.status==='approved'?'ok':'bad'}">${s.status}</span></div></div>`).join('')}`:''}`;
+}
+function adminPunishments(){
+  const proofs=state.admin?.proofs||[]; const pend=proofs.filter(p=>p.status==='pending');
+  const punById=id=>(state.admin?.pun||[]).find(p=>p.id===id);
+  return `<h1 style="font-size:30px;margin-bottom:12px">Forfeits & Proofs</h1>
+  ${pend.length?pend.map(p=>{ const pu=punById(p.punishment_id);
+    return `<div class="card" style="margin-bottom:14px;border-color:var(--gold)">
+      <div class="row" style="justify-content:space-between"><span class="pill wait">Proof pending</span><span class="muted">${fmtDate(p.created_at)}</span></div>
+      <h3 style="font-size:22px;margin:8px 0 2px">${pu?esc(pu.title):'Forfeit'}</h3>
+      <p class="muted">${pu?esc(pu.description):''}</p>
+      <div class="divider"></div>
+      ${p.proof_type==='text'?`<p style="font-size:16px;line-height:1.7">"${esc(p.content_text)}"</p>`:`<div data-proofmedia="${p.id}" data-bucket="${esc(p.media_bucket)}" data-path="${esc(p.media_path)}" class="muted">Loading media…</div>`}
+      <label class="fld">Feedback (optional)</label>
+      <input class="input" data-pfb="${p.id}" placeholder="Say something…" />
+      <div class="row" style="margin-top:12px;gap:10px">
+        <button class="btn" data-papprove="${p.id}">Approve ❤️</button>
+        <button class="btn danger" data-preject="${p.id}">Reject 😌</button>
+      </div></div>`; }).join(''):'<div class="card empty"><div class="e">👑</div>No proofs waiting.</div>'}`;
+}
+
+function adminContent(){
+  if(state.view==='riddle' && state.editRiddle) return adminRiddleEditor();
+  const days=state.admin?.days||[]; const riddles=state.admin?.riddles||[];
+  return `<div class="row" style="justify-content:space-between;margin-bottom:12px"><h1 style="font-size:30px">Riddles</h1>
+    <button class="btn ghost sm" id="addDayBtn">+ Add day</button></div>
+  ${days.map(d=>{
+    const rs=riddles.filter(r=>r.day_id===d.id).sort((a,b)=>a.riddle_number-b.riddle_number);
+    return `<div class="card" style="margin-bottom:14px">
+      <div class="row" style="justify-content:space-between"><div><div class="serif" style="font-size:22px">${esc(d.title)} <span class="muted" style="font-size:14px">Day ${d.day_number}</span></div>
+      <div class="muted" style="font-size:13px">${esc(d.subtitle||'')} · ${esc(d.date||'')}</div></div>
+      <button class="btn soft sm" data-addriddle="${d.id}">+ Riddle</button></div>
+      <div class="grid g3" style="margin-top:12px">${rs.map(r=>`<div class="card" style="padding:14px">
+        <div class="row" style="justify-content:space-between"><span class="pill info">R${r.riddle_number}</span></div>
+        <div class="serif" style="font-size:19px;margin:6px 0 2px">${esc(r.title)}</div>
+        <div class="muted" style="font-size:12px">🔓 ${fmtDate(r.unlock_at)}</div>
+        <div class="muted" style="font-size:12px;margin-top:2px">✅ ${esc(r.correct_answer||'—')}</div>
+        <div class="row" style="gap:6px;margin-top:10px">
+          <button class="btn sm ghost" data-editriddle="${r.id}">Edit</button>
+          <button class="btn sm danger" data-delriddle="${r.id}">Delete</button>
+        </div></div>`).join('')||'<p class="muted">No riddles.</p>'}</div>
+    </div>`;
+  }).join('')||'<div class="card empty">No days yet.</div>'}`;
+}
+function adminRiddleEditor(){
+  const r=state.editRiddle; const isNew=!r.id;
+  return `<button class="tab" data-nav="content" style="margin-bottom:14px">← Back</button>
+  <h1 style="font-size:30px;margin-bottom:12px">${isNew?'New riddle':'Edit riddle'}</h1>
+  <div class="card" style="max-width:720px">
+    <div class="grid g2">
+      <div><label class="fld">Riddle number</label><input class="input" id="e_num" type="number" value="${r.riddle_number||1}"></div>
+      <div><label class="fld">Unlocks at</label><input class="input" id="e_unlock" type="datetime-local" value="${toLocalInput(r.unlock_at)}"></div>
+    </div>
+    <label class="fld">Title</label><input class="input" id="e_title" value="${esc(r.title||'')}">
+    <label class="fld">Story</label><textarea class="input" id="e_story">${esc(r.story||'')}</textarea>
+    <label class="fld">Question</label><textarea class="input" id="e_question">${esc(r.question||'')}</textarea>
+    <div class="grid g2">
+      <div><label class="fld">Correct answer</label><input class="input" id="e_answer" value="${esc(r.correct_answer||'')}"></div>
+      <div><label class="fld">Hint (optional)</label><input class="input" id="e_hint" value="${esc(r.hint||'')}"></div>
+    </div>
+    <label class="fld">Location hint (optional)</label><input class="input" id="e_loc" value="${esc(r.location_hint||'')}">
+    <label class="fld">Special notes (optional)</label><textarea class="input" id="e_notes">${esc(r.special_notes||'')}</textarea>
+    <div class="divider"></div>
+    <label class="fld">Add media (image / video / audio / pdf)</label>
+    <input class="input" type="file" id="e_media" accept="image/*,video/*,audio/*,application/pdf">
+    <div id="e_medialist" style="margin-top:8px"></div>
+    <button class="btn block" id="saveRiddle" style="margin-top:16px">${isNew?'Create riddle':'Save changes'}</button>
+  </div>`;
+}
+function toLocalInput(ts){ if(!ts) return ''; const d=new Date(ts); const p=n=>String(n).padStart(2,'0');
+  return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}`; }
+
+function adminTreasure(){
+  const s=state.settings||{};
+  return `<h1 style="font-size:30px;margin-bottom:12px">Final Treasure</h1>
+  <div class="card" style="max-width:720px">
     <label class="fld">Title</label><input class="input" id="t_title" value="${esc(s.title||'')}">
     <label class="fld">Message</label><textarea class="input" id="t_msg">${esc(s.message||'')}</textarea>
-    <label class="fld">Letter (incl. the 13th-piece message)</label><textarea class="input" id="t_letter" style="min-height:180px">${esc(s.letter||'')}</textarea>
-    <label class="fld">And then… (the reveal)</label><textarea class="input" id="t_loc">${esc(s.location_reveal||'')}</textarea>
-    <button class="btn" id="saveTreasure" style="margin-top:14px">Save finale</button>
-  </div>`;}
-function adminExtras(){return `<h1 style="font-size:30px;margin-bottom:12px">Extras</h1>
+    <label class="fld">Letter</label><textarea class="input" id="t_letter" style="min-height:160px">${esc(s.letter||'')}</textarea>
+    <label class="fld">Location reveal</label><textarea class="input" id="t_loc">${esc(s.location_reveal||'')}</textarea>
+    <button class="btn" id="saveTreasure" style="margin-top:14px">Save treasure</button>
+  </div>`;
+}
+function adminExtras(){
+  return `<h1 style="font-size:30px;margin-bottom:12px">Extras</h1>
   <div class="grid g2">
-    <div class="card"><h3 style="font-size:20px">Her welcome</h3>
-      <label class="fld">Her display name</label><input class="input" id="p_name" value="${esc(getPP()?.display_name||'')}">
-      <button class="btn sm" id="p_save" style="margin-top:12px">Save</button></div>
+    <div class="card"><h3 style="font-size:20px">Add a memory</h3>
+      <label class="fld">Photo / video</label><input class="input" type="file" id="m_file" accept="image/*,video/*">
+      <label class="fld">Title (optional)</label><input class="input" id="m_title">
+      <button class="btn sm" id="m_save" style="margin-top:12px">Add memory</button></div>
     <div class="card"><h3 style="font-size:20px">Add a timeline moment</h3>
       <label class="fld">Date</label><input class="input" type="date" id="tl_date">
       <label class="fld">Title</label><input class="input" id="tl_title">
       <label class="fld">Description</label><textarea class="input" id="tl_desc"></textarea>
-      <button class="btn sm" id="tl_save" style="margin-top:10px">Add</button></div>
-  </div>`;}
-function getPP(){return state._pp||null;}
-async function loadPP(){const{data}=await sb.from('profiles').select('*').eq('role','player').maybeSingle();state._pp=data||null;}
+      <button class="btn sm" id="tl_save" style="margin-top:10px">Add moment</button></div>
+    <div class="card"><h3 style="font-size:20px">Update welcome message</h3>
+      <label class="fld">Player display name</label><input class="input" id="p_name" value="${esc(getPlayerProfile()?.display_name||'')}">
+      <label class="fld">Personalised welcome</label><textarea class="input" id="p_welcome">${esc(getPlayerProfile()?.welcome_message||'')}</textarea>
+      <button class="btn sm" id="p_save" style="margin-top:10px">Save</button></div>
+    <div class="card"><h3 style="font-size:20px">Write her a secret note</h3>
+      <textarea class="input" id="an_note" placeholder="A little love note…"></textarea>
+      <button class="btn sm" id="an_save" style="margin-top:10px">Send note 💌</button></div>
+  </div>`;
+}
+function getPlayerProfile(){ return state._playerProfile||null; }
 
+/* ============================================================
+   ADMIN WIRING
+   ============================================================ */
 async function wireAdmin(){
-  document.querySelectorAll('[data-approve]').forEach(b=>b.addEventListener('click',()=>reviewSubmission(b.dataset.approve,true,$(`.fb[data-fb="${b.dataset.approve}"]`)?.value)));
-  document.querySelectorAll('[data-reject]').forEach(b=>b.addEventListener('click',()=>reviewSubmission(b.dataset.reject,false,$(`.fb[data-fb="${b.dataset.reject}"]`)?.value)));
-  document.querySelectorAll('[data-editriddle]').forEach(b=>b.addEventListener('click',()=>{state.editRiddle={...(state.admin.riddles||[]).find(r=>r.id===b.dataset.editriddle)};state.view='riddle';render();}));
-  const sr=$('#saveRiddle');if(sr)sr.addEventListener('click',saveRiddle);
-  const st=$('#saveTreasure');if(st)st.addEventListener('click',async()=>{const patch={title:$('#t_title').value,message:$('#t_msg').value,letter:$('#t_letter').value,location_reveal:$('#t_loc').value,updated_at:new Date().toISOString()};const{error}=await sb.from('treasure_settings').update(patch).eq('id',true);if(error)return toast('Failed',error.message,'bad');toast('Finale saved ✨');await loadSettings();});
-  const ps=$('#p_save');if(ps)ps.addEventListener('click',async()=>{const pp=getPP();if(!pp)return;const{error}=await sb.from('profiles').update({display_name:$('#p_name').value}).eq('id',pp.id);if(error)return toast('Failed',error.message,'bad');toast('Saved');await loadPP();});
-  const tl=$('#tl_save');if(tl)tl.addEventListener('click',async()=>{if(!$('#tl_title').value||!$('#tl_date').value)return toast('Missing','Date and title required','bad');const{error}=await sb.from('timeline_events').insert({event_date:$('#tl_date').value,title:$('#tl_title').value,description:$('#tl_desc').value||null});if(error)return toast('Failed',error.message,'bad');toast('Added 📖');$('#tl_title').value='';$('#tl_desc').value='';});
+  document.querySelectorAll('[data-approve]').forEach(b=>b.addEventListener('click',()=>{
+    const id=b.dataset.approve; reviewSubmission(id,true, $(`.fb[data-fb="${id}"]`)?.value); }));
+  document.querySelectorAll('[data-reject]').forEach(b=>b.addEventListener('click',()=>{
+    const id=b.dataset.reject; reviewSubmission(id,false, $(`.fb[data-fb="${id}"]`)?.value); }));
+  document.querySelectorAll('[data-papprove]').forEach(b=>b.addEventListener('click',()=>reviewProof(b.dataset.papprove,true,$(`[data-pfb="${b.dataset.papprove}"]`)?.value)));
+  document.querySelectorAll('[data-preject]').forEach(b=>b.addEventListener('click',()=>reviewProof(b.dataset.preject,false,$(`[data-pfb="${b.dataset.preject}"]`)?.value)));
+  // proof media (signed url for private bucket)
+  document.querySelectorAll('[data-proofmedia]').forEach(async n=>{
+    const { data }=await sb.storage.from(n.dataset.bucket).createSignedUrl(n.dataset.path,3600);
+    if(data?.signedUrl){ const isV=/\.(mp4|mov|webm|m4v)$/i.test(n.dataset.path);
+      n.innerHTML = isV?`<video class="mediaThumb" controls src="${data.signedUrl}"></video>`:`<img class="mediaThumb lb" data-lb="${data.signedUrl}" src="${data.signedUrl}">`;
+      n.querySelectorAll('.lb').forEach(x=>x.addEventListener('click',()=>lightbox(x.dataset.lb))); }
+    else n.textContent='(media unavailable)';
+  });
+  // content
+  const addDay=$('#addDayBtn'); if(addDay) addDay.addEventListener('click', addDayFlow);
+  document.querySelectorAll('[data-addriddle]').forEach(b=>b.addEventListener('click',()=>{
+    const dayId=b.dataset.addriddle; const rs=(state.admin.riddles||[]).filter(r=>r.day_id===dayId);
+    state.editRiddle={ day_id:dayId, riddle_number:(rs.length+1), unlock_at:new Date(Date.now()+864e5).toISOString() };
+    state.view='riddle'; render();
+  }));
+  document.querySelectorAll('[data-editriddle]').forEach(b=>b.addEventListener('click',()=>{
+    state.editRiddle={...(state.admin.riddles||[]).find(r=>r.id===b.dataset.editriddle)}; state.view='riddle'; render(); loadRiddleMediaList();
+  }));
+  document.querySelectorAll('[data-delriddle]').forEach(b=>b.addEventListener('click',async ()=>{
+    if(!confirm('Delete this riddle?')) return;
+    const { error }=await sb.from('riddles').delete().eq('id',b.dataset.delriddle);
+    if(error) return toast('Failed',error.message,'bad'); toast('Deleted'); await loadAdminData(); render();
+  }));
+  const saveR=$('#saveRiddle'); if(saveR) saveR.addEventListener('click', saveRiddle);
+  const eMedia=$('#e_media'); if(eMedia) eMedia.addEventListener('change', uploadRiddleMedia);
+  if(state.view==='riddle' && state.editRiddle?.id) loadRiddleMediaList();
+  // treasure
+  const st=$('#saveTreasure'); if(st) st.addEventListener('click', async ()=>{
+    const patch={ title:$('#t_title').value, message:$('#t_msg').value, letter:$('#t_letter').value, location_reveal:$('#t_loc').value, updated_at:new Date().toISOString() };
+    const { error }=await sb.from('treasure_settings').update(patch).eq('id',true);
+    if(error) return toast('Failed',error.message,'bad'); toast('Treasure saved ✨'); await loadSettings();
+  });
+  // extras
+  wireAdminExtras();
   document.querySelectorAll('.lb').forEach(n=>n.addEventListener('click',()=>lightbox(n.dataset.lb)));
 }
+async function addDayFlow(){
+  const days=state.admin.days||[]; const n=days.length+1;
+  const title=prompt('Day title', 'Day '+['One','Two','Three','Four','Five','Six'][n-1]||('Day '+n)); if(title==null) return;
+  const date=prompt('Date (YYYY-MM-DD)', new Date(Date.now()+(n-1)*864e5).toISOString().slice(0,10)); if(!date) return;
+  const { error }=await sb.from('days').insert({ day_number:n, title, date });
+  if(error) return toast('Failed',error.message,'bad'); toast('Day added'); await loadAdminData(); render();
+}
 async function saveRiddle(){
-  const b=$('#saveRiddle');b.disabled=true;b.innerHTML='<span class="spin"></span>';
-  const payload={title:$('#e_title').value,story:$('#e_story').value,question:$('#e_question').value,special_notes:$('#e_notes').value||null,correct_answer:$('#e_answer').value,unlock_at:new Date($('#e_unlock').value).toISOString()};
-  const{error}=await sb.from('riddles').update(payload).eq('id',state.editRiddle.id);
-  if(error){toast('Failed',error.message,'bad');b.disabled=false;b.textContent='Save chapter';return;}
-  toast('Saved ✨');await loadAdminData();state.view='content';render();
+  const b=$('#saveRiddle'); b.disabled=true; b.innerHTML='<span class="spin"></span>';
+  const payload={
+    day_id:state.editRiddle.day_id,
+    riddle_number:+$('#e_num').value, title:$('#e_title').value, story:$('#e_story').value,
+    question:$('#e_question').value, correct_answer:$('#e_answer').value, hint:$('#e_hint').value||null,
+    location_hint:$('#e_loc').value||null, special_notes:$('#e_notes').value||null,
+    unlock_at:new Date($('#e_unlock').value).toISOString()
+  };
+  let res;
+  if(state.editRiddle.id) res=await sb.from('riddles').update(payload).eq('id',state.editRiddle.id);
+  else res=await sb.from('riddles').insert(payload);
+  if(res.error){ toast('Failed',res.error.message,'bad'); b.disabled=false; b.textContent='Save'; return; }
+  toast('Saved ✨'); await loadAdminData(); state.view='content'; render();
+}
+async function loadRiddleMediaList(){
+  if(!state.editRiddle?.id) return;
+  const { data }=await sb.from('media').select('*').eq('riddle_id',state.editRiddle.id).order('position');
+  const box=$('#e_medialist'); if(!box) return;
+  box.innerHTML=(data||[]).map(m=>`<div class="row" style="justify-content:space-between;gap:8px;margin:6px 0">
+    <span class="muted" style="font-size:13px">${esc(m.media_type)} · ${esc(m.path.split('/').pop())}</span>
+    <button class="btn sm danger" data-delmedia="${m.id}">✕</button></div>`).join('')||'<span class="muted" style="font-size:13px">No media yet.</span>';
+  box.querySelectorAll('[data-delmedia]').forEach(x=>x.addEventListener('click',async ()=>{
+    await sb.from('media').delete().eq('id',x.dataset.delmedia); loadRiddleMediaList();
+  }));
+}
+async function uploadRiddleMedia(e){
+  const f=e.target.files[0]; if(!f) return;
+  if(!state.editRiddle?.id){ toast('Save first','Create the riddle before adding media.','bad'); return; }
+  const mt = f.type.startsWith('video')?'video':f.type.startsWith('audio')?'audio':f.type==='application/pdf'?'pdf':'image';
+  const path=`riddle/${state.editRiddle.id}/${Date.now()}_${f.name.replace(/[^\w.\-]/g,'_')}`;
+  const up=await sb.storage.from('media').upload(path,f);
+  if(up.error) return toast('Upload failed',up.error.message,'bad');
+  const { error }=await sb.from('media').insert({ context:'riddle', riddle_id:state.editRiddle.id, bucket:'media', path, media_type:mt, uploaded_by:state.session.user.id });
+  if(error) return toast('Failed',error.message,'bad');
+  toast('Media added'); loadRiddleMediaList(); e.target.value='';
+}
+function wireAdminExtras(){
+  const ms=$('#m_save'); if(ms) ms.addEventListener('click', async ()=>{
+    const f=$('#m_file').files[0]; if(!f) return toast('No file','Choose a photo','bad');
+    const mt=f.type.startsWith('video')?'video':'image';
+    const path=`memory/${Date.now()}_${f.name.replace(/[^\w.\-]/g,'_')}`;
+    const up=await sb.storage.from('media').upload(path,f); if(up.error) return toast('Upload failed',up.error.message,'bad');
+    const { error }=await sb.from('memories').insert({ title:$('#m_title').value||null, bucket:'media', path, media_type:mt });
+    if(error) return toast('Failed',error.message,'bad'); toast('Memory added ✨');
+  });
+  const tl=$('#tl_save'); if(tl) tl.addEventListener('click', async ()=>{
+    if(!$('#tl_title').value||!$('#tl_date').value) return toast('Missing','Date and title required','bad');
+    const { error }=await sb.from('timeline_events').insert({ event_date:$('#tl_date').value, title:$('#tl_title').value, description:$('#tl_desc').value||null });
+    if(error) return toast('Failed',error.message,'bad'); toast('Moment added 💞'); $('#tl_title').value='';$('#tl_desc').value='';
+  });
+  const ps=$('#p_save'); if(ps) ps.addEventListener('click', async ()=>{
+    const pp=getPlayerProfile(); if(!pp) return;
+    const { error }=await sb.from('profiles').update({ display_name:$('#p_name').value, welcome_message:$('#p_welcome').value||null }).eq('id',pp.id);
+    if(error) return toast('Failed',error.message,'bad'); toast('Saved'); await loadPlayerProfile();
+  });
+  const an=$('#an_save'); if(an) an.addEventListener('click', async ()=>{
+    const b=$('#an_note').value.trim(); if(!b) return;
+    const { error }=await sb.from('secret_notes').insert({ author_id:state.session.user.id, body:b });
+    if(error) return toast('Failed',error.message,'bad'); toast('Note sent 💌'); $('#an_note').value='';
+  });
+}
+async function loadPlayerProfile(){
+  const { data }=await sb.from('profiles').select('*').eq('role','player').maybeSingle();
+  state._playerProfile=data||null;
 }
 
-/* ============ GLOBAL WIRING ============ */
+/* assign punishment modal (after reject) */
+function openAssignModal(submissionId, feedback){
+  const wrap=document.createElement('div'); wrap.className='overlay';
+  wrap.innerHTML=`<div class="modal pop">
+    <h2 style="font-size:26px">Reject & assign a forfeit 👑</h2>
+    <p class="muted">She cannot retry until she completes this.</p>
+    <label class="fld">Forfeit title</label><input class="input" id="pnTitle" placeholder="e.g. Sing our song">
+    <label class="fld">Description</label><textarea class="input" id="pnDesc" placeholder="What must she do?"></textarea>
+    <div class="row" style="gap:10px;margin-top:14px">
+      <button class="btn danger" id="pnGo">Reject & assign</button>
+      <button class="btn ghost" id="pnCancel">Cancel</button>
+    </div></div>`;
+  document.body.appendChild(wrap);
+  $('#pnCancel').addEventListener('click',()=>wrap.remove());
+  wrap.addEventListener('click',e=>{ if(e.target===wrap) wrap.remove(); });
+  $('#pnGo').addEventListener('click', async ()=>{
+    const title=$('#pnTitle').value.trim(), desc=$('#pnDesc').value.trim();
+    if(!title||!desc) return toast('Missing','Add a title and description','bad');
+    const go=$('#pnGo'); go.disabled=true; go.innerHTML='<span class="spin"></span>';
+    await reviewSubmission(submissionId,false,feedback);
+    await assignPunishment(submissionId,title,desc);
+    wrap.remove();
+  });
+}
+
+/* ============================================================
+   GLOBAL WIRING (topbar, nav, notifications)
+   ============================================================ */
 function wireGlobal(){
   document.querySelectorAll('[data-nav]').forEach(n=>n.addEventListener('click',()=>navigate(n.dataset.nav)));
   document.querySelectorAll('[data-act]').forEach(n=>n.addEventListener('click',()=>topAct(n.dataset.act)));
 }
 async function navigate(v){
-  if(v==='timeline'){await goTimeline();return;}
-  if(v==='treasure'){if(state.role==='player'){await goTreasure();return;}}
-  if(v==='extras'){await loadPP();}
-  if(v==='content')state.editRiddle=null;
-  state.view=v;state.activeRiddle=null;render();
+  if(v==='memories'||v==='timeline'||v==='notes'){ await loadExtras(); }
+  if(v==='treasure'){ if(state.role==='player'){ await openTreasure(); return; } }
+  if(v==='extras'){ await loadPlayerProfile(); }
+  if(v==='content'){ state.editRiddle=null; }
+  state.view=v; state.activeRiddle=null; render();
 }
-function topAct(a){if(a==='logout')sb.auth.signOut().then(()=>location.reload());else if(a==='notif')openNotif();else if(a==='music')toggleMusic();else if(a==='fullscreen')toggleFullscreen();}
-function paintNotif(){const btn=document.querySelector('[data-act="notif"]');if(!btn)return;const b=btn.querySelector('.badge');const u=state.notifications.filter(n=>!n.read).length;if(u){if(b)b.textContent=u;else{const s=document.createElement('span');s.className='badge';s.textContent=u;btn.appendChild(s);}}else if(b)b.remove();}
+function topAct(a){
+  if(a==='logout'){ sb.auth.signOut().then(()=>location.reload()); }
+  else if(a==='theme'){ toggleTheme(); }
+  else if(a==='notif'){ openNotif(); }
+  else if(a==='music'){ toggleMusic(); }
+  else if(a==='fullscreen'){ toggleFullscreen(); }
+}
+function paintNotif(){ // update badge without full re-render
+  const b=document.querySelector('[data-act="notif"] .badge');
+  const unread=state.notifications.filter(n=>!n.read).length;
+  const btn=document.querySelector('[data-act="notif"]');
+  if(!btn) return;
+  if(unread){ if(b) b.textContent=unread; else { const s=document.createElement('span'); s.className='badge'; s.textContent=unread; btn.appendChild(s);} }
+  else if(b) b.remove();
+}
 async function openNotif(){
-  const items=state.notifications;const wrap=document.createElement('div');wrap.className='overlay';
-  wrap.innerHTML=`<div class="modal pop"><div class="row" style="justify-content:space-between"><h2 style="font-size:26px">Notifications</h2><button class="btn ghost sm" id="mk">Mark read</button></div>
-    <div style="margin-top:12px">${items.length?items.map(n=>`<div class="card" style="margin-bottom:8px;${n.read?'opacity:.55':''}"><div class="row" style="justify-content:space-between"><b>${esc(n.title)}</b><span class="muted" style="font-size:12px">${fmtDate(n.created_at)}</span></div>${n.body?`<div class="muted" style="font-size:14px">${esc(n.body)}</div>`:''}</div>`).join(''):'<div class="empty"><div class="e">🔔</div>Nothing yet.</div>'}</div>
-    <button class="btn ghost block" id="cl" style="margin-top:6px">Close</button></div>`;
-  document.body.appendChild(wrap);wrap.addEventListener('click',e=>{if(e.target===wrap)wrap.remove();});
-  $('#cl').addEventListener('click',()=>wrap.remove());
+  const wrap=document.createElement('div'); wrap.className='overlay';
+  const items=state.notifications;
+  wrap.innerHTML=`<div class="modal pop">
+    <div class="row" style="justify-content:space-between"><h2 style="font-size:26px">Notifications</h2>
+    <button class="btn ghost sm" id="markAll">Mark all read</button></div>
+    <div style="margin-top:12px">${items.length?items.map(n=>`<div class="card ${n.read?'':''}" style="margin-bottom:8px;${n.read?'opacity:.6':''}">
+      <div class="row" style="justify-content:space-between"><b>${esc(n.title)}</b><span class="muted" style="font-size:12px">${fmtDate(n.created_at)}</span></div>
+      ${n.body?`<div class="muted" style="font-size:14px">${esc(n.body)}</div>`:''}</div>`).join(''):'<div class="empty"><div class="e">🔔</div>No notifications yet.</div>'}</div>
+    <button class="btn ghost block" id="closeNotif" style="margin-top:6px">Close</button></div>`;
+  document.body.appendChild(wrap);
+  wrap.addEventListener('click',e=>{ if(e.target===wrap) wrap.remove(); });
+  $('#closeNotif').addEventListener('click',()=>wrap.remove());
+  $('#markAll').addEventListener('click', async ()=>{
+    const ids=items.filter(n=>!n.read).map(n=>n.id); if(!ids.length) return;
+    await sb.rpc('mark_notifications_read',{ _ids:ids }); await loadNotifications(); paintNotif(); wrap.remove();
+  });
+  // auto-mark read
   const ids=items.filter(n=>!n.read).map(n=>n.id);
-  $('#mk').addEventListener('click',async()=>{if(ids.length){await sb.rpc('mark_notifications_read',{_ids:ids});await loadNotifications();paintNotif();}wrap.remove();});
-  if(ids.length){await sb.rpc('mark_notifications_read',{_ids:ids});await loadNotifications();paintNotif();}
+  if(ids.length){ await sb.rpc('mark_notifications_read',{ _ids:ids }); await loadNotifications(); paintNotif(); }
 }
-let audio=null;
-function toggleMusic(){state.music=!state.music;if(state.music){if(!SONG_URL){toast('No song set');state.music=false;render();return;}if(!audio){audio=new Audio(SONG_URL);audio.loop=true;audio.volume=.55;}audio.play().catch(()=>toast('Tap again','Tap the note once more to start audio.'));}else if(audio)audio.pause();render();}
-function toggleFullscreen(){if(!document.fullscreenElement)document.documentElement.requestFullscreen?.();else document.exitFullscreen?.();}
-function lightbox(url){const wrap=document.createElement('div');wrap.className='lightbox';wrap.innerHTML=/\.(mp4|mov|webm|m4v)/i.test(url)?`<video controls autoplay src="${url}"></video>`:`<img src="${url}">`;wrap.addEventListener('click',()=>wrap.remove());document.body.appendChild(wrap);}
 
-/* ============ START ============ */
-sb.auth.onAuthStateChange(()=>{});
-boot().catch(e=>{console.error(e);renderLogin('Could not connect. Check your internet and refresh.');});
+/* theme / music / fullscreen / lightbox */
+function applyTheme(){ const t=localStorage.getItem('th-theme')||'light'; document.documentElement.dataset.theme=t; }
+function toggleTheme(){ const cur=document.documentElement.dataset.theme==='dark'?'light':'dark'; document.documentElement.dataset.theme=cur; localStorage.setItem('th-theme',cur); }
+let audio=null;
+function toggleMusic(){
+  state.music=!state.music;
+  if(state.music){
+    if(!SONG_URL){ toast('No song set yet','Your MP3 will be added in a moment 🎵','bad'); state.music=false; render(); return; }
+    if(!audio){ audio=new Audio(SONG_URL); audio.loop=true; audio.volume=.6; }
+    audio.play().catch(()=>toast('Tap again','Browser blocked autoplay — tap the note once more.','bad'));
+  } else if(audio){ audio.pause(); }
+  render();
+}
+function toggleFullscreen(){ if(!document.fullscreenElement){ document.documentElement.requestFullscreen?.(); } else { document.exitFullscreen?.(); } }
+function lightbox(url){
+  const wrap=document.createElement('div'); wrap.className='lightbox';
+  const isV=/\.(mp4|mov|webm|m4v)/i.test(url);
+  wrap.innerHTML=isV?`<video controls autoplay src="${url}"></video>`:`<img src="${url}">`;
+  wrap.addEventListener('click',()=>wrap.remove()); document.body.appendChild(wrap);
+}
+
+/* ============================================================
+   ICONS
+   ============================================================ */
+const ICON={
+  bell:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>',
+  moon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"/></svg>',
+  logout:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>',
+  expand:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="M21 3l-7 7"/><path d="M3 21l7-7"/></svg>',
+  music:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>',
+  musicOff:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" opacity=".5"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/><path d="M2 2l20 20"/></svg>',
+  lock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>',
+  check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 6L9 17l-5-5"/></svg>',
+  heart:'<svg viewBox="0 0 24 24" fill="currentColor" opacity=".85"><path d="M12 21s-8-4.9-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 6.1-8 11-8 11z"/></svg>'
+};
+
+/* ============================================================
+   START
+   ============================================================ */
+sb.auth.onAuthStateChange((_e,session)=>{ /* keep session fresh */ });
+boot().catch(e=>{ console.error(e); renderLogin('Could not connect. Check your internet and refresh.'); });
 </script>
 </body>
 </html>
