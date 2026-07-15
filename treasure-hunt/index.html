@@ -24,6 +24,8 @@
   --sans:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
   --grad:linear-gradient(135deg,#f9b8cf 0%,#e7cf9b 100%);
   --grad-deep:linear-gradient(135deg,#c8607f 0%,#c9a24b 120%);
+  --veil:linear-gradient(rgba(255,247,250,.72),rgba(253,238,244,.86));
+  --wall:url("https://rtqslyatkzwghnejzvjl.supabase.co/storage/v1/object/public/media/memory/1784097541040_WhatsApp_Image_2026-07-15_at_12.05.56_PM.jpeg");
 }
 html[data-theme="dark"]{
   --pink-50:#241820; --pink-100:#2c1d26; --pink-200:#3a2632; --pink-300:#5a3a48;
@@ -33,14 +35,14 @@ html[data-theme="dark"]{
   --shadow-sm:0 10px 30px -16px rgba(0,0,0,.6);
   --grad:linear-gradient(135deg,#7d4a60 0%,#8a6f3a 100%);
   --grad-deep:linear-gradient(135deg,#f2a7c0 0%,#e7cf9b 120%);
+  --veil:linear-gradient(rgba(22,15,20,.78),rgba(30,20,27,.88));
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%}
 body{
   font-family:var(--sans); color:var(--ink); background:var(--bg);
-  background-image:radial-gradient(1200px 600px at 10% -10%,var(--pink-200),transparent 60%),
-    radial-gradient(1000px 700px at 110% 10%,var(--bg2),transparent 55%),
-    radial-gradient(900px 900px at 50% 120%,var(--pink-100),transparent 60%);
+  background-image:var(--veil), var(--wall);
+  background-size:cover; background-position:center; background-repeat:no-repeat;
   background-attachment:fixed; -webkit-font-smoothing:antialiased; line-height:1.55;
   overflow-x:hidden; transition:background .5s,color .4s;
 }
