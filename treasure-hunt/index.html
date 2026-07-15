@@ -232,6 +232,9 @@ const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON, {
   realtime:{ params:{ eventsPerSecond:5 } }
 });
 
+// Background music — your song (YouTube video id). Change this to swap the song.
+const SONG_YT_ID = "ByonwlSEpPU";
+
 /* ============================================================
    SMALL HELPERS
    ============================================================ */
@@ -1219,13 +1222,32 @@ async function openNotif(){
 /* theme / music / fullscreen / lightbox */
 function applyTheme(){ const t=localStorage.getItem('th-theme')||'light'; document.documentElement.dataset.theme=t; }
 function toggleTheme(){ const cur=document.documentElement.dataset.theme==='dark'?'light':'dark'; document.documentElement.dataset.theme=cur; localStorage.setItem('th-theme',cur); }
-let audio=null;
+let ytPlayer=null, ytReady=false, ytWanted=false;
+function initYT(){
+  if(document.getElementById('yt-api')) return;
+  const holder=document.createElement('div'); holder.id='ytholder';
+  holder.style.cssText='position:fixed;width:1px;height:1px;left:-9999px;bottom:0;opacity:0;pointer-events:none';
+  document.body.appendChild(holder);
+  const tag=document.createElement('script'); tag.id='yt-api'; tag.src='https://www.youtube.com/iframe_api';
+  document.body.appendChild(tag);
+}
+window.onYouTubeIframeAPIReady=function(){
+  ytPlayer=new YT.Player('ytholder',{
+    videoId:SONG_YT_ID,
+    playerVars:{ autoplay:0, controls:0, loop:1, playlist:SONG_YT_ID, playsinline:1 },
+    events:{
+      onReady:()=>{ ytReady=true; if(ytWanted){ try{ ytPlayer.unMute(); ytPlayer.playVideo(); }catch(e){} } },
+      onStateChange:e=>{ if(e.data===YT.PlayerState.ENDED){ try{ ytPlayer.playVideo(); }catch(e){} } }
+    }
+  });
+};
 function toggleMusic(){
-  state.music=!state.music;
+  state.music=!state.music; ytWanted=state.music;
+  initYT();
   if(state.music){
-    if(!audio){ audio=new Audio('https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8b8a73467.mp3?filename=romantic-piano-101243.mp3'); audio.loop=true; audio.volume=.5; }
-    audio.play().catch(()=>toast('Tap again','Browser blocked autoplay — tap the note once more.','bad'));
-  } else if(audio){ audio.pause(); }
+    if(ytReady&&ytPlayer){ try{ ytPlayer.unMute(); ytPlayer.playVideo(); }catch(e){} }
+    else { toast('Loading your song…','It will start playing in a moment 🎵'); }
+  } else if(ytReady&&ytPlayer){ try{ ytPlayer.pauseVideo(); }catch(e){} }
   render();
 }
 function toggleFullscreen(){ if(!document.fullscreenElement){ document.documentElement.requestFullscreen?.(); } else { document.exitFullscreen?.(); } }
