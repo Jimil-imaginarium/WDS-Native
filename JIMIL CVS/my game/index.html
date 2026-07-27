@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Truth or Dare · For Two</title>
+<meta name="theme-color" content="#1a0510">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Date Night">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="manifest" href="manifest.json">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  :root {
+    --bg1: #1a0510; --bg2: #2b0a1d; --bg3: #3d0a2a;
+    --pink: #ff2d6f; --pink-soft: #ff6b9d;
+    --truth: #7b5cff; --truth-soft: #a896ff;
+    --gold: #ffd27a; --amber: #ff9d4d; --green: #46e08a;
+    --ink: #ffeaf2; --muted: #c98fae;
+    --card: rgba(255,255,255,0.06); --line: rgba(255,255,255,0.12);
+  }
+  html, body { height: 100%; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: var(--ink);
+    background: linear-gradient(135deg, var(--bg1), var(--bg2) 45%, var(--bg3));
+    background-attachment: fixed; min-height: 100%;
+    display: flex; align-items: stretch; justify-content: center; overflow-x: hidden;
+  }
+  .glow {
+    position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background:
+      radial-gradient(40vw 40vw at 15% 10%, rgba(255,45,111,0.18), transparent 60%),
+      radial-gradient(45vw 45vw at 85% 90%, rgba(123,92,255,0.16), transparent 60%);
+    animation: drift 14s ease-in-out infinite alternate;
+  }
+  @keyframes drift { from { transform: translateY(-2%);} to { transform: translateY(2%);} }
+
+  html { background: var(--bg1); }
+  .wrap { position: relative; z-index: 1; width: 100%; max-width: 520px; min-height: 100vh; display: flex; flex-direction: column;
+    padding: calc(24px + env(safe-area-inset-top)) calc(20px + env(safe-area-inset-right)) calc(40px + env(safe-area-inset-bottom)) calc(20px + env(safe-area-inset-left)); }
+
+  .screen { display: none; flex: 1; flex-direction: column; }
+  .screen.active { display: flex; animation: fade .4s ease; }
+  @keyframes fade { from { opacity: 0; transform: translateY(10px);} to { opacity: 1; transform: none;} }
+
+  .title { text-align: center; margin: 18px 0 6px; font-size: 40px; font-weight: 800; letter-spacing: -1px; line-height: 1.05; }
+  .title b { color: var(--pink); }
+  .title i { color: var(--truth-soft); font-style: normal; }
+  .subtitle { text-align: center; color: var(--muted); font-size: 14px; margin-bottom: 22px; }
+
+  .field { margin-bottom: 16px; }
+  .field label { display: block; font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--muted); margin-bottom: 8px; }
+  .field input {
+    width: 100%; padding: 15px 16px; font-size: 17px;
+    background: var(--card); border: 1px solid var(--line); border-radius: 14px;
+    color: var(--ink); outline: none; transition: border .2s, background .2s;
+  }
+  .field input:focus { border-color: var(--pink); background: rgba(255,45,111,0.08); }
+  .field input::placeholder { color: rgba(255,255,255,0.3); }
+
+  .gsel { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
+  .gopt { padding: 11px; text-align: center; border-radius: 11px; border: 1px solid var(--line); background: var(--card); cursor: pointer; font-size: 14px; font-weight: 600; color: var(--muted); transition: all .15s; }
+  .gopt.sel { border-color: var(--pink); background: rgba(255,45,111,0.15); color: var(--ink); }
+
+  .seg-label { font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--muted); margin: 6px 0 10px; }
+  .heat { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 8px; }
+  .heat .chip { padding: 14px 12px; border-radius: 14px; border: 1px solid var(--line); background: var(--card); cursor: pointer; text-align: center; transition: all .18s; }
+  .heat .chip .h { font-size: 16px; font-weight: 700; }
+  .heat .chip .d { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .heat .chip.sel { border-color: var(--pink); background: linear-gradient(135deg, rgba(255,45,111,0.22), rgba(123,92,255,0.18)); box-shadow: 0 6px 20px rgba(255,45,111,0.18); }
+  .heat .chip.sel .d { color: var(--pink-soft); }
+
+  .aibox { margin: 14px 0 4px; padding: 14px; border: 1px solid var(--line); border-radius: 14px; background: rgba(255,255,255,0.04); }
+  .aitoggle { display: flex; align-items: center; gap: 10px; font-size: 14.5px; font-weight: 700; cursor: pointer; }
+  .aitoggle input { width: 19px; height: 19px; accent-color: var(--pink); }
+  .aitoggle .tag { color: var(--gold); }
+  .ainote { font-size: 11.5px; color: var(--muted); line-height: 1.55; margin-top: 10px; }
+
+  .note { margin: 18px 0 22px; padding: 12px 14px; font-size: 12.5px; line-height: 1.55; color: var(--muted); background: rgba(255,255,255,0.04); border: 1px solid var(--line); border-radius: 12px; }
+  .note b { color: var(--gold); }
+
+  .btn { width: 100%; padding: 17px; font-size: 18px; font-weight: 700; letter-spacing: .3px; border: none; border-radius: 16px; cursor: pointer; color: white; background: linear-gradient(135deg, var(--pink), #ff5e8a); box-shadow: 0 10px 30px rgba(255,45,111,0.35); transition: transform .12s, box-shadow .2s; }
+  .btn:active { transform: scale(.97); }
+  .btn.ghost { background: var(--card); border: 1px solid var(--line); box-shadow: none; color: var(--ink); }
+  .btn.truthbtn { background: linear-gradient(135deg, var(--truth), #9b82ff); box-shadow: 0 10px 30px rgba(123,92,255,0.35); }
+  .btn.small { padding: 14px; font-size: 15px; }
+
+  .topbar { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 6px; }
+  .scoreboard { display: flex; gap: 14px; font-size: 13px; }
+  .scoreboard .pl { color: var(--muted); }
+  .scoreboard .pl.up { color: var(--ink); }
+  .scoreboard .pl b { color: var(--pink-soft); }
+  .scoreboard .x { color: var(--amber); font-weight: 700; }
+  .reset { background: none; border: none; color: var(--muted); font-size: 13px; cursor: pointer; padding: 6px; white-space: nowrap; }
+  .metaline { text-align: center; font-size: 11.5px; color: rgba(255,255,255,0.45); letter-spacing: .3px; margin-bottom: 4px; }
+
+  .minigame { flex: 1; display: flex; flex-direction: column; gap: 10px; padding: 6px 0; }
+  .vsband { text-align: center; font-weight: 800; letter-spacing: 1px; min-height: 40px; display: flex; align-items: center; justify-content: center; font-size: 20px; color: var(--muted); transition: color .15s; }
+  .vsband.count { font-size: 46px; color: var(--gold); }
+  .vsband.go { font-size: 30px; color: var(--green); }
+  .vsband.win { font-size: 21px; color: var(--pink-soft); }
+  .zone { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 20px; border: 2px solid var(--line); min-height: 140px; cursor: pointer; user-select: none; -webkit-user-select: none; touch-action: manipulation; text-align: center; padding: 18px; transition: background .08s, border-color .08s, opacity .15s; }
+  .zone .zname { font-size: 23px; font-weight: 800; }
+  .zone .zhint { font-size: 12.5px; opacity: .8; margin-top: 6px; }
+  .zone.top { transform: rotate(180deg); }
+  .zone.idle { background: rgba(255,255,255,0.05); color: var(--muted); }
+  .zone.armed { background: linear-gradient(160deg, #61101f, #3a0a16); border-color: #ff5b6e; color: #ffd9df; }
+  .zone.go { background: linear-gradient(160deg, #0f7a44, #0a5e34); border-color: #5cf0a0; color: #eafff3; }
+  .zone.win { background: linear-gradient(160deg, rgba(255,45,111,0.32), rgba(255,45,111,0.1)); border-color: var(--pink); color: var(--ink); }
+  .zone.lose { background: rgba(255,255,255,0.03); border-color: var(--line); color: var(--muted); opacity: .6; }
+
+  .play { display: flex; flex-direction: column; flex: 1; }
+  .turn { text-align: center; margin: 8px 0 4px; }
+  .turn b#turnName { display: block; font-size: 30px; font-weight: 800; letter-spacing: -.5px; color: var(--ink); }
+  .spotsub { font-size: 12px; text-transform: uppercase; letter-spacing: 2px; color: var(--muted); }
+  .levelpill { display: inline-block; margin: 8px auto 0; padding: 4px 12px; border-radius: 999px; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; background: rgba(255,255,255,0.06); border: 1px solid var(--line); color: var(--muted); }
+  .pickhint { font-size: 13px; color: var(--pink-soft); margin-top: 10px; }
+
+  .cardzone { flex: 1; display: flex; align-items: center; justify-content: center; padding: 14px 0; min-height: 200px; }
+  .card { width: 100%; border-radius: 22px; padding: 30px 24px; text-align: center; background: var(--card); border: 1px solid var(--line); box-shadow: 0 16px 50px rgba(0,0,0,0.35); position: relative; overflow: hidden; }
+  .card.truth { background: linear-gradient(160deg, rgba(123,92,255,0.20), rgba(123,92,255,0.05)); border-color: rgba(123,92,255,0.4); }
+  .card.dare { background: linear-gradient(160deg, rgba(255,45,111,0.22), rgba(255,45,111,0.05)); border-color: rgba(255,45,111,0.45); }
+  .card.punish { background: linear-gradient(160deg, rgba(255,157,77,0.25), rgba(255,157,77,0.05)); border-color: rgba(255,157,77,0.5); }
+  .card .kind { font-size: 13px; letter-spacing: 3px; text-transform: uppercase; font-weight: 700; margin-bottom: 16px; }
+  .card.truth .kind { color: var(--truth-soft); }
+  .card.dare .kind { color: var(--pink-soft); }
+  .card.punish .kind { color: var(--amber); }
+  .card .prompt { font-size: 23px; line-height: 1.4; font-weight: 600; }
+  .card.pop { animation: pop .35s cubic-bezier(.2,.9,.3,1.3); }
+  @keyframes pop { from { opacity: 0; transform: scale(.92) translateY(8px);} to { opacity: 1; transform: none;} }
+
+  .placeholder { color: var(--muted); font-size: 18px; line-height: 1.5; }
+  .placeholder .em { font-size: 34px; display: block; margin-bottom: 12px; }
+
+  .timer { margin-top: 18px; font-size: 14px; color: var(--gold); cursor: pointer; display: inline-block; padding: 8px 16px; border: 1px solid rgba(255,210,122,0.4); border-radius: 999px; background: rgba(255,210,122,0.08); }
+  .timer.run { color: var(--ink); }
+
+  .choices { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px; }
+  .choices .btn { padding: 18px; }
+  .writeown { margin-top: 10px; }
+  .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px; }
+  .actions.single { grid-template-columns: 1fr; }
+  .actions .btn { padding: 15px; font-size: 16px; }
+
+  .hidden { display: none !important; }
+  .footer { text-align: center; color: rgba(255,255,255,0.25); font-size: 11px; margin-top: 18px; }
+
+  .overlay { position: fixed; inset: 0; z-index: 50; display: none; align-items: center; justify-content: center; padding: 20px; background: rgba(8,2,8,0.66); }
+  .overlay.active { display: flex; animation: fade .25s ease; }
+  .modal { width: 100%; max-width: 460px; background: linear-gradient(160deg, #341024, #1a0510); border: 1px solid var(--line); border-radius: 22px; padding: 24px; box-shadow: 0 24px 70px rgba(0,0,0,0.5); }
+  .modal h3 { font-size: 21px; margin-bottom: 4px; }
+  .modal p.sub { color: var(--muted); font-size: 13px; margin-bottom: 16px; }
+  .modal textarea { width: 100%; min-height: 96px; padding: 14px; font-size: 16px; font-family: inherit; resize: vertical; background: var(--card); border: 1px solid var(--line); border-radius: 14px; color: var(--ink); outline: none; }
+  .modal textarea:focus { border-color: var(--pink); }
+  .typetoggle { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 14px 0; }
+  .typetoggle .t { padding: 12px; text-align: center; border-radius: 12px; border: 1px solid var(--line); background: var(--card); cursor: pointer; font-weight: 600; }
+  .typetoggle .t.sel { border-color: var(--pink); background: rgba(255,45,111,0.15); color: var(--pink-soft); }
+  .savechk { display: flex; align-items: center; gap: 10px; font-size: 13.5px; color: var(--muted); margin-bottom: 18px; cursor: pointer; }
+  .savechk input { width: 18px; height: 18px; accent-color: var(--pink); }
+  .modal .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  .result { text-align: center; }
+  .result .trophy { font-size: 54px; margin-bottom: 6px; }
+  .result h3 { font-size: 26px; margin-bottom: 10px; }
+  .result .owes { font-size: 16px; line-height: 1.5; color: var(--ink); background: rgba(255,45,111,0.12); border: 1px solid rgba(255,45,111,0.3); border-radius: 14px; padding: 14px; margin-bottom: 20px; }
+  .result .owes b { color: var(--pink-soft); }
+</style>
+</head>
+<body>
+<div class="glow"></div>
+<div class="wrap">
+
+  <!-- ================= SETUP ================= -->
+  <section class="screen active" id="setup">
+    <h1 class="title">Truth <i>or</i> <b>Dare</b></h1>
+    <p class="subtitle">A little game for two 🔥</p>
+
+    <div class="field">
+      <label>Player One</label>
+      <input id="p1" type="text" placeholder="Your name" maxlength="14" autocomplete="off">
+      <div class="gsel" id="g1">
+        <div class="gopt sel" data-g="m">♂ Guy</div>
+        <div class="gopt" data-g="f">♀ Girl</div>
+      </div>
+    </div>
+    <div class="field">
+      <label>Player Two</label>
+      <input id="p2" type="text" placeholder="Their name" maxlength="14" autocomplete="off">
+      <div class="gsel" id="g2">
+        <div class="gopt" data-g="m">♂ Guy</div>
+        <div class="gopt sel" data-g="f">♀ Girl</div>
+      </div>
+    </div>
+
+    <p class="seg-label">Pick your heat</p>
+    <div class="heat" id="heat">
+      <div class="chip" data-mode="1"><div class="h">😏 Flirty</div><div class="d">Charged warm-up</div></div>
+      <div class="chip" data-mode="2"><div class="h">🔥 Spicy</div><div class="d">Clothes coming off</div></div>
+      <div class="chip" data-mode="3"><div class="h">💋 Filthy</div><div class="d">Absolutely no limits</div></div>
+      <div class="chip sel" data-mode="b"><div class="h">📈 Build-Up</div><div class="d">Starts slow, gets filthy</div></div>
+    </div>
+
+    <div class="aibox">
+      <label class="aitoggle"><input type="checkbox" id="endlessOn" checked> <span class="tag">♾️ Endless cards</span> — fresh every round, never repeat</label>
+      <p class="ainote">Builds brand-new truths &amp; dares right on your device — completely free, works offline, and won't repeat even after thousands of rounds. Turn this off to use only the hand-picked deck.</p>
+    </div>
+
+    <div class="note">
+      <b>How it works:</b> each round it's a race — tap your side the instant it flashes <b>green</b>. Slowest is on the spot, and the winner picks Truth or Dare. Pass and you take a punishment — most passes owes the winner a grand finale. 😈
+    </div>
+
+    <button class="btn" id="startBtn">Start Playing</button>
+    <p class="footer">Made just for the two of you · 18+</p>
+  </section>
+
+  <!-- ================= GAME ================= -->
+  <section class="screen" id="game">
+    <div class="topbar">
+      <div class="scoreboard" id="scoreboard">
+        <span class="pl" id="sb0"><b id="s0name">P1</b> <span class="x" id="s0">0</span>❌</span>
+        <span class="pl" id="sb1"><b id="s1name">P2</b> <span class="x" id="s1">0</span>❌</span>
+      </div>
+      <button class="reset" id="resetBtn">🏁 Finish</button>
+    </div>
+    <div class="metaline" id="metaline">Round 1</div>
+
+    <div class="minigame" id="minigame">
+      <div class="zone top idle" id="zone0" data-player="0">
+        <div class="zname" id="z0name">P1</div>
+        <div class="zhint">tap your side the moment it turns green</div>
+      </div>
+      <div class="vsband" id="vsband">Get ready…</div>
+      <div class="zone idle" id="zone1" data-player="1">
+        <div class="zname" id="z1name">P2</div>
+        <div class="zhint">tap your side the moment it turns green</div>
+      </div>
+    </div>
+
+    <div class="play hidden" id="play">
+      <div class="turn">
+        <b id="turnName">—</b>
+        <span class="spotsub">is on the spot 👀</span>
+        <div><span class="levelpill" id="levelPill">Flirty</span></div>
+        <div class="pickhint" id="pickHint"></div>
+      </div>
+
+      <div class="cardzone">
+        <div class="card" id="card">
+          <div class="placeholder" id="placeholder">
+            <span class="em">💞</span>
+            Pick <b>Truth</b> or <b>Dare</b> below…
+          </div>
+          <div class="hidden" id="cardContent">
+            <div class="kind" id="cardKind">DARE</div>
+            <div class="prompt" id="cardPrompt"></div>
+            <div class="timer hidden" id="timer">⏱ Tap to start timer</div>
+          </div>
+        </div>
+      </div>
+
+      <div id="choicesWrap">
+        <div class="choices" id="choices">
+          <button class="btn truthbtn" id="truthBtn">Truth</button>
+          <button class="btn" id="dareBtn">Dare</button>
+        </div>
+        <button class="btn ghost small writeown" id="writeBtn">✍️ Write your own dare</button>
+      </div>
+
+      <div class="actions hidden" id="actions">
+        <button class="btn ghost" id="passBtn">Pass 🙈</button>
+        <button class="btn" id="doneBtn">Done 😈 Next</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CUSTOM CARD MODAL ============ -->
+  <div class="overlay" id="customOverlay">
+    <div class="modal">
+      <h3 id="customTitle">Write a dare 😈</h3>
+      <p class="sub" id="customSub">Type a challenge for your partner.</p>
+      <textarea id="customText" placeholder="e.g. Kiss me wherever I point for the next minute..." maxlength="220"></textarea>
+      <div class="typetoggle" id="customType">
+        <div class="t sel" data-type="dare">🔥 Dare</div>
+        <div class="t" data-type="truth">💭 Truth</div>
+      </div>
+      <label class="savechk"><input type="checkbox" id="customSave" checked> Add it to our deck for next time</label>
+      <div class="row">
+        <button class="btn ghost" id="customCancel">Cancel</button>
+        <button class="btn" id="customGo">Send it 😈</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ RESULT MODAL ============ -->
+  <div class="overlay" id="resultOverlay">
+    <div class="modal result">
+      <div class="trophy" id="resultEmoji">🏆</div>
+      <h3 id="resultTitle">Game over</h3>
+      <div class="owes" id="resultOwes"></div>
+      <div class="row">
+        <button class="btn ghost" id="playAgain">Play again</button>
+        <button class="btn" id="newGame">New game</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============ HAND-PICKED DECK (always available) ============
+   "you/your" = person ON THE SPOT; {P} = partner. Tokens filled per round. */
+const DATA = {
+  truth: {
+    1: [
+      "If {P} walked in wearing nothing right now, what's the very first thing you'd do?",
+      "Where on your body are you aching to be touched first tonight?",
+      "What's the dirtiest thought you've had about {P} this week?",
+      "When you touch yourself, how often is {P} the one you're thinking about?",
+      "What part of {P}'s body do you fantasize about the most?",
+      "What's something you've imagined {P} doing to you but never said out loud?",
+      "If {P} pinned you against the wall right now, what would you want next?",
+      "What's the neediest you've ever felt for {P} in public?",
+      "What look from {P} makes you want to rip {Ppos} clothes off?",
+      "What's a fantasy about {P} you replay in your head to get yourself off?",
+      "Where's the riskiest place you've wanted {P} to take you?",
+      "What turns you on faster — {P}'s mouth, {Ppos} hands, or {Ppos} voice?",
+      "What's the hottest thing {P} has ever whispered to you?",
+      "If you could feel {P}'s lips on one spot right now, where?",
+      "What outfit of {P}'s makes you instantly want {Pobj} out of it?",
+      "What was the very first dirty thought you ever had about {P}?",
+      "What's something innocent {P} does that secretly drives you wild?",
+      "If you had {P} for the next hour with no rules, where would you start?",
+      "What's a sound {P} makes in bed that you can't get out of your head?",
+      "What's the dirtiest text you've wanted to send {P} but chickened out of?"
+    ],
+    2: [
+      "Describe exactly how you like {P}'s mouth on you — pace, pressure, everything.",
+      "What's something you want {P} to do to you tonight that you've never tried?",
+      "When you touch yourself, what exactly are you picturing {P} doing?",
+      "Where do you want {P}'s {Phand} right now, and exactly how?",
+      "What's the loudest {P} has ever made you — and what was {Pse} doing?",
+      "How do you like to be teased right before {P} lets you finish?",
+      "Describe how you want to be touched when you're already worked up and {Swet}.",
+      "What do you want to do to {P} with your mouth tonight?",
+      "What's a kink you've been too shy to admit to {P}?",
+      "What's the hottest thing you'd let {P} do to you with the lights on?",
+      "What's something dirty you want {P} to whisper to you mid-hookup?",
+      "What part of your body do you most want {P}'s mouth on right now?"
+    ],
+    3: [
+      "Tell {P} exactly how you want {Pobj} to make you come tonight.",
+      "Describe your filthiest fantasy about {P} — every detail, nothing left out.",
+      "Walk {P} through exactly how you touch yourself when you're thinking of {Pobj}.",
+      "What's the dirtiest thing you want {P}'s mouth doing to you right now?",
+      "How long do you want {P} to edge you before {Pse} finally lets you finish?",
+      "Tell {P} where you want {Ppos} tongue and exactly how long you want it there.",
+      "If {P} made you beg tonight, what would you be begging {Pobj} for?",
+      "What's the {Swettest} {P} has ever made you, and exactly how {Pse} did it?",
+      "What toy do you want {P} to use on you, and exactly how?",
+      "Describe, start to finish, the filthiest night you want {P} to give you."
+    ]
+  },
+  dare: {
+    1: [
+      "Kiss your way down {P}'s neck and don't stop until {Pse} tells you to.",
+      "Take off one piece of clothing — slowly, while {P} watches.",
+      "Whisper the filthiest thing you want to do to {P} into {Ppos} ear.",
+      "Straddle {P} and grind slowly for 20 seconds.",
+      "Bite {P}'s lip, then tell {Pobj} exactly what you're thinking.",
+      "Suck on two of {P}'s fingers like you really mean it.",
+      "Sit in {P}'s lap facing {Pobj}, no space between you, for one round.",
+      "Leave a mark on {P}'s neck — or lower — that {Pse}'ll feel later.",
+      "Pull {P} in by the waist and kiss {Pobj} like you're starving.",
+      "Drag your nails down {P}'s chest and stomach.",
+      "Kiss {P}'s inner thigh and work upward — stop where you dare.",
+      "Strip down to your underwear and stay that way for two rounds."
+    ],
+    2: [
+      "Take off {P}'s underwear using your teeth.",
+      "Straddle {P} topless and grind for 30 seconds.",
+      "Kiss down {P}'s stomach to the waistband — then stop and look up at {Pobj}.",
+      "Touch yourself over your underwear while {P} watches for 30 seconds.",
+      "Give {P} a lap dance and lose one layer by the end.",
+      "Take {P}'s hand and show {Pobj} exactly how you want to be touched.",
+      "Lie back and let {P} kiss everywhere {Pse} wants for 90 seconds.",
+      "Run an ice cube down {P}'s chest and follow it with your tongue.",
+      "Let {P} slip {Ppos} hand into your underwear and tease for 30 seconds."
+    ],
+    3: [
+      "Go down on {P} and don't stop until {Pse} finishes or the two-minute timer ends.",
+      "Lie back and let {P} {doU} while {Pse} kisses your neck — try to stay quiet.",
+      "Touch yourself in front of {P} until you're close — then stop and let {Pobj} take over.",
+      "Let {P} edge you with {Ppos} {Phand} until you're begging {Pobj} to let you finish.",
+      "On your knees, use your mouth on {P} with your hands behind your back.",
+      "Show {P} exactly how you make yourself come — then let {Pobj} copy it.",
+      "Use a toy on yourself for one minute while {P} watches — then {Pse} takes over.",
+      "Both of you, hands on each other at the same time for one minute.",
+      "Let {P} strip you naked, slow, then taste {Ppos} way down your whole body.",
+      "Lie back and let {P} alternate {Ppos} {Phand} and tongue on you for two minutes."
+    ]
+  },
+  punish: {
+    1: [
+      "You passed — take something off, slowly, while {P} watches.",
+      "Forfeit: kiss {P} anywhere {Pse} points for 30 seconds.",
+      "No free pass — {P} writes your next dare and you can't say no.",
+      "Penalty: let {P} leave a mark anywhere {Pse} wants.",
+      "Sit in {P}'s lap and grind for 15 seconds as your fine.",
+      "Forfeit: describe out loud three filthy things you want {P} to do tonight.",
+      "Pass tax: {P} picks a piece of your clothing and it comes off.",
+      "You owe {P} a 20-second kiss wherever {Pse} chooses to put {Ppos} mouth."
+    ],
+    2: [
+      "Passed? Lose a layer — {P}'s choice which.",
+      "Forfeit: {P} gets to kiss and bite anywhere on you for 30 seconds.",
+      "Penalty: give {P} a one-minute lap dance, nothing on above the waist.",
+      "Pass tax: top and one more layer come off.",
+      "Forfeit: touch yourself over your underwear for 20 seconds while {P} watches.",
+      "Penalty: {P} guides your mouth down {Ppos} body wherever {Pse} wants for 30 seconds.",
+      "Let {P} blindfold you for the next two rounds.",
+      "You owe {P} 30 seconds of grinding in {Ppos} lap."
+    ],
+    3: [
+      "You passed — now you owe {P} two minutes of doing whatever {Pse} says.",
+      "Forfeit: get fully undressed and stay that way the rest of the round.",
+      "Penalty: {P} edges you with {Ppos} {Phand} for one minute — no finishing.",
+      "Pass tax: go down on {P} for one minute as your fine — no second pass.",
+      "Forfeit: touch yourself in front of {P} for one minute while {Pse} watches.",
+      "Penalty: hands behind your back, {P} teases you with {Ppos} mouth for one minute.",
+      "You owe {P} a dare of {Ppos} choosing, and 'no' isn't allowed.",
+      "No mercy: {P}'s mouth on you, wherever {Pse} wants, for one minute."
+    ]
+  }
+};
+
+/* ============ ENDLESS GENERATOR (free, on-device) ============
+   Word-banks + templates → tens of thousands of unique cards. */
+const BANK = {
+  KISS_AREA: ["neck","collarbone","jaw","earlobe","throat","shoulders","chest","stomach","hips","inner thighs","lower back","waist","spine"],
+  MARK_AREA: ["neck","collarbone","throat","shoulder","hip","inner thigh"],
+  LOWERAREA: ["thigh","inner thigh","hip","waist","side","lower back"],
+  BITE_AREA: ["lip","bottom lip","neck","shoulder","earlobe","throat"],
+  HAND_PART: ["hand","fingers","nails","palm"],
+  CLOTHING: ["one piece of clothing","your top","one layer","something of your choosing","whatever {P} points at"],
+  GARMENT: ["shirt","top","underwear","bra","one layer"],
+  TEETH: ["your teeth","only your mouth, hands behind your back","just your lips"],
+  PACE: ["slowly","painfully slowly","teasingly","hungrily","keeping eye contact","barely touching","without using your hands","while you moan"],
+  DUR: ["for 15 seconds","for 20 seconds","for 30 seconds","for a slow 30 seconds","for one minute","for two minutes","for 90 seconds","until the timer runs out","until {Pse} tells you to stop","until you can't take it"],
+  DURT: ["for 20 seconds","for 30 seconds","for one minute","for two minutes","for 90 seconds","until the timer runs out"],
+  ROUNDS: ["for two rounds","for the next three rounds","until your next turn"],
+  WHISPER: ["the filthiest thing on your mind","exactly what you want {Pobj} to do to you tonight","how worked up you already are","the dirtiest thought you had today","what you want {Pobj} to do the second this game ends","how badly you want {Pobj} right now"],
+  TELL: ["exactly what you're thinking","how badly you want {Pobj}","what you want next","the dirtiest thing on your mind","where you want {Ppos} hands"],
+  DIRTY: ["dirtiest","filthiest","naughtiest","hottest","most desperate"],
+  THOUGHT: ["thought","imagined","fantasized","daydreamed"],
+  CRAVE: ["fantasize about","crave","stare at","want your mouth on","can't stop thinking about"],
+  WHEN: ["first tonight","right now","the most"],
+  LOOK: ["look","outfit","move","smile","glance"],
+  WANT: ["rip {Ppos} clothes off","drag {Pobj} to the bedroom","climb into {Ppos} lap","forget where you are"],
+  SENSE: ["mouth","hands","voice","eyes","fingers","lips"],
+  DIDTOYOU: ["whispered to you","done to you","texted you","done to you in public"],
+  INITIATED: ["pinned you against the wall","kissed you hard","pulled you onto {Ppos} lap","grabbed you by the hips","bit your neck"],
+  ORAL_ABOVE: ["chest","stomach","hips","neck","collarbone","inner thighs"],
+  ORAL_STYLE: ["slow and deep","keeping eye contact the whole time","and don't stop until {Pse} says so","with your hands behind your back","while you moan against {Pobj}"],
+  DOWN_ON_YOU: ["go down on you","use {Ppos} mouth on you","tease you with just {Ppos} tongue","work you with {Ppos} mouth"],
+  WHILE: ["while {Pse} kisses your neck","while you whisper your dirtiest fantasy out loud","until you're begging {Pobj} to let you finish","while {Pse} watches your face"],
+  SELF: ["until you're close, then let {Pobj} take over","exactly how you do it alone","and tell {Pobj} what you're imagining","then let {Pobj} finish what you started"],
+  EDGE_TOOL: ["{Phand}","mouth","fingers and tongue"],
+  EDGE_GOAL: ["until you're begging","three times without letting you finish","right to the edge and back, twice","until you can't take any more"],
+  MOUTH_MOD: ["wherever {Pse} guides you","and don't stop until {Pse} finishes","while you touch yourself","keeping eye contact"],
+  RIDE: ["grind against it at your own pace","guide it exactly where you want it","show {Pobj} how you like it"],
+  MUTUAL: ["use your hands on each other","touch each other at the same time","go down on each other","strip each other with your teeth"],
+  GRIND_ON: ["mouth","hand","thigh"],
+  HANDWORK: ["your hand works {Pobj} under the waistband","you stroke {Pobj} slowly","your fingers tease {Pobj}"],
+  OVERWEAR: ["over your underwear","through your clothes","slowly, watching {Pobj} watch you"],
+  LAYERS: ["one layer","your top","two layers"],
+  REMAIN: ["your underwear","one last piece","nothing but your underwear"],
+  ICEAREA: ["chest","stomach","spine","neck","collarbone"],
+  DETAIL: ["in filthy detail","leaving nothing out","slowly, right in {Ppos} ear"],
+  P_TEASE: ["kiss everywhere {Pse} wants","trace {Ppos} tongue down your body","pin your hands and kiss down to your stomach","tease you with {Ppos} mouth over the fabric","slip {Ppos} hand under your waistband and tease you"],
+  TEASE_TOOL: ["{Ppos} tongue","{Ppos} fingers","a toy","{Ppos} lips"],
+  EXPLICIT_ACT: ["use your tongue on {P}'s {Ppart}","work {P}'s {Ppart} with your {Phand}","tease {P}'s {Ppart} with your mouth"],
+  FINISH: ["get yourself off","get in the mood","turn yourself on"],
+  TOUCHVERB: ["put {Ppos} hands","kiss","bite","touch"],
+  T_ACT1: ["kiss you","pin you against the wall","whisper filth in your ear","run {Ppos} hands all over you","tease you until you can't stand it","press you up against {Pobj}","trail kisses down your neck","grab you by the hips","bite your lip","undress you with {Ppos} eyes"],
+  T_ACT2: ["go down on you","use {Ppos} mouth on you","strip you down slowly","tease you over your clothes","pin you down and kiss every inch","run {Ppos} hands under your clothes","kiss down to your waistband","grind against you","peel your clothes off","leave marks all over you"],
+  T_ACT3: ["use {Ppos} mouth on you","use {Ppos} {Phand} on you","go down on you until you beg","edge you until you can't take it","make you come with {Ppos} tongue","take full control of your body","use a toy on you","make you beg for it","work you with {Ppos} fingers and tongue","have {Ppos} way with you"],
+  T_LEAD: ["Describe exactly how you want {P} to","Tell {P} exactly how you want {Pobj} to","Walk {P} through how you want {Pobj} to","In filthy detail, tell {P} how you want {Pobj} to"],
+  T_LEADQ: ["What's the dirtiest way you want {P} to","Where do you most want {P} to","How badly do you want {P} to"],
+  T_WHEN: ["tonight","the second this game ends","first thing tomorrow morning","when you're already worked up","right now","next time you two are alone","all night long","before you even make it to the bed"],
+  T_PACE: ["slow and teasing","rough and fast","deep and unhurried","exactly how you like it","until you're shaking"],
+  T_IF: ["{Pse} made you wait all night","{Pse} had you completely at {Ppos} mercy","no one could ever know","{Pse} told you to ask for it dirty","you couldn't touch {Pobj} back"],
+  T_PLACE: ["in the shower","somewhere you could get caught","when you're supposed to be sleeping","in the back seat","on the kitchen counter","the next time you're home alone"],
+  T_BODY: ["mouth","hands","fingers","tongue","lips"]
+};
+const TPL = {
+  dare: {
+    1: [
+      "Kiss {P}'s %KISS_AREA% %PACE% %DUR%.",
+      "Kiss your way from {P}'s %KISS_AREA% to {Ppos} %KISS_AREA%, %PACE%.",
+      "Take off %CLOTHING% %PACE% while {P} watches.",
+      "Whisper %WHISPER% in {P}'s ear.",
+      "Run your %HAND_PART% up {P}'s %LOWERAREA% and stop where you dare.",
+      "Straddle {P} and grind %PACE% %DUR%.",
+      "Bite {P}'s %BITE_AREA%, then tell {Pobj} %TELL%.",
+      "Trail your tongue from {P}'s %KISS_AREA% up to {Ppos} %KISS_AREA%.",
+      "Sit in {P}'s lap and roll your hips %DUR%.",
+      "Leave a mark on {P}'s %MARK_AREA% that {Pse}'ll feel later.",
+      "Suck on {P}'s fingers %PACE% %DUR%.",
+      "Tease {P}'s lips with yours but don't let {Pobj} kiss you %DUR%.",
+      "Pull {P} in by the %LOWERAREA% and kiss {Pobj} like you're starving.",
+      "Drag your nails down {P}'s %KISS_AREA% and %KISS_AREA%.",
+      "Tell {P} %TELL%, then kiss {Pobj} where {Pse} least expects it."
+    ],
+    2: [
+      "Kiss your way down {P}'s body from {Ppos} %KISS_AREA% to the waistband, %PACE%.",
+      "Use your mouth on {P}'s %ORAL_ABOVE% %DUR%.",
+      "Take off {P}'s %GARMENT% using %TEETH%.",
+      "Touch yourself %OVERWEAR% while {P} watches %DUR%.",
+      "Grind on {P} %DURT%.",
+      "Give {P} a lap dance and lose %LAYERS% by the end.",
+      "Kiss {P}'s inner thighs everywhere except where {Pse} wants it most %DUR%.",
+      "Let {P} %P_TEASE% %DUR%.",
+      "Strip down to %REMAIN% and stay that way %ROUNDS%.",
+      "Run an ice cube down {P}'s %ICEAREA% and follow it with your tongue.",
+      "Whisper exactly what you want {P} to do to you — %DETAIL%.",
+      "Let {P} pin your hands and kiss down to your %KISS_AREA%.",
+      "Take {P}'s hand and show {Pobj} exactly how you want to be touched %OVERWEAR%.",
+      "Suck {P}'s fingers, then guide {Ppos} hand under your waistband."
+    ],
+    3: [
+      "Go down on {P} %ORAL_STYLE% %DURT%.",
+      "Lie back and let {P} %DOWN_ON_YOU% %DURT%.",
+      "Let {P} {doU} %WHILE%.",
+      "Touch yourself in front of {P} %SELF%.",
+      "Let {P} edge you with {Ppos} %EDGE_TOOL% %EDGE_GOAL%.",
+      "Use your mouth on {P} %MOUTH_MOD% %DURT%.",
+      "Take {P}'s {Phand} and show {Pobj} exactly how you like to be touched %DURT%.",
+      "Use a toy on yourself %DURT% while {P} watches, then {Pse} takes over.",
+      "Both of you, %MUTUAL% %DURT%.",
+      "Let {P} strip you naked %PACE% and taste {Ppos} way down your whole body.",
+      "Grind against {P}'s %GRIND_ON% until you're close, then let {Pobj} decide what's next.",
+      "Whisper filth in {P}'s ear while %HANDWORK%.",
+      "%EXPLICIT_ACT% %DURT%.",
+      "Let {P} tease your {Spart} with %TEASE_TOOL% %DURT%.",
+      "Let {P} use {Ppos} mouth and {Phand} on you at the same time %DURT%."
+    ]
+  },
+  truth: {
+    1: [
+      "What's the %DIRTY% thing you've %THOUGHT% about {P}?",
+      "What part of {P}'s body do you %CRAVE% the most?",
+      "Where on your body are you aching to be touched %WHEN%?",
+      "What %LOOK% from {P} makes you want to %WANT%?",
+      "What turns you on faster — {P}'s %SENSE% or {Ppos} %SENSE%?",
+      "What's the hottest thing {P} has ever %DIDTOYOU%?",
+      "If {P} %INITIATED% right now, what would you want next?",
+      "What do you secretly wish {P} would do — %T_ACT1% %T_WHEN%?",
+      "When do you most catch yourself wanting {P} to %T_ACT1%?",
+      "Where would you love {P} to %T_ACT1% %T_PLACE%?",
+      "What's a fantasy about {P} you replay to %FINISH%?",
+      "What's the dirtiest text you've wanted to send {P} but didn't?",
+      "What outfit of {P}'s makes you instantly want {Pobj} out of it?",
+      "Where do you most love being kissed that isn't your mouth?"
+    ],
+    2: [
+      "%T_LEAD% %T_ACT2% %T_WHEN%.",
+      "%T_LEADQ% %T_ACT2%?",
+      "Describe how you like {P}'s %T_BODY% on you — %T_PACE%.",
+      "Where would you most want {P} to %T_ACT2% %T_WHEN%?",
+      "How do you want {P} to %T_ACT2% — %T_PACE%?",
+      "Where do you want {P}'s %HAND_PART% right now, and exactly how?",
+      "What's the loudest {P} has ever made you — and what was {Pse} doing?",
+      "Describe how you want to be touched when you're already worked up and {Swet}.",
+      "What's a kink you've been too shy to admit to {P}?",
+      "Tell {P} the exact spot to %TOUCHVERB% to make you melt.",
+      "What do you want to do to {P} with your %T_BODY% tonight?",
+      "What's the hottest thing you'd let {P} do to you with the lights on?",
+      "What sound or word from {P} flips your switch instantly?"
+    ],
+    3: [
+      "%T_LEAD% %T_ACT3% %T_WHEN%.",
+      "%T_LEADQ% %T_ACT3%?",
+      "Describe your %DIRTY% fantasy about {P} — every detail, nothing left out.",
+      "Walk {P} through exactly how you touch yourself when you're thinking of {Pobj}.",
+      "How do you want {P} to %T_ACT3% — %T_PACE%?",
+      "Tell {P} where you want {Ppos} %T_BODY% and exactly how long you want it there.",
+      "What would you beg {P} for if %T_IF%?",
+      "What's the %DIRTY% thing you've pictured {P} doing %T_PLACE%?",
+      "How long do you want {P} to edge you before letting you finish?",
+      "What's the {Swettest} {P} has ever made you, and exactly how?",
+      "Describe how you'd touch yourself for {P} if {Pse} told you to put on a show.",
+      "Tell {P} the filthiest thing you want {Pobj} to do to you %T_WHEN%.",
+      "What toy do you want {P} to use on you, and exactly how?",
+      "Describe, start to finish, the filthiest night you want {P} to give you."
+    ]
+  }
+};
+
+const LEVEL_NAMES = { 1: "Flirty", 2: "Spicy", 3: "Filthy" };
+const LS = { p1:"tod_p1", p2:"tod_p2", g1:"tod_g1", g2:"tod_g2", mode:"tod_mode", custom:"tod_custom", endless:"tod_endless", seen:"tod_seen" };
+
+/* ============ STATE ============ */
+let state = {
+  players: ["", ""], genders: ["m", "f"], mode: "b",
+  round: 1, strikes: [0, 0], onSpot: 1, picker: 0,
+  lastText: { truth: "", dare: "", punish: "" }
+};
+let customCards = [];
+let customDraft = "dare";
+let timerInt = null;
+let endless = true;
+let seen = new Set();
+
+const $ = id => document.getElementById(id);
+
+/* ============ GENDER FILL ============ */
+function pron(g) {
+  return g === "m" ? { se:"he", obj:"him", pos:"his", self:"himself", part:"cock" }
+                   : { se:"she", obj:"her", pos:"her", self:"herself", part:"clit" };
+}
+function fill(t) {
+  const Pg = state.genders[state.picker], Sg = state.genders[state.onSpot];
+  const pp = pron(Pg), sp = pron(Sg);
+  const map = {
+    "{P}": state.players[state.picker],
+    "{Pse}": pp.se, "{Pobj}": pp.obj, "{Ppos}": pp.pos, "{Pemself}": pp.self, "{Ppart}": pp.part,
+    "{Spart}": sp.part,
+    "{Phand}": Pg === "f" ? "fingers" : "hand",
+    "{doU}": Sg === "f" ? "finger you" : "stroke you",
+    "{Swet}": Sg === "f" ? "wet" : "hard",
+    "{Swettest}": Sg === "f" ? "wettest" : "hardest"
+  };
+  return t.replace(/\{[^}]+\}/g, m => (m in map ? map[m] : m));
+}
+
+/* ============ STORAGE ============ */
+function loadStorage() {
+  try {
+    if (localStorage.getItem(LS.p1)) $("p1").value = localStorage.getItem(LS.p1);
+    if (localStorage.getItem(LS.p2)) $("p2").value = localStorage.getItem(LS.p2);
+    const g1 = localStorage.getItem(LS.g1), g2 = localStorage.getItem(LS.g2);
+    if (g1) selectGender("g1", g1, 0);
+    if (g2) selectGender("g2", g2, 1);
+    const m = localStorage.getItem(LS.mode);
+    if (m) { state.mode = m; document.querySelectorAll("#heat .chip").forEach(c => c.classList.toggle("sel", c.dataset.mode === m)); }
+    customCards = JSON.parse(localStorage.getItem(LS.custom) || "[]");
+    const e = localStorage.getItem(LS.endless);
+    endless = (e === null) ? true : (e === "1");
+    $("endlessOn").checked = endless;
+    seen = new Set(JSON.parse(localStorage.getItem(LS.seen) || "[]"));
+  } catch (e) {}
+}
+function saveStorage() {
+  try {
+    localStorage.setItem(LS.p1, state.players[0]);
+    localStorage.setItem(LS.p2, state.players[1]);
+    localStorage.setItem(LS.g1, state.genders[0]);
+    localStorage.setItem(LS.g2, state.genders[1]);
+    localStorage.setItem(LS.mode, state.mode);
+    localStorage.setItem(LS.custom, JSON.stringify(customCards));
+    localStorage.setItem(LS.endless, endless ? "1" : "0");
+  } catch (e) {}
+}
+function saveSeen() {
+  try { localStorage.setItem(LS.seen, JSON.stringify(Array.from(seen).slice(-2500))); } catch (e) {}
+}
+
+/* ============ HELPERS ============ */
+function currentLevel() {
+  if (state.mode !== "b") return parseInt(state.mode, 10);
+  if (state.round <= 5) return 1;
+  if (state.round <= 12) return 2;
+  return 3;
+}
+function rand(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+function getList(type, lvl) {
+  const base = DATA[type][lvl];
+  if (type === "punish") return base;
+  const extra = customCards.filter(c => c.type === type).map(c => c.text);
+  return base.concat(extra);
+}
+function pickFrom(type, lvl) {
+  const list = getList(type, lvl);
+  let text, guard = 0;
+  do { text = rand(list); guard++; }
+  while (text === state.lastText[type] && list.length > 1 && guard < 25);
+  state.lastText[type] = text;
+  return text;
+}
+function needsTimer(text) { return /second|minute|timer/i.test(text); }
+
+/* ============ ENDLESS GENERATOR ============ */
+function assemble(tpl) {
+  const usedByBank = {};
+  return tpl.replace(/%([A-Z0-9_]+)%/g, (m, bank) => {
+    const pool = BANK[bank];
+    if (!pool) return m;
+    const used = usedByBank[bank] || (usedByBank[bank] = new Set());
+    let v, t = 0;
+    do { v = pool[Math.floor(Math.random() * pool.length)]; t++; }
+    while (used.has(v) && used.size < pool.length && t < 30);
+    used.add(v);
+    return v;
+  });
+}
+function cap(s) { return s.replace(/^(\s*)([a-z])/, (m, a, b) => a + b.toUpperCase()); }
+function genCard(type, lvl) {
+  const tpl = rand(TPL[type][lvl]);
+  return cap(assemble(tpl)).replace(/\s+/g, " ").trim();
+}
+function nextCard(type) {
+  const lvl = currentLevel();
+  const handList = getList(type, lvl).filter(c => !seen.has(c));
+  for (let i = 0; i < 80; i++) {
+    let cand;
+    // mix in the hand-picked deck (while any remain unseen), else generate
+    if (handList.length && Math.random() < 0.3) cand = rand(handList);
+    else cand = genCard(type, lvl);
+    if (!seen.has(cand)) { seen.add(cand); state.lastText[type] = cand; saveSeen(); return cand; }
+  }
+  const fresh = genCard(type, lvl);
+  seen.add(fresh); state.lastText[type] = fresh; saveSeen();
+  return fresh;
+}
+
+/* ============ SETUP ============ */
+function selectGender(groupId, g, idx) {
+  document.querySelectorAll("#" + groupId + " .gopt").forEach(o => o.classList.toggle("sel", o.dataset.g === g));
+  state.genders[idx] = g;
+}
+["g1", "g2"].forEach((gid, idx) => {
+  document.querySelectorAll("#" + gid + " .gopt").forEach(opt => {
+    opt.addEventListener("click", () => selectGender(gid, opt.dataset.g, idx));
+  });
+});
+document.querySelectorAll("#heat .chip").forEach(chip => {
+  chip.addEventListener("click", () => {
+    document.querySelectorAll("#heat .chip").forEach(c => c.classList.remove("sel"));
+    chip.classList.add("sel");
+    state.mode = chip.dataset.mode;
+  });
+});
+
+$("startBtn").addEventListener("click", () => {
+  state.players = [$("p1").value.trim() || "Player 1", $("p2").value.trim() || "Player 2"];
+  state.round = 1; state.strikes = [0, 0];
+  state.lastText = { truth: "", dare: "", punish: "" };
+  endless = $("endlessOn").checked;
+  saveStorage();
+  $("s0name").textContent = state.players[0];
+  $("s1name").textContent = state.players[1];
+  $("z0name").textContent = state.players[0];
+  $("z1name").textContent = state.players[1];
+  $("setup").classList.remove("active");
+  $("game").classList.add("active");
+  updateScore();
+  runRound();
+});
+
+/* ============ ROUND FLOW ============ */
+function runRound() {
+  $("metaline").textContent = "Round " + state.round + " · tap green to win the race";
+  highlight(-1);
+  $("play").classList.add("hidden");
+  $("minigame").classList.remove("hidden");
+  startDuel();
+}
+function endRound() { state.round++; runRound(); }
+
+/* ============ MINI-GAME ============ */
+let duel = { phase: "idle", timers: [] };
+function stopDuel() { duel.timers.forEach(clearTimeout); duel.timers = []; duel.phase = "done"; }
+function setZones(cls) { $("zone0").className = "zone top " + cls; $("zone1").className = "zone " + cls; }
+function vs(text, cls) { const b = $("vsband"); b.textContent = text; b.className = "vsband" + (cls ? " " + cls : ""); }
+function startDuel() {
+  stopDuel(); duel.phase = "count"; setZones("idle");
+  let n = 3; vs(n, "count");
+  const tick = () => { n--; if (n > 0) { vs(n, "count"); duel.timers.push(setTimeout(tick, 800)); } else armDuel(); };
+  duel.timers.push(setTimeout(tick, 800));
+}
+function armDuel() { duel.phase = "armed"; setZones("armed"); vs("Wait for green…"); duel.timers.push(setTimeout(goDuel, 1400 + Math.random() * 4200)); }
+function goDuel() { duel.phase = "go"; setZones("go"); vs("TAP YOUR SIDE!", "go"); }
+function onZone(player) {
+  if (duel.phase === "armed") decideDuel(player === 0 ? 1 : 0, player, true);
+  else if (duel.phase === "go") decideDuel(player, player === 0 ? 1 : 0, false);
+}
+function decideDuel(winner, loser, falseStart) {
+  if (duel.phase === "done") return;
+  stopDuel();
+  $("zone" + winner).className = (winner === 0 ? "zone top " : "zone ") + "win";
+  $("zone" + loser).className = (loser === 0 ? "zone top " : "zone ") + "lose";
+  vs(falseStart ? state.players[loser] + " jumped early! 😏" : state.players[winner] + " wins! ⚡", "win");
+  duel.timers.push(setTimeout(() => spotlight(loser, winner), 1150));
+}
+["zone0", "zone1"].forEach(id => {
+  const el = $(id);
+  el.addEventListener("pointerdown", e => { e.preventDefault(); onZone(parseInt(el.dataset.player, 10)); });
+});
+
+/* ============ PLAY ============ */
+function highlight(idx) { $("sb0").classList.toggle("up", idx === 0); $("sb1").classList.toggle("up", idx === 1); }
+function spotlight(loser, winner) {
+  state.onSpot = loser; state.picker = winner;
+  $("minigame").classList.add("hidden");
+  $("play").classList.remove("hidden");
+  renderSpot();
+  showChoices();
+}
+function renderSpot() {
+  $("turnName").textContent = state.players[state.onSpot];
+  const lvl = currentLevel();
+  $("levelPill").textContent = (state.mode === "b" ? "Build-Up · " : "") + LEVEL_NAMES[lvl] + (endless ? " · ♾️" : "");
+  $("pickHint").textContent = state.players[state.picker] + " gets to pick — Truth or Dare?";
+  $("metaline").textContent = "Round " + state.round + " · loser owes the winner 😏";
+  highlight(state.onSpot);
+}
+function updateScore() { $("s0").textContent = state.strikes[0]; $("s1").textContent = state.strikes[1]; }
+function setActions(mode) {
+  const actions = $("actions");
+  if (mode === "single") { actions.classList.add("single"); $("passBtn").classList.add("hidden"); }
+  else { actions.classList.remove("single"); $("passBtn").classList.remove("hidden"); }
+}
+function showChoices() {
+  stopTimer();
+  $("choicesWrap").classList.remove("hidden");
+  $("actions").classList.add("hidden");
+  $("cardContent").classList.add("hidden");
+  $("placeholder").classList.remove("hidden");
+  $("card").className = "card";
+}
+function renderCard(kindLabel, rawText, style, actionMode) {
+  const text = fill(rawText);
+  const card = $("card");
+  card.className = "card " + style + " pop"; void card.offsetWidth;
+  $("placeholder").classList.add("hidden");
+  $("cardContent").classList.remove("hidden");
+  $("cardKind").textContent = kindLabel;
+  $("cardPrompt").textContent = text;
+  const timer = $("timer");
+  stopTimer();
+  if (needsTimer(text)) { timer.classList.remove("hidden", "run"); timer.textContent = "⏱ Tap to start timer"; }
+  else timer.classList.add("hidden");
+  $("choicesWrap").classList.add("hidden");
+  $("actions").classList.remove("hidden");
+  setActions(actionMode);
+}
+function showPrompt(type) {
+  const raw = endless ? nextCard(type) : pickFrom(type, currentLevel());
+  renderCard(type.toUpperCase() + (endless ? " · ♾️" : ""), raw, type, "double");
+}
+function showPunishment() { renderCard("PUNISHMENT", pickFrom("punish", currentLevel()), "punish", "single"); }
+
+$("truthBtn").addEventListener("click", () => showPrompt("truth"));
+$("dareBtn").addEventListener("click", () => showPrompt("dare"));
+$("doneBtn").addEventListener("click", endRound);
+$("passBtn").addEventListener("click", () => { state.strikes[state.onSpot]++; updateScore(); showPunishment(); });
+
+/* ============ FINISH / RESULT ============ */
+$("resetBtn").addEventListener("click", () => {
+  stopDuel(); stopTimer();
+  const [a, b] = state.strikes;
+  const emoji = $("resultEmoji"), title = $("resultTitle"), owes = $("resultOwes");
+  if (a === 0 && b === 0) {
+    emoji.textContent = "🔥"; title.textContent = "Nobody blinked!";
+    owes.innerHTML = "Not a single pass between you. Looks like you both win tonight. 😏";
+  } else if (a === b) {
+    emoji.textContent = "🤝"; title.textContent = "Dead even";
+    owes.innerHTML = "You each passed <b>" + a + "</b> time" + (a === 1 ? "" : "s") + ". Settle the tie however you like… 😈";
+  } else {
+    const winI = a < b ? 0 : 1, loseI = a < b ? 1 : 0;
+    emoji.textContent = "🏆"; title.textContent = state.players[winI] + " wins!";
+    owes.innerHTML = "<b>" + state.players[loseI] + "</b> chickened out <b>" + state.strikes[loseI] +
+      "</b> time" + (state.strikes[loseI] === 1 ? "" : "s") + " and owes <b>" + state.players[winI] +
+      "</b> a grand finale — winner's choice. 😈";
+  }
+  $("resultOverlay").classList.add("active");
+});
+$("playAgain").addEventListener("click", () => {
+  $("resultOverlay").classList.remove("active");
+  state.round = 1; state.strikes = [0, 0];
+  state.lastText = { truth: "", dare: "", punish: "" };
+  updateScore(); runRound();
+});
+$("newGame").addEventListener("click", () => {
+  $("resultOverlay").classList.remove("active");
+  $("game").classList.remove("active");
+  $("setup").classList.add("active");
+});
+
+/* ============ CUSTOM CARD ============ */
+$("writeBtn").addEventListener("click", () => {
+  const target = state.players[state.onSpot], author = state.players[state.picker];
+  $("customTitle").textContent = "Write a dare for " + target + " 😈";
+  $("customSub").textContent = author + ", type a challenge and make " + target + " do it.";
+  $("customText").value = "";
+  customDraft = "dare";
+  document.querySelectorAll("#customType .t").forEach(t => t.classList.toggle("sel", t.dataset.type === "dare"));
+  $("customOverlay").classList.add("active");
+  setTimeout(() => $("customText").focus(), 50);
+});
+document.querySelectorAll("#customType .t").forEach(t => {
+  t.addEventListener("click", () => {
+    customDraft = t.dataset.type;
+    document.querySelectorAll("#customType .t").forEach(x => x.classList.remove("sel"));
+    t.classList.add("sel");
+  });
+});
+$("customCancel").addEventListener("click", () => $("customOverlay").classList.remove("active"));
+$("customGo").addEventListener("click", () => {
+  const text = $("customText").value.trim();
+  if (!text) { $("customText").focus(); return; }
+  if ($("customSave").checked) { customCards.push({ type: customDraft, text }); saveStorage(); }
+  $("customOverlay").classList.remove("active");
+  state.lastText[customDraft] = text;
+  renderCard(customDraft.toUpperCase() + " · CUSTOM", text, customDraft, "double");
+});
+
+/* ============ TIMER ============ */
+function stopTimer() { if (timerInt) { clearInterval(timerInt); timerInt = null; } }
+$("timer").addEventListener("click", () => {
+  const timer = $("timer");
+  stopTimer();
+  const text = $("cardPrompt").textContent;
+  let secs = 30;
+  const mSec = text.match(/(\d+)[- ]?second/i);
+  const mMin = text.match(/(\w+|\d+)[- ]?minute/i);
+  const words = { one: 1, two: 2, three: 3 };
+  if (/\b90\b/.test(text)) secs = 90;
+  else if (mSec) secs = parseInt(mSec[1], 10);
+  else if (mMin) { const v = mMin[1].toLowerCase(); secs = (words[v] || parseInt(v, 10) || 1) * 60; }
+  let left = secs;
+  timer.classList.add("run"); timer.textContent = "⏱ " + left + "s";
+  timerInt = setInterval(() => {
+    left--;
+    if (left <= 0) { stopTimer(); timer.textContent = "⏰ Time's up! 😏"; timer.classList.remove("run"); }
+    else timer.textContent = "⏱ " + left + "s";
+  }, 1000);
+});
+
+/* ============ INIT ============ */
+loadStorage();
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => { navigator.serviceWorker.register("sw.js").catch(() => {}); });
+}
+</script>
+</body>
+</html>
