@@ -1,0 +1,428 @@
+{
+  "deities": [
+    {
+      "id": "ganesh",
+      "name": { "en": "Ganesh", "hi": "गणेश" },
+      "tier": "A",
+      "styleTags": ["saumya"],
+      "forms": [
+        {
+          "id": "standing",
+          "name": { "en": "Standing", "hi": "स्थानक" },
+          "description": { "en": "Upright samabhanga stance", "hi": "समभंग मुद्रा में खड़े" }
+        },
+        {
+          "id": "seated",
+          "name": { "en": "Seated (Lalitasana)", "hi": "ललितासन" },
+          "description": { "en": "Seated in royal ease", "hi": "ललितासन में विराजमान" }
+        }
+      ],
+      "poses": [
+        {
+          "id": "ashirwad",
+          "name": { "en": "Ashirwad (Blessing)", "hi": "आशीर्वाद" },
+          "description": { "en": "Front right hand raised in abhaya", "hi": "अभय मुद्रा में उठा दाहिना हाथ" }
+        },
+        {
+          "id": "dhyana",
+          "name": { "en": "Dhyana (Meditative)", "hi": "ध्यान" },
+          "description": { "en": "Hands low and restful, serene bearing", "hi": "शांत ध्यानमग्न भाव" }
+        },
+        {
+          "id": "nritya",
+          "name": { "en": "Nritya (Dancing)", "hi": "नृत्य" },
+          "description": { "en": "Joyful dancing bearing", "hi": "आनंदमय नृत्य भाव" }
+        }
+      ],
+      "bodyZones": [
+        { "id": "skin", "name": { "en": "Skin", "hi": "त्वचा" }, "defaultColor": "#E8A25A" },
+        { "id": "tusk", "name": { "en": "Tusks", "hi": "दन्त" }, "defaultColor": "#F5EFE2" },
+        { "id": "eyes", "name": { "en": "Eyes", "hi": "नेत्र" }, "defaultColor": "#2E2014" },
+        { "id": "mukut", "name": { "en": "Mukut (Crown)", "hi": "मुकुट" }, "defaultColor": "#D4A017" }
+      ],
+      "faceSliders": ["eyeOpen", "browTilt", "smile", "trunkCurl", "earSize", "tuskLength"]
+    },
+    {
+      "id": "krishna",
+      "name": { "en": "Krishna", "hi": "कृष्ण" },
+      "tier": "A",
+      "styleTags": ["saumya"],
+      "forms": [
+        {
+          "id": "murlidhar",
+          "name": { "en": "Murlidhar (Tribhanga)", "hi": "मुरलीधर" },
+          "description": { "en": "Standing in the triple-bend stance", "hi": "त्रिभंग मुद्रा में खड़े" }
+        },
+        {
+          "id": "seated",
+          "name": { "en": "Seated (Lalitasana)", "hi": "ललितासन" },
+          "description": { "en": "Seated in royal ease", "hi": "ललितासन में विराजमान" }
+        }
+      ],
+      "poses": [
+        {
+          "id": "murali",
+          "name": { "en": "Murali (Flute-playing)", "hi": "मुरली" },
+          "description": { "en": "Both hands raised to the flute", "hi": "मुरली बजाते हुए" }
+        },
+        {
+          "id": "ashirwad",
+          "name": { "en": "Ashirwad (Blessing)", "hi": "आशीर्वाद" },
+          "description": { "en": "Front right hand raised in abhaya", "hi": "अभय मुद्रा में उठा दाहिना हाथ" }
+        },
+        {
+          "id": "nritya",
+          "name": { "en": "Nritya (Dancing)", "hi": "नृत्य" },
+          "description": { "en": "Joyful dancing bearing", "hi": "आनंदमय नृत्य भाव" }
+        }
+      ],
+      "bodyZones": [
+        { "id": "skin", "name": { "en": "Skin", "hi": "त्वचा" }, "defaultColor": "#4A6FA5" },
+        { "id": "eyes", "name": { "en": "Eyes", "hi": "नेत्र" }, "defaultColor": "#14100A" },
+        { "id": "mukut", "name": { "en": "Mukut (Crown)", "hi": "मुकुट" }, "defaultColor": "#D4A017" },
+        { "id": "feather", "name": { "en": "Mor Pankh (Feather)", "hi": "मोर पंख" }, "defaultColor": "#146B5C" }
+      ],
+      "faceSliders": ["eyeOpen", "browTilt", "smile", "earSize"]
+    },
+    {
+      "id": "shankar",
+      "name": { "en": "Shankar (Shiva)", "hi": "शंकर" },
+      "tier": "A",
+      "styleTags": ["saumya"],
+      "forms": [
+        {
+          "id": "padmasana",
+          "name": { "en": "Meditating (Padmasana)", "hi": "पद्मासन" },
+          "description": { "en": "Seated in deep meditation", "hi": "ध्यानमग्न पद्मासन" }
+        },
+        {
+          "id": "standing",
+          "name": { "en": "Standing (Blessing)", "hi": "स्थानक" },
+          "description": { "en": "Upright blessing stance", "hi": "आशीर्वाद मुद्रा में खड़े" }
+        }
+      ],
+      "poses": [
+        {
+          "id": "dhyana",
+          "name": { "en": "Dhyana (Meditative)", "hi": "ध्यान" },
+          "description": { "en": "Hands low and restful, serene bearing", "hi": "शांत ध्यानमग्न भाव" }
+        },
+        {
+          "id": "ashirwad",
+          "name": { "en": "Ashirwad (Blessing)", "hi": "आशीर्वाद" },
+          "description": { "en": "Front right hand raised in abhaya", "hi": "अभय मुद्रा में उठा दाहिना हाथ" }
+        },
+        {
+          "id": "nritya",
+          "name": { "en": "Nritya (Dancing)", "hi": "नृत्य" },
+          "description": { "en": "Dynamic dancing bearing", "hi": "नृत्य भाव" }
+        }
+      ],
+      "bodyZones": [
+        { "id": "skin", "name": { "en": "Skin", "hi": "त्वचा" }, "defaultColor": "#7A8FA6" },
+        { "id": "eyes", "name": { "en": "Eyes", "hi": "नेत्र" }, "defaultColor": "#14100A" },
+        { "id": "jata", "name": { "en": "Jata (matted hair)", "hi": "जटा" }, "defaultColor": "#4A3524" },
+        { "id": "chandra", "name": { "en": "Chandra (crescent)", "hi": "चन्द्र" }, "defaultColor": "#F5EFE2" }
+      ],
+      "faceSliders": ["eyeOpen", "browTilt", "smile", "earSize"]
+    }
+  ],
+  "parts": [
+    {
+      "id": "dhoti-classic",
+      "deityId": null,
+      "category": "attire",
+      "tab": "vastra",
+      "slot": "vastraLower",
+      "name": { "en": "Classic Dhoti", "hi": "धोती" },
+      "meshUrl": "/assets/parts/dhoti-classic.glb",
+      "thumbnailUrl": "/assets/thumbs/dhoti-classic.svg",
+      "colorZones": [
+        { "id": "cloth", "name": { "en": "Cloth", "hi": "वस्त्र" }, "defaultColor": "#9B1B1B" },
+        { "id": "border", "name": { "en": "Border", "hi": "किनारी" }, "defaultColor": "#D4A017" }
+      ],
+      "constraintTags": [],
+      "priceVolume": 3,
+      "styleTags": ["classic"]
+    },
+    {
+      "id": "dhoti-pitambar",
+      "deityId": null,
+      "category": "attire",
+      "tab": "vastra",
+      "slot": "vastraLower",
+      "name": { "en": "Pitambar Dhoti (pleated)", "hi": "पीताम्बर धोती" },
+      "meshUrl": "/assets/parts/dhoti-pitambar.glb",
+      "thumbnailUrl": "/assets/thumbs/dhoti-pitambar.svg",
+      "colorZones": [
+        { "id": "cloth", "name": { "en": "Cloth", "hi": "वस्त्र" }, "defaultColor": "#E8B325" },
+        { "id": "border", "name": { "en": "Border", "hi": "किनारी" }, "defaultColor": "#9B1B1B" }
+      ],
+      "constraintTags": [],
+      "priceVolume": 3.5,
+      "styleTags": ["classic"]
+    },
+    {
+      "id": "angavastram",
+      "deityId": null,
+      "category": "attire",
+      "tab": "vastra",
+      "slot": "vastraUpper",
+      "name": { "en": "Angavastram (shoulder cloth)", "hi": "अंगवस्त्रम्" },
+      "meshUrl": "/assets/parts/angavastram.glb",
+      "thumbnailUrl": "/assets/thumbs/angavastram.svg",
+      "colorZones": [
+        { "id": "cloth", "name": { "en": "Cloth", "hi": "वस्त्र" }, "defaultColor": "#F3ECD9" }
+      ],
+      "constraintTags": [],
+      "priceVolume": 2,
+      "styleTags": ["classic"]
+    },
+    {
+      "id": "modak",
+      "deityId": "ganesh",
+      "category": "ayudha",
+      "tab": "ayudha",
+      "slot": "hand",
+      "name": { "en": "Modak", "hi": "मोदक" },
+      "meshUrl": "/assets/parts/modak.glb",
+      "thumbnailUrl": "/assets/thumbs/modak.svg",
+      "colorZones": [
+        { "id": "sweet", "name": { "en": "Modak", "hi": "मोदक" }, "defaultColor": "#E8C878" }
+      ],
+      "constraintTags": ["modak"],
+      "priceVolume": 1,
+      "styleTags": ["classic"]
+    },
+    {
+      "id": "ankusha",
+      "deityId": "ganesh",
+      "category": "ayudha",
+      "tab": "ayudha",
+      "slot": "hand",
+      "name": { "en": "Ankusha (goad)", "hi": "अंकुश" },
+      "meshUrl": "/assets/parts/ankusha.glb",
+      "thumbnailUrl": "/assets/thumbs/ankusha.svg",
+      "colorZones": [
+        { "id": "handle", "name": { "en": "Handle", "hi": "मूठ" }, "defaultColor": "#8A5A2B" },
+        { "id": "metal", "name": { "en": "Metal", "hi": "धातु" }, "defaultColor": "#D4A017" }
+      ],
+      "constraintTags": ["ankusha", "unique-item"],
+      "priceVolume": 1.5,
+      "styleTags": ["classic"]
+    },
+    {
+      "id": "pasha",
+      "deityId": "ganesh",
+      "category": "ayudha",
+      "tab": "ayudha",
+      "slot": "hand",
+      "name": { "en": "Pasha (noose)", "hi": "पाश" },
+      "meshUrl": "/assets/parts/pasha.glb",
+      "thumbnailUrl": "/assets/thumbs/pasha.svg",
+      "colorZones": [
+        { "id": "rope", "name": { "en": "Rope", "hi": "रज्जु" }, "defaultColor": "#C9A227" }
+      ],
+      "constraintTags": ["pasha", "unique-item"],
+      "priceVolume": 1.5,
+      "styleTags": ["classic"]
+    },
+    {
+      "id": "lotus-flower",
+      "deityId": null,
+      "category": "ayudha",
+      "tab": "ayudha",
+      "slot": "hand",
+      "name": { "en": "Lotus", "hi": "कमल" },
+      "meshUrl": "/assets/parts/lotus-flower.glb",
+      "thumbnailUrl": "/assets/thumbs/lotus-flower.svg",
+      "colorZones": [
+        { "id": "petals", "name": { "en": "Petals", "hi": "पंखुड़ियाँ" }, "defaultColor": "#E86A8A" },
+        { "id": "stem", "name": { "en": "Stem", "hi": "नाल" }, "defaultColor": "#4E7A3A" }
+      ],
+      "constraintTags": [],
+      "priceVolume": 1.2,
+      "styleTags": ["classic"]
+    },
+    {
+      "id": "bansuri",
+      "deityId": "krishna",
+      "category": "ayudha",
+      "tab": "ayudha",
+      "slot": "hand",
+      "name": { "en": "Bansuri (flute)", "hi": "बाँसुरी" },
+      "meshUrl": "/assets/parts/bansuri.glb",
+      "thumbnailUrl": "/assets/thumbs/bansuri.svg",
+      "colorZones": [
+        { "id": "flute", "name": { "en": "Flute", "hi": "बाँसुरी" }, "defaultColor": "#C9A227" }
+      ],
+      "constraintTags": ["unique-item"],
+      "priceVolume": 1.2,
+      "styleTags": ["classic"]
+    },
+    {
+      "id": "makhan-matki",
+      "deityId": "krishna",
+      "category": "ayudha",
+      "tab": "ayudha",
+      "slot": "hand",
+      "name": { "en": "Makhan Matki (butter pot)", "hi": "माखन मटकी" },
+      "meshUrl": "/assets/parts/makhan-matki.glb",
+      "thumbnailUrl": "/assets/thumbs/makhan-matki.svg",
+      "colorZones": [
+        { "id": "pot", "name": { "en": "Pot", "hi": "मटकी" }, "defaultColor": "#A05A2C" },
+        { "id": "butter", "name": { "en": "Butter", "hi": "माखन" }, "defaultColor": "#F5EFDD" }
+      ],
+      "constraintTags": ["makhan", "unique-item"],
+      "priceVolume": 1.3,
+      "styleTags": ["classic"]
+    },
+    {
+      "id": "trishul",
+      "deityId": "shankar",
+      "category": "ayudha",
+      "tab": "ayudha",
+      "slot": "hand",
+      "name": { "en": "Trishul (trident)", "hi": "त्रिशूल" },
+      "meshUrl": "/assets/parts/trishul.glb",
+      "thumbnailUrl": "/assets/thumbs/trishul.svg",
+      "colorZones": [
+        { "id": "shaft", "name": { "en": "Shaft", "hi": "दण्ड" }, "defaultColor": "#8A5A2B" },
+        { "id": "prongs", "name": { "en": "Prongs", "hi": "शूल" }, "defaultColor": "#C9CDD4" }
+      ],
+      "constraintTags": ["trishul", "unique-item"],
+      "priceVolume": 1.8,
+      "styleTags": ["classic"]
+    },
+    {
+      "id": "damaru",
+      "deityId": "shankar",
+      "category": "ayudha",
+      "tab": "ayudha",
+      "slot": "hand",
+      "name": { "en": "Damaru (drum)", "hi": "डमरू" },
+      "meshUrl": "/assets/parts/damaru.glb",
+      "thumbnailUrl": "/assets/thumbs/damaru.svg",
+      "colorZones": [
+        { "id": "drum", "name": { "en": "Drum", "hi": "डमरू" }, "defaultColor": "#8E4A2B" },
+        { "id": "cords", "name": { "en": "Cords", "hi": "डोरी" }, "defaultColor": "#C9A227" }
+      ],
+      "constraintTags": ["unique-item"],
+      "priceVolume": 1.1,
+      "styleTags": ["classic"]
+    },
+    {
+      "id": "lotus-peetha",
+      "deityId": null,
+      "category": "base",
+      "tab": "base",
+      "slot": "base",
+      "name": { "en": "Lotus Pedestal (Padma Peetha)", "hi": "पद्म पीठ" },
+      "meshUrl": "/assets/parts/lotus-peetha.glb",
+      "thumbnailUrl": "/assets/thumbs/lotus-peetha.svg",
+      "colorZones": [
+        { "id": "petals", "name": { "en": "Petals", "hi": "पंखुड़ियाँ" }, "defaultColor": "#E86A8A" },
+        { "id": "seat", "name": { "en": "Seat", "hi": "पीठिका" }, "defaultColor": "#D4A017" }
+      ],
+      "constraintTags": [],
+      "priceVolume": 8,
+      "styleTags": ["classic"]
+    },
+    {
+      "id": "square-peetha",
+      "deityId": null,
+      "category": "base",
+      "tab": "base",
+      "slot": "base",
+      "name": { "en": "Square Peetha", "hi": "चौकोर पीठ" },
+      "meshUrl": "/assets/parts/square-peetha.glb",
+      "thumbnailUrl": "/assets/thumbs/square-peetha.svg",
+      "colorZones": [
+        { "id": "stone", "name": { "en": "Stone", "hi": "पाषाण" }, "defaultColor": "#C9B79C" },
+        { "id": "trim", "name": { "en": "Trim", "hi": "किनारी" }, "defaultColor": "#D4A017" }
+      ],
+      "constraintTags": [],
+      "priceVolume": 7,
+      "styleTags": ["classic"]
+    }
+  ],
+  "constraints": [
+    {
+      "id": "ganesh-ankusha-right-hand",
+      "deityId": "ganesh",
+      "ruleType": "slot_allow",
+      "partTag": "ankusha",
+      "slotSide": "right",
+      "reason": {
+        "en": "The ankusha is traditionally held in a right hand.",
+        "hi": "अंकुश परम्परागत रूप से दाहिने हाथ में धारण किया जाता है।"
+      }
+    },
+    {
+      "id": "ganesh-pasha-left-hand",
+      "deityId": "ganesh",
+      "ruleType": "slot_allow",
+      "partTag": "pasha",
+      "slotSide": "left",
+      "reason": {
+        "en": "The pasha (noose) is traditionally held in a left hand.",
+        "hi": "पाश परम्परागत रूप से बाएँ हाथ में धारण किया जाता है।"
+      }
+    },
+    {
+      "id": "ganesh-modak-left-hand",
+      "deityId": "ganesh",
+      "ruleType": "slot_allow",
+      "partTag": "modak",
+      "slotSide": "left",
+      "reason": {
+        "en": "The modak is traditionally held in a left hand, within the trunk's reach.",
+        "hi": "मोदक परम्परागत रूप से बाएँ हाथ में रखा जाता है।"
+      }
+    },
+    {
+      "id": "krishna-makhan-left-hand",
+      "deityId": "krishna",
+      "ruleType": "slot_allow",
+      "partTag": "makhan",
+      "slotSide": "left",
+      "reason": {
+        "en": "The makhan matki is traditionally held in a left hand.",
+        "hi": "माखन मटकी परम्परागत रूप से बाएँ हाथ में रखी जाती है।"
+      }
+    },
+    {
+      "id": "shankar-trishul-right-hand",
+      "deityId": "shankar",
+      "ruleType": "slot_allow",
+      "partTag": "trishul",
+      "slotSide": "right",
+      "reason": {
+        "en": "The trishul is traditionally held in a right hand.",
+        "hi": "त्रिशूल परम्परागत रूप से दाहिने हाथ में धारण किया जाता है।"
+      }
+    },
+    {
+      "id": "unique-items-once",
+      "deityId": null,
+      "ruleType": "limit",
+      "partTag": "unique-item",
+      "maxCount": 1,
+      "reason": {
+        "en": "This item is held only once in traditional iconography.",
+        "hi": "पारम्परिक प्रतिमा-विधि में यह वस्तु केवल एक बार धारण की जाती है।"
+      }
+    },
+    {
+      "id": "no-fierce-items-on-saumya",
+      "deityId": null,
+      "ruleType": "deny",
+      "partTag": "fierce",
+      "deityStyleTag": "saumya",
+      "reason": {
+        "en": "Fierce-form items are not part of this deity's benign (saumya) iconography.",
+        "hi": "उग्र रूप की वस्तुएँ इस सौम्य स्वरूप की प्रतिमा-विधि में नहीं आतीं।"
+      }
+    }
+  ]
+}
