@@ -1,0 +1,128 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Dark romantic theme — deep midnight plum with rose & gold accents */
+    --background: 253 45% 6%;
+    --foreground: 340 30% 94%;
+
+    --card: 258 40% 10%;
+    --card-foreground: 340 30% 94%;
+
+    --popover: 258 42% 9%;
+    --popover-foreground: 340 30% 94%;
+
+    --primary: 336 80% 62%;
+    --primary-foreground: 340 60% 98%;
+
+    --secondary: 258 30% 18%;
+    --secondary-foreground: 340 30% 92%;
+
+    --muted: 258 25% 16%;
+    --muted-foreground: 300 12% 65%;
+
+    --accent: 258 32% 20%;
+    --accent-foreground: 340 30% 94%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 258 30% 22%;
+    --input: 258 30% 24%;
+    --ring: 336 80% 62%;
+
+    --gold: 43 96% 58%;
+    --gold-soft: 45 90% 76%;
+    --rose-glow: 336 90% 70%;
+
+    --radius: 0.75rem;
+
+    --font-display: "Playfair Display";
+    --font-body: "Quicksand";
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-background font-body text-foreground antialiased;
+    background-image: radial-gradient(
+        ellipse 90% 60% at 50% -10%,
+        hsl(280 55% 18% / 0.7) 0%,
+        transparent 60%
+      ),
+      radial-gradient(
+        ellipse 60% 45% at 85% 110%,
+        hsl(336 60% 20% / 0.45) 0%,
+        transparent 65%
+      ),
+      linear-gradient(180deg, hsl(253 45% 7%) 0%, hsl(253 48% 5%) 100%);
+    background-attachment: fixed;
+    min-height: 100dvh;
+  }
+
+  ::selection {
+    background: hsl(var(--primary) / 0.35);
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: hsl(var(--background));
+  }
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--secondary));
+    border-radius: 999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--primary) / 0.5);
+  }
+}
+
+@layer components {
+  /* frosted glass panel */
+  .glass {
+    @apply border border-white/10 bg-white/[0.04] shadow-xl shadow-black/30 backdrop-blur-md;
+  }
+
+  /* shimmering golden headline */
+  .text-treasure {
+    background: linear-gradient(
+      100deg,
+      hsl(var(--gold-soft)) 20%,
+      hsl(var(--gold)) 40%,
+      #fff7db 50%,
+      hsl(var(--gold)) 60%,
+      hsl(var(--gold-soft)) 80%
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: shimmer 4s linear infinite;
+  }
+
+  .text-romantic {
+    background: linear-gradient(
+      100deg,
+      #f9a8d4 10%,
+      #f472b6 35%,
+      #fbcfe8 50%,
+      #f472b6 65%,
+      #f9a8d4 90%
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: shimmer 5s linear infinite;
+  }
+}
